@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Auth\UserInterface;
+use Illuminate\Database\Connection;
+use Illuminate\Hashing\HasherInterface;
+use Illuminate\Auth\EloquentUserProvider;
 use Mockery as m;
 
 class AuthEloquentUserProviderTest extends PHPUnit_Framework_TestCase {
@@ -39,11 +43,11 @@ class AuthEloquentUserProviderTest extends PHPUnit_Framework_TestCase {
 
 	public function testCredentialValidation()
 	{
-		$conn = m::mock('Illuminate\Database\Connection');
-		$hasher = m::mock('Illuminate\Hashing\HasherInterface');
+		$conn = m::mock(Connection::class);
+		$hasher = m::mock(HasherInterface::class);
 		$hasher->shouldReceive('check')->once()->with('plain', 'hash')->andReturn(true);
 		$provider = new Illuminate\Auth\EloquentUserProvider($hasher, 'foo');
-		$user = m::mock('Illuminate\Auth\UserInterface');
+		$user = m::mock(UserInterface::class);
 		$user->shouldReceive('getAuthPassword')->once()->andReturn('hash');
 		$result = $provider->validateCredentials($user, array('password' => 'plain'));
 
@@ -53,8 +57,8 @@ class AuthEloquentUserProviderTest extends PHPUnit_Framework_TestCase {
 
 	public function testModelsCanBeCreated()
 	{
-		$conn = m::mock('Illuminate\Database\Connection');
-		$hasher = m::mock('Illuminate\Hashing\HasherInterface');
+		$conn = m::mock(Connection::class);
+		$hasher = m::mock(HasherInterface::class);
 		$provider = new Illuminate\Auth\EloquentUserProvider($hasher, 'EloquentProviderUserStub');
 		$model = $provider->createModel();
 
@@ -64,8 +68,11 @@ class AuthEloquentUserProviderTest extends PHPUnit_Framework_TestCase {
 
 	protected function getProviderMock()
 	{
-		$hasher = m::mock('Illuminate\Hashing\HasherInterface');
-		return $this->getMock('Illuminate\Auth\EloquentUserProvider', array('createModel'), array($hasher, 'foo'));
+		$hasher = m::mock(HasherInterface::class);
+		return $this->getMockBuilder(EloquentUserProvider::class)
+            ->setMethods(array('createModel'))
+            ->setConstructorArgs(array($hasher, 'foo'))
+            ->getMock();
 	}
 
 }
