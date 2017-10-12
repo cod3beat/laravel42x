@@ -10,6 +10,8 @@ class QueueSqsJobTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 
+		$this->markTestSkipped();
+
 		$this->key = 'AMAZONSQSKEY';
 		$this->secret = 'AmAz0n+SqSsEcReT+aLpHaNuM3R1CsTr1nG';
 		$this->service = 'sqs';
