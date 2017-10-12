@@ -12,7 +12,7 @@ use Illuminate\Session\Store;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\Request;
 
-class AuthGuardTest extends PHPUnit_Framework_TestCase {
+class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{
