@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Auth\Reminders\PasswordBroker;
 
-class AuthPasswordBrokerTest extends PHPUnit_Framework_TestCase {
+class AuthPasswordBrokerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{
