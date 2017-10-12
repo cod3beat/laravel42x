@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class CacheRedisStoreTest extends PHPUnit_Framework_TestCase {
+class CacheRedisStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

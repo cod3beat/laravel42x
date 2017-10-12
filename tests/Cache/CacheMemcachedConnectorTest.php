@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class CacheMemcachedConnectorTest extends PHPUnit_Framework_TestCase {
+class CacheMemcachedConnectorTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

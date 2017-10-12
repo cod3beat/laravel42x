@@ -1,6 +1,6 @@
 <?php
 
-class CacheApcStoreTest extends PHPUnit_Framework_TestCase {
+class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testGetReturnsNullWhenNotFound()
 	{

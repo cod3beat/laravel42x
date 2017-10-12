@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class CacheRepositoryTest extends PHPUnit_Framework_TestCase {
+class CacheRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{
