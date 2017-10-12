@@ -81,6 +81,9 @@
         ],
         "psr-0": {
             "Illuminate": "src/"
+        },
+        "psr-4": {
+            "L4\\": "src/L4"
         }
     },
     "extra": {
