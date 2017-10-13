@@ -6,7 +6,7 @@ use Illuminate\Hashing\HasherInterface;
 use Illuminate\Auth\EloquentUserProvider;
 use Mockery as m;
 
-class AuthEloquentUserProviderTest extends PHPUnit_Framework_TestCase {
+class AuthEloquentUserProviderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

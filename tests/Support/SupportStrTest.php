@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 
-class SupportStrTest extends PHPUnit_Framework_TestCase {
+class SupportStrTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	/**
 	* Test the Str::words method.

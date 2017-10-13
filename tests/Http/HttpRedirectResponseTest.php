@@ -4,7 +4,7 @@ use Mockery as m;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
-class HttpRedirectResponseTest extends PHPUnit_Framework_TestCase {
+class HttpRedirectResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

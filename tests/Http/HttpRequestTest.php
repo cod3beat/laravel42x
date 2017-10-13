@@ -4,7 +4,7 @@ use Mockery as m;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class HttpRequestTest extends PHPUnit_Framework_TestCase {
+class HttpRequestTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

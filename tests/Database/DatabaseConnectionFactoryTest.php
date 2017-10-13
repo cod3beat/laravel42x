@@ -6,7 +6,7 @@ class DatabaseConnectionFactoryPDOStub extends PDO {
 	public function __construct() {}
 }
 
-class DatabaseConnectionFactoryTest extends PHPUnit_Framework_TestCase {
+class DatabaseConnectionFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

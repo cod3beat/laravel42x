@@ -2,7 +2,7 @@
 
 use Illuminate\Support\NamespacedItemResolver;
 
-class SupportNamespacedItemResolverTest extends PHPUnit_Framework_TestCase {
+class SupportNamespacedItemResolverTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testResolution()
 	{

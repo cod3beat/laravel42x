@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Database\Schema\Builder;
 
-class DatabaseSchemaBuilderTest extends PHPUnit_Framework_TestCase {
+class DatabaseSchemaBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

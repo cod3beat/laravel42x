@@ -7,7 +7,7 @@ use Illuminate\Html\HtmlBuilder;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Routing\RouteCollection;
 
-class FormBuilderTest extends PHPUnit_Framework_TestCase {
+class FormBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	/**
 	 * Setup the test environment.

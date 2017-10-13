@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\View\Factory;
 
-class ViewFactoryTest extends PHPUnit_Framework_TestCase {
+class ViewFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

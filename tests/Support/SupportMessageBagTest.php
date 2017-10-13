@@ -3,7 +3,7 @@
 use Illuminate\Support\MessageBag;
 use Mockery as m;
 
-class SupportMessageBagTest extends PHPUnit_Framework_TestCase {
+class SupportMessageBagTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

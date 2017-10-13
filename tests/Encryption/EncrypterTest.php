@@ -2,7 +2,7 @@
 
 use Illuminate\Encryption\Encrypter;
 
-class EncrypterTest extends PHPUnit_Framework_TestCase {
+class EncrypterTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testEncryption()
 	{

@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Translation\LoaderInterface;
 use Mockery as m;
 use Illuminate\Translation\Translator;
 
-class TranslationTranslatorTest extends PHPUnit_Framework_TestCase {
+class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{
@@ -25,7 +26,7 @@ class TranslationTranslatorTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetMethodProperlyLoadsAndRetrievesItem()
 	{
-		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'));
+		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
 		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(array('foo' => 'foo', 'baz' => 'breeze :foo'));
 		$this->assertEquals('breeze bar', $t->get('foo::bar.baz', array('foo' => 'bar'), 'en'));
 		$this->assertEquals('foo', $t->get('foo::bar.foo'));
@@ -34,7 +35,7 @@ class TranslationTranslatorTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetMethodProperlyLoadsAndRetrievesItemWithLongestReplacementsFirst()
 	{
-		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'));
+		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
 		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(array('foo' => 'foo', 'baz' => 'breeze :foo :foobar'));
 		$this->assertEquals('breeze bar taylor', $t->get('foo::bar.baz', array('foo' => 'bar', 'foobar' => 'taylor'), 'en'));
 		$this->assertEquals('foo', $t->get('foo::bar.foo'));
@@ -43,7 +44,7 @@ class TranslationTranslatorTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetMethodProperlyLoadsAndRetrievesItemForGlobalNamespace()
 	{
-		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'));
+		$t = $this->getMock('Illuminate\Translation\Translator', null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
 		$t->getLoader()->shouldReceive('load')->once()->with('en', 'foo', '*')->andReturn(array('bar' => 'breeze :foo'));
 		$this->assertEquals('breeze bar', $t->get('foo.bar', array('foo' => 'bar')));
 	}
@@ -62,7 +63,7 @@ class TranslationTranslatorTest extends PHPUnit_Framework_TestCase {
 
 	protected function getLoader()
 	{
-		return m::mock('Illuminate\Translation\LoaderInterface');
+		return m::mock(LoaderInterface::class);
 	}
 
 }

@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class SupportFacadeTest extends PHPUnit_Framework_TestCase {
+class SupportFacadeTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function setUp()
 	{

@@ -2,7 +2,7 @@
 
 use Illuminate\Container\Container;
 
-class ContainerContainerTest extends PHPUnit_Framework_TestCase {
+class ContainerContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testClosureResolution()
 	{

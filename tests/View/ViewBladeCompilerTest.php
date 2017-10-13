@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\View\Compilers\BladeCompiler;
 
-class ViewBladeCompilerTest extends PHPUnit_Framework_TestCase {
+class ViewBladeCompilerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

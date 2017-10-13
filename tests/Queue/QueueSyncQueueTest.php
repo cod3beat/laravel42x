@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class QueueSyncQueueTest extends PHPUnit_Framework_TestCase {
+class QueueSyncQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

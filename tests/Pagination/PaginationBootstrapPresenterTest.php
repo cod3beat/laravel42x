@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Pagination\BootstrapPresenter;
 
-class PaginationBootstrapPresenterTest extends PHPUnit_Framework_TestCase {
+class PaginationBootstrapPresenterTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

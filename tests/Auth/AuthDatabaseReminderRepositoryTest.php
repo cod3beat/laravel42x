@@ -4,7 +4,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Mockery as m;
 
-class AuthDatabaseReminderRepositoryTest extends PHPUnit_Framework_TestCase {
+class AuthDatabaseReminderRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

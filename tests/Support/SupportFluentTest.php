@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Fluent;
 
-class SupportFluentTest extends PHPUnit_Framework_TestCase {
+class SupportFluentTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testAttributesAreSetByConstructor()
 	{

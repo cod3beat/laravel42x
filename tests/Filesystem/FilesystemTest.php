@@ -2,7 +2,7 @@
 
 use Illuminate\Filesystem\Filesystem;
 
-class FilesystemTest extends PHPUnit_Framework_TestCase {
+class FilesystemTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testGetRetrievesFiles()
 	{

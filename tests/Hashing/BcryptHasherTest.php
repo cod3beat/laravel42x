@@ -1,6 +1,6 @@
 <?php
 
-class BcryptHasherTest extends PHPUnit_Framework_TestCase {
+class BcryptHasherTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testBasicHashing()
 	{

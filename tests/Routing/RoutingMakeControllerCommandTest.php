@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class RoutingMakeControllerCommandTest extends PHPUnit_Framework_TestCase {
+class RoutingMakeControllerCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

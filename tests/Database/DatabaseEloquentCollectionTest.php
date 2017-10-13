@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 
-class DatabaseEloquentCollectionTest extends PHPUnit_Framework_TestCase {
+class DatabaseEloquentCollectionTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

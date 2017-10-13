@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class FoundationAssetPublisherTest extends PHPUnit_Framework_TestCase {
+class FoundationAssetPublisherTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\AliasLoader;
 
-class FoundationAliasLoaderTest extends PHPUnit_Framework_TestCase {
+class FoundationAliasLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testLoaderCanBeCreatedAndRegisteredOnce()
 	{

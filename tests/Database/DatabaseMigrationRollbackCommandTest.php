@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Database\Console\Migrations\RollbackCommand;
 
-class DatabaseMigrationRollbackCommandTest extends PHPUnit_Framework_TestCase {
+class DatabaseMigrationRollbackCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

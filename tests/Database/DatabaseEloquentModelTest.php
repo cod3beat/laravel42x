@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class DatabaseEloquentModelTest extends PHPUnit_Framework_TestCase {
+class DatabaseEloquentModelTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

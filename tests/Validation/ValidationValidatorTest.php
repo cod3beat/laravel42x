@@ -4,7 +4,7 @@ use Mockery as m;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\File\File;
 
-class ValidationValidatorTest extends PHPUnit_Framework_TestCase {
+class ValidationValidatorTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

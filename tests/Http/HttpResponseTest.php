@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Support\Contracts\JsonableInterface;
 
-class HttpResponseTest extends PHPUnit_Framework_TestCase {
+class HttpResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

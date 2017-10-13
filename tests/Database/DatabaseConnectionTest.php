@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class DatabaseConnectionTest extends PHPUnit_Framework_TestCase {
+class DatabaseConnectionTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

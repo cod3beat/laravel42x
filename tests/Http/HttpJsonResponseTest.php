@@ -1,6 +1,6 @@
 <?php
 
-class HttpJsonResponseTest extends PHPUnit_Framework_TestCase {
+class HttpJsonResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testSetAndRetrieveData()
 	{

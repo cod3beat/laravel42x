@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Database\Schema\Blueprint;
 
-class DatabaseMySqlSchemaGrammarTest extends PHPUnit_Framework_TestCase {
+class DatabaseMySqlSchemaGrammarTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

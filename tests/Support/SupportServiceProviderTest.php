@@ -1,6 +1,6 @@
 <?php
 
-class SupportServiceProviderTest extends PHPUnit_Framework_TestCase {
+class SupportServiceProviderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public static function setUpBeforeClass()
 	{

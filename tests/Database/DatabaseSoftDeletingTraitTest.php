@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class DatabaseSoftDeletingTraitTest extends PHPUnit_Framework_TestCase {
+class DatabaseSoftDeletingTraitTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

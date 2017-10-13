@@ -4,7 +4,7 @@ use Mockery as m;
 use Illuminate\View\View;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
-class ViewTest extends PHPUnit_Framework_TestCase {
+class ViewTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

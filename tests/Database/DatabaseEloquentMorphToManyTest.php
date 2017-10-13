@@ -3,7 +3,7 @@
 use Mockery as m;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class DatabaseEloquentMorphToManyTest extends PHPUnit_Framework_TestCase {
+class DatabaseEloquentMorphToManyTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{
