@@ -68,8 +68,8 @@
     },
     "require-dev": {
         "pda/pheanstalk": "~2.1",
-        "mockery/mockery": "~0.9",
-        "phpunit/phpunit": "^5.4",
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~5.0",
         "brianium/paratest": "^0.15.0"
     },
     "autoload": {
@@ -95,5 +95,5 @@
     "suggest": {
         "doctrine/dbal": "Allow renaming columns and dropping SQLite columns."
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
