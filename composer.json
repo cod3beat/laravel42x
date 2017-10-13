@@ -79,11 +79,9 @@
         "files": [
             "src/Illuminate/Support/helpers.php"
         ],
-        "psr-0": {
-            "Illuminate": "src/"
-        },
         "psr-4": {
-            "L4\\": "src/L4"
+            "L4\\": "src/L4",
+            "Illuminate\\": "src/Illuminate"
         }
     },
     "extra": {
