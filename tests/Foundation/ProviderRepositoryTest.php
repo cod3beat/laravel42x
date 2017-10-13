@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Filesystem\Filesystem;
 use Mockery as m;
 
 class ProviderRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
@@ -101,8 +102,13 @@ class ProviderRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testWriteManifestStoresToProperLocation()
 	{
-		$repo = new Illuminate\Foundation\ProviderRepository($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
-		$files->shouldReceive('put')->once()->with(__DIR__.'/services.json', json_encode(array('foo')));
+	    $files = m::mock(Filesystem::class);
+		$repo = new Illuminate\Foundation\ProviderRepository($files, __DIR__);
+		$files->shouldReceive('put')
+            ->once()
+            ->with(__DIR__.'/services.json', Mockery::on(function($arg) {
+                return json_decode(json_encode(['foo'])) == json_decode($arg);
+            }));
 
 		$result = $repo->writeManifest(array('foo'));
 
