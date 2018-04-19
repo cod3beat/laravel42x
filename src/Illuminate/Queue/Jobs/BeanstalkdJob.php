@@ -80,7 +80,7 @@ class BeanstalkdJob extends Job {
 	 */
 	public function release($delay = 0)
 	{
-		$priority = Pheanstalk::DEFAULT_PRIORITY;
+		$priority = \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY;
 
 		$this->pheanstalk->release($this->job, $priority, $delay);
 	}

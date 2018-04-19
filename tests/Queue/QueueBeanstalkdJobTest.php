@@ -33,7 +33,7 @@ class QueueBeanstalkdJobTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testReleaseProperlyReleasesJobOntoBeanstalkd()
 	{
 		$job = $this->getJob();
-		$job->getPheanstalk()->shouldReceive('release')->once()->with($job->getPheanstalkJob(), Pheanstalk_Pheanstalk::DEFAULT_PRIORITY, 0);
+		$job->getPheanstalk()->shouldReceive('release')->once()->with($job->getPheanstalkJob(), \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, 0);
 
 		$job->release();
 	}

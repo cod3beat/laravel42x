@@ -29,7 +29,7 @@ class QueueBeanstalkdQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$pheanstalk = $queue->getPheanstalk();
 		$pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
 		$pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
-		$pheanstalk->shouldReceive('put')->twice()->with(json_encode(array('job' => 'foo', 'data' => array('data'))), Pheanstalk_Pheanstalk::DEFAULT_PRIORITY, 5, Pheanstalk_Pheanstalk::DEFAULT_TTR);
+		$pheanstalk->shouldReceive('put')->twice()->with(json_encode(array('job' => 'foo', 'data' => array('data'))), \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, 5, \Pheanstalk\PheanstalkInterface::DEFAULT_TTR);
 
 		$queue->later(5, 'foo', array('data'), 'stack');
 		$queue->later(5, 'foo', array('data'));
