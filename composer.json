@@ -84,7 +84,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit --colors=always"
     },
     "extra": {
         "branch-alias": {
