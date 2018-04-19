@@ -18,7 +18,7 @@
         "nesbot/carbon": "~1.0",
         "patchwork/utf8": "~1.1",
         "phpseclib/phpseclib": "~2.0",
-        "predis/predis": "0.8.*",
+        "predis/predis": "^1.1",
         "stack/builder": "~1.0",
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/browser-kit": "2.8.*",
