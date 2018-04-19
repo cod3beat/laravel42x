@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Container\Container;
 use Mockery as m;
 
 class QueueBeanstalkdJobTest extends \L4\Tests\BackwardCompatibleTestCase {
@@ -51,9 +52,9 @@ class QueueBeanstalkdJobTest extends \L4\Tests\BackwardCompatibleTestCase {
 	protected function getJob()
 	{
 		return new Illuminate\Queue\Jobs\BeanstalkdJob(
-			m::mock('Illuminate\Container\Container'),
-			m::mock('Pheanstalk_Pheanstalk'),
-			m::mock('Pheanstalk_Job'),
+			m::mock(Container::class),
+			m::mock(\Pheanstalk\Pheanstalk::class),
+			m::mock(\Illuminate\Queue\Jobs\Job::class),
 			'default'
 		);
 	}
