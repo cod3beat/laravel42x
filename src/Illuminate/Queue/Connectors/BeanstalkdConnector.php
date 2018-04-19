@@ -1,8 +1,6 @@
 <?php namespace Illuminate\Queue\Connectors;
 
 use Illuminate\Queue\BeanstalkdQueue;
-//use Pheanstalk_Pheanstalk as Pheanstalk;
-//use Pheanstalk_PheanstalkInterface as PheanstalkInterface;
 
 class BeanstalkdConnector implements ConnectorInterface {
 
