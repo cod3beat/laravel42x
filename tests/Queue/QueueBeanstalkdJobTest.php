@@ -54,7 +54,7 @@ class QueueBeanstalkdJobTest extends \L4\Tests\BackwardCompatibleTestCase {
 		return new Illuminate\Queue\Jobs\BeanstalkdJob(
 			m::mock(Container::class),
 			m::mock(\Pheanstalk\Pheanstalk::class),
-			m::mock(\Illuminate\Queue\Jobs\Job::class),
+			m::mock(\Pheanstalk\Job::class),
 			'default'
 		);
 	}
