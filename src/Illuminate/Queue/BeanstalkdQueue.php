@@ -1,7 +1,5 @@
 <?php namespace Illuminate\Queue;
 
-use Pheanstalk_Job;
-use Pheanstalk_Pheanstalk as Pheanstalk;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 
 class BeanstalkdQueue extends Queue implements QueueInterface {
@@ -9,7 +7,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	/**
 	 * The Pheanstalk instance.
 	 *
-	 * @var \Pheanstalk_Pheanstalk
+	 * @var \Pheanstalk\Pheanstalk
 	 */
 	protected $pheanstalk;
 
@@ -30,12 +28,12 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	/**
 	 * Create a new Beanstalkd queue instance.
 	 *
-	 * @param  \Pheanstalk_Pheanstalk  $pheanstalk
+	 * @param  \Pheanstalk\Pheanstalk  $pheanstalk
 	 * @param  string  $default
 	 * @param  int  $timeToRun
 	 * @return void
 	 */
-	public function __construct(Pheanstalk $pheanstalk, $default, $timeToRun)
+	public function __construct(\Pheanstalk\Pheanstalk $pheanstalk, $default, $timeToRun)
 	{
 		$this->default = $default;
 		$this->timeToRun = $timeToRun;
@@ -100,7 +98,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 
 		$job = $this->pheanstalk->watchOnly($queue)->reserve(0);
 
-		if ($job instanceof Pheanstalk_Job)
+		if ($job instanceof \Pheanstalk\Job)
 		{
 			return new BeanstalkdJob($this->container, $this->pheanstalk, $job, $queue);
 		}
@@ -132,7 +130,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	/**
 	 * Get the underlying Pheanstalk instance.
 	 *
-	 * @return \Pheanstalk_Pheanstalk
+	 * @return \Pheanstalk\Pheanstalk
 	 */
 	public function getPheanstalk()
 	{
