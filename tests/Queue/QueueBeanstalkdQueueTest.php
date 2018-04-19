@@ -12,7 +12,7 @@ class QueueBeanstalkdQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testPushProperlyPushesJobOntoBeanstalkd()
 	{
-		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock('Pheanstalk_Pheanstalk'), 'default', 60);
+		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(\Pheanstalk\Pheanstalk::class), 'default', 60);
 		$pheanstalk = $queue->getPheanstalk();
 		$pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
 		$pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
@@ -25,7 +25,7 @@ class QueueBeanstalkdQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testDelayedPushProperlyPushesJobOntoBeanstalkd()
 	{
-		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock('Pheanstalk_Pheanstalk'), 'default', 60);
+		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(\Pheanstalk\Pheanstalk::class), 'default', 60);
 		$pheanstalk = $queue->getPheanstalk();
 		$pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
 		$pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
@@ -38,11 +38,11 @@ class QueueBeanstalkdQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testPopProperlyPopsJobOffOfBeanstalkd()
 	{
-		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock('Pheanstalk_Pheanstalk'), 'default', 60);
+		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(\Pheanstalk\Pheanstalk::class), 'default', 60);
 		$queue->setContainer(m::mock('Illuminate\Container\Container'));
 		$pheanstalk = $queue->getPheanstalk();
 		$pheanstalk->shouldReceive('watchOnly')->once()->with('default')->andReturn($pheanstalk);
-		$job = m::mock('Pheanstalk_Job');
+		$job = m::mock(\Pheanstalk\Job::class);
 		$pheanstalk->shouldReceive('reserve')->once()->andReturn($job);
 
 		$result = $queue->pop();
@@ -53,7 +53,7 @@ class QueueBeanstalkdQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testDeleteProperlyRemoveJobsOffBeanstalkd()
 	{
-		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock('Pheanstalk_Pheanstalk'), 'default', 60);
+		$queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(\Pheanstalk\Pheanstalk::class), 'default', 60);
 		$pheanstalk = $queue->getPheanstalk();
 		$pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
 		$pheanstalk->shouldReceive('delete')->once()->with(1);
