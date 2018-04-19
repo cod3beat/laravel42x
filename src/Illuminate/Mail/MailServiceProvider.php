@@ -153,7 +153,7 @@ class MailServiceProvider extends ServiceProvider {
 			// The Swift SMTP transport instance will allow us to use any SMTP backend
 			// for delivering mail such as Sendgrid, Amazon SES, or a custom server
 			// a developer has available. We will just pass this configured host.
-			$transport = SmtpTransport::newInstance($host, $port);
+			$transport = new SmtpTransport($host, $port);
 
 			if (isset($encryption))
 			{
