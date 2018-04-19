@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class QueueBeanstalkdJobTest extends PHPUnit_Framework_TestCase {
+class QueueBeanstalkdJobTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function tearDown()
 	{

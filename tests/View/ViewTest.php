@@ -147,7 +147,7 @@ class ViewTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testViewBadMethod()
 	{
-		$this->setExpectedException('BadMethodCallException');
+		$this->expectException('BadMethodCallException');
 		$view = $this->getView();
 		$view->badMethodCall();
 	}

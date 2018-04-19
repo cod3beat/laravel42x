@@ -388,7 +388,7 @@ class HttpRequestTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testSessionMethod()
 	{
-		$this->setExpectedException('RuntimeException');
+		$this->expectException('RuntimeException');
 		$request = Request::create('/', 'GET');
 		$request->session();
 	}

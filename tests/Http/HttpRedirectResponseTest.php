@@ -128,7 +128,7 @@ class HttpRedirectResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testMagicCallException()
 	{
-		$this->setExpectedException('BadMethodCallException');
+		$this->expectException('BadMethodCallException');
 		$response = new RedirectResponse('foo.bar');
 		$response->doesNotExist('bar');
 	}

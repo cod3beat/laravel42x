@@ -323,7 +323,7 @@ class ContainerContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testInternalClassWithDefaultParameters()
 	{
-		$this->setExpectedException('Illuminate\Container\BindingResolutionException', 'Unresolvable dependency resolving [Parameter #0 [ <required> $first ]] in class ContainerMixedPrimitiveStub');
+		$this->expectException('Illuminate\Container\BindingResolutionException', 'Unresolvable dependency resolving [Parameter #0 [ <required> $first ]] in class ContainerMixedPrimitiveStub');
 		$container = new Container;
 		$parameters = array();
 		$container->make('ContainerMixedPrimitiveStub', $parameters);

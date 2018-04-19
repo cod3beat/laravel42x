@@ -2,9 +2,9 @@
 
 namespace L4\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class BackwardCompatibleTestCase extends PHPUnit_Framework_TestCase
+class BackwardCompatibleTestCase extends TestCase
 {
     /**
      * Returns a mock object for the specified class.

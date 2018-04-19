@@ -32,7 +32,7 @@ class SessionStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testSessionGetBagException()
 	{
-		$this->setExpectedException('InvalidArgumentException');
+		$this->expectException('InvalidArgumentException');
 		$session = $this->getSession();
 		$session->getBag('doesNotExist');
 	}

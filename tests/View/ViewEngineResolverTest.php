@@ -14,7 +14,7 @@ class ViewEngineResolverTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testResolverThrowsExceptionOnUnknownEngine()
 	{
-		$this->setExpectedException('InvalidArgumentException');
+		$this->expectException('InvalidArgumentException');
 		$resolver = new Illuminate\View\Engines\EngineResolver;
 		$resolver->resolve('foo');
 	}

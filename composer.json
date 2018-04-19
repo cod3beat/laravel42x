@@ -69,8 +69,7 @@
     "require-dev": {
         "pda/pheanstalk": "~2.1",
         "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "~5.0",
-        "brianium/paratest": "^0.15.0"
+        "phpunit/phpunit": "^6.0"
     },
     "autoload": {
         "classmap": [

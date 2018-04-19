@@ -126,7 +126,7 @@ class FoundationApplicationTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testHandleRespectsCatchArgument()
 	{
-		$this->setExpectedException('Exception');
+		$this->expectException('Exception');
 		$app = new Application;
 		$app['router'] = $router = m::mock('StdClass');
 		$router->shouldReceive('dispatch')->andThrow('Exception');
