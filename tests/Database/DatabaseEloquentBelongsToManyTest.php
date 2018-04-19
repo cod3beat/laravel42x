@@ -99,11 +99,12 @@ class DatabaseEloquentBelongsToManyTest extends \L4\Tests\BackwardCompatibleTest
 		$models = $relation->match(array($model1, $model2, $model3), new Collection(array($result1, $result2, $result3)), 'foo');
 
 		$this->assertEquals(1, $models[0]->foo[0]->pivot->user_id);
-		$this->assertEquals(1, count($models[0]->foo));
+		$this->assertCount(1, $models[0]->foo);
+
 		$this->assertEquals(2, $models[1]->foo[0]->pivot->user_id);
 		$this->assertEquals(2, $models[1]->foo[1]->pivot->user_id);
-		$this->assertEquals(2, count($models[1]->foo));
-		$this->assertEquals(0, count($models[2]->foo));
+        $this->assertEquals(2, count($models[1]->foo));
+        $this->assertEmpty($models[2]->foo);
 	}
 
 
