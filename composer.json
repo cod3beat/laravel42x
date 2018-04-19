@@ -84,7 +84,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/paratest -p 4 --colors -c phpunit.xml --runner WrapperRunner"
+        "test": "./vendor/bin/phpunit"
     },
     "extra": {
         "branch-alias": {
