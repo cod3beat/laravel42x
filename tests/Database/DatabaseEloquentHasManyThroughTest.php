@@ -62,7 +62,7 @@ class DatabaseEloquentHasManyThroughTest extends \L4\Tests\BackwardCompatibleTes
 		$this->assertEquals(2, $models[1]->foo[0]->country_id);
 		$this->assertEquals(2, $models[1]->foo[1]->country_id);
 		$this->assertEquals(2, count($models[1]->foo));
-		$this->assertEquals(0, count($models[2]->foo));
+		$this->assertEmpty($models[2]->foo);
 	}
 
 
