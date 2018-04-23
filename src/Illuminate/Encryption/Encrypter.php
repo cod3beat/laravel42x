@@ -52,7 +52,12 @@ class Encrypter {
         }
 	}
 
-    private static function supported($key, $cipher)
+    /**
+     * @param $key
+     * @param $cipher
+     * @return bool
+     */
+    private static function supported($key, $cipher): bool
     {
         $length = mb_strlen($key, '8bit');
         return ($cipher === 'AES-128-CBC' && $length === 16) ||
