@@ -17,7 +17,7 @@ class Encrypter {
 	 *
 	 * @var string
 	 */
-	protected $cipher = MCRYPT_RIJNDAEL_128;
+	protected $cipher;
 
 	/**
 	 * The mode used for encryption.
@@ -33,13 +33,13 @@ class Encrypter {
 	 */
 	protected $block = 16;
 
-	/**
-	 * Create a new encrypter instance.
-	 *
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function __construct($key)
+    /**
+     * Create a new encrypter instance.
+     *
+     * @param  string $key
+     * @param string $cipher
+     */
+	public function __construct($key, $cipher = 'AES-256-CBC')
 	{
 		$this->key = (string) $key;
 	}
