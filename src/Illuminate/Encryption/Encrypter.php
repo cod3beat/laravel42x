@@ -20,13 +20,6 @@ class Encrypter {
 	protected $cipher;
 
 	/**
-	 * The mode used for encryption.
-	 *
-	 * @var string
-	 */
-	protected $mode = MCRYPT_MODE_CBC;
-
-	/**
 	 * The block size of the cipher.
 	 *
 	 * @var int
