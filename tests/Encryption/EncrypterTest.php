@@ -16,7 +16,6 @@ class EncrypterTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testEncryptionWithCustomCipher()
 	{
 		$e = $this->getEncrypter();
-		$e->setCipher(MCRYPT_RIJNDAEL_256);
 		$this->assertNotEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
 		$encrypted = $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 		$this->assertEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->decrypt($encrypted));
@@ -24,7 +23,7 @@ class EncrypterTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	/**
 	 * @expectedException Illuminate\Encryption\DecryptException
-	 * @expectedExceptionMessage Invalid data.
+	 * @expectedExceptionMessage The payload is invalid.
 	 */
 	public function testExceptionThrownWhenPayloadIsInvalid()
 	{
