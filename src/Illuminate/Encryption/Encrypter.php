@@ -38,13 +38,28 @@ class Encrypter {
      *
      * @param  string $key
      * @param string $cipher
+     *
+     * @throws \Exception
      */
 	public function __construct($key, $cipher = 'AES-256-CBC')
 	{
-		$this->key = (string) $key;
+        $key = (string) $key;
+        if (static::supported($key, $cipher)) {
+            $this->key = $key;
+            $this->cipher = $cipher;
+        } else {
+            throw new \RuntimeException('The only supported ciphers are AES-128-CBC and AES-256-CBC with the correct key lengths.');
+        }
 	}
 
-	/**
+    private static function supported($key, $cipher)
+    {
+        $length = mb_strlen($key, '8bit');
+        return ($cipher === 'AES-128-CBC' && $length === 16) ||
+            ($cipher === 'AES-256-CBC' && $length === 32);
+    }
+
+    /**
 	 * Encrypt the given value.
 	 *
 	 * @param  string  $value
