@@ -248,27 +248,6 @@ class Encrypter {
     }
 
 	/**
-	 * Run the mcrypt decryption routine for the value.
-	 *
-	 * @param  string  $value
-	 * @param  string  $iv
-	 * @return string
-	 *
-	 * @throws \Exception
-	 */
-	protected function mcryptDecrypt($value, $iv)
-	{
-		try
-		{
-			return mcrypt_decrypt($this->cipher, $this->key, $value, $this->mode, $iv);
-		}
-		catch (\Exception $e)
-		{
-			throw new DecryptException($e->getMessage());
-		}
-	}
-
-	/**
 	 * Add PKCS7 padding to a given value.
 	 *
 	 * @param  string  $value
