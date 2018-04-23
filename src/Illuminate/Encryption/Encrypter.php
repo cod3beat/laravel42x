@@ -19,13 +19,6 @@ class Encrypter {
 	 */
 	protected $cipher;
 
-	/**
-	 * The block size of the cipher.
-	 *
-	 * @var int
-	 */
-	protected $block = 16;
-
     /**
      * Create a new encrypter instance.
      *
