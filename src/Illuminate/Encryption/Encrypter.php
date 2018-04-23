@@ -72,8 +72,8 @@ class Encrypter {
      * @return string
      * @throws \Exception
      */
-	public function encrypt($value, $serialize = true)
-	{
+	public function encrypt($value, $serialize = true): string
+    {
         $iv = random_bytes(openssl_cipher_iv_length($this->cipher));
 
         // First we will encrypt the value using OpenSSL. After this is encrypted we
@@ -132,12 +132,12 @@ class Encrypter {
      * Decrypt the given value.
      *
      * @param  string $payload
+     * @param bool $unserialize
      * @return string
      *
      * @throws \Exception
-     * @throws \Illuminate\Encryption\DecryptException
      */
-	public function decrypt($payload)
+	public function decrypt($payload, $unserialize = true)
 	{
         $payload = $this->getJsonPayload($payload);
 
