@@ -102,6 +102,18 @@ class Encrypter {
         return base64_encode($json);
 	}
 
+    /**
+     * Encrypt a string without serialization.
+     *
+     * @param  string $value
+     * @return string
+     * @throws \Exception
+     */
+    public function encryptString($value): string
+    {
+        return $this->encrypt($value, false);
+    }
+
 	/**
 	 * Pad and use mcrypt on the given value and input vector.
 	 *
@@ -116,24 +128,33 @@ class Encrypter {
 		return mcrypt_encrypt($this->cipher, $this->key, $value, $this->mode, $iv);
 	}
 
-	/**
-	 * Decrypt the given value.
-	 *
-	 * @param  string  $payload
-	 * @return string
-	 */
+    /**
+     * Decrypt the given value.
+     *
+     * @param  string $payload
+     * @return string
+     *
+     * @throws \Exception
+     * @throws \Illuminate\Encryption\DecryptException
+     */
 	public function decrypt($payload)
 	{
-		$payload = $this->getJsonPayload($payload);
+        $payload = $this->getJsonPayload($payload);
 
-		// We'll go ahead and remove the PKCS7 padding from the encrypted value before
-		// we decrypt it. Once we have the de-padded value, we will grab the vector
-		// and decrypt the data, passing back the unserialized from of the value.
-		$value = base64_decode($payload['value']);
+        $iv = base64_decode($payload['iv']);
 
-		$iv = base64_decode($payload['iv']);
+        // Here we will decrypt the value. If we are able to successfully decrypt it
+        // we will then unserialize it and return it out to the caller. If we are
+        // unable to decrypt this value we will throw out an exception message.
+        $decrypted = \openssl_decrypt(
+            $payload['value'], $this->cipher, $this->key, 0, $iv
+        );
 
-		return unserialize($this->stripPadding($this->mcryptDecrypt($value, $iv)));
+        if ($decrypted === false) {
+            throw new DecryptException('Could not decrypt the data.');
+        }
+
+        return $unserialize ? unserialize($decrypted) : $decrypted;
 	}
 
 	/**
