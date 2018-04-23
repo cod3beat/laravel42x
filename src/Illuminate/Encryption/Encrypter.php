@@ -157,6 +157,18 @@ class Encrypter {
         return $unserialize ? unserialize($decrypted) : $decrypted;
 	}
 
+    /**
+     * Decrypt the given string without unserialization.
+     *
+     * @param  string $payload
+     * @return string
+     * @throws \Exception
+     */
+    public function decryptString($payload): string
+    {
+        return $this->decrypt($payload, false);
+    }
+
 	/**
 	 * Run the mcrypt decryption routine for the value.
 	 *
