@@ -116,7 +116,7 @@ class Encrypter {
 
 	/**
 	 * Pad and use mcrypt on the given value and input vector.
-	 *
+	 * @todo who uses this?
 	 * @param  string  $value
 	 * @param  string  $iv
 	 * @return string
@@ -169,6 +169,89 @@ class Encrypter {
         return $this->decrypt($payload, false);
     }
 
+    /**
+     * Create a MAC for the given value.
+     *
+     * @param  string  $iv
+     * @param  string  $value
+     * @return string
+     */
+    protected function hash($iv, $value): string
+    {
+        return hash_hmac('sha256', $iv.$value, $this->key);
+    }
+
+    /**
+     * Get the JSON array from the given payload.
+     *
+     * @param  string $payload
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \Illuminate\Encryption\DecryptException
+     */
+    protected function getJsonPayload($payload): array
+    {
+        $payload = json_decode(base64_decode($payload), true);
+
+        // If the payload is not valid JSON or does not have the proper keys set we will
+        // assume it is invalid and bail out of the routine since we will not be able
+        // to decrypt the given value. We'll also check the MAC for this encryption.
+        if (! $this->validPayload($payload)) {
+            throw new DecryptException('The payload is invalid.');
+        }
+
+        if (! $this->validMac($payload)) {
+            throw new DecryptException('The MAC is invalid.');
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Verify that the encryption payload is valid.
+     *
+     * @param  mixed  $payload
+     * @return bool
+     */
+    protected function validPayload($payload): bool
+    {
+        return \is_array($payload) && isset(
+                $payload['iv'], $payload['value'], $payload['mac']
+            );
+    }
+
+    /**
+     * Determine if the MAC for the given payload is valid.
+     *
+     * @param  array  $payload
+     * @return bool
+     *
+     * @throws \RuntimeException
+     */
+    protected function validMac(array $payload): bool
+    {
+        $calculated = $this->calculateMac($payload, $bytes = random_bytes(16));
+
+        return hash_equals(
+            hash_hmac('sha256', $payload['mac'], $bytes, true), $calculated
+        );
+    }
+
+    /**
+     * Calculate the hash of the given payload.
+     *
+     * @param  array  $payload
+     * @param  string  $bytes
+     * @return string
+     */
+    protected function calculateMac($payload, $bytes): string
+    {
+        return hash_hmac(
+            'sha256', $this->hash($payload['iv'], $payload['value']), $bytes, true
+        );
+    }
+
 	/**
 	 * Run the mcrypt decryption routine for the value.
 	 *
@@ -188,68 +271,6 @@ class Encrypter {
 		{
 			throw new DecryptException($e->getMessage());
 		}
-	}
-
-	/**
-	 * Get the JSON array from the given payload.
-	 *
-	 * @param  string  $payload
-	 * @return array
-	 *
-	 * @throws \Illuminate\Encryption\DecryptException
-	 */
-	protected function getJsonPayload($payload)
-	{
-		$payload = json_decode(base64_decode($payload), true);
-
-		// If the payload is not valid JSON or does not have the proper keys set we will
-		// assume it is invalid and bail out of the routine since we will not be able
-		// to decrypt the given value. We'll also check the MAC for this encryption.
-		if ( ! $payload || $this->invalidPayload($payload))
-		{
-			throw new DecryptException('Invalid data.');
-		}
-
-		if ( ! $this->validMac($payload))
-		{
-			throw new DecryptException('MAC is invalid.');
-		}
-
-		return $payload;
-	}
-
-	/**
-	 * Determine if the MAC for the given payload is valid.
-	 *
-	 * @param  array  $payload
-	 * @return bool
-	 *
-	 * @throws \RuntimeException
-	 */
-	protected function validMac(array $payload)
-	{
-		if ( ! function_exists('openssl_random_pseudo_bytes'))
-		{
-			throw new \RuntimeException('OpenSSL extension is required.');
-		}
-
-		$bytes = (new SecureRandom)->nextBytes(16);
-
-		$calcMac = hash_hmac('sha256', $this->hash($payload['iv'], $payload['value']), $bytes, true);
-
-		return StringUtils::equals(hash_hmac('sha256', $payload['mac'], $bytes, true), $calcMac);
-	}
-
-	/**
-	 * Create a MAC for the given value.
-	 *
-	 * @param  string  $iv
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function hash($iv, $value)
-	{
-		return hash_hmac('sha256', $iv.$value, $this->key);
 	}
 
 	/**
