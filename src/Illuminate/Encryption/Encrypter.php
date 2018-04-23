@@ -228,7 +228,7 @@ class Encrypter {
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -248,83 +248,6 @@ class Encrypter {
     }
 
 	/**
-	 * Add PKCS7 padding to a given value.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function addPadding($value)
-	{
-		$pad = $this->block - (strlen($value) % $this->block);
-
-		return $value.str_repeat(chr($pad), $pad);
-	}
-
-	/**
-	 * Remove the padding from the given value.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	protected function stripPadding($value)
-	{
-		$pad = ord($value[($len = strlen($value)) - 1]);
-
-		return $this->paddingIsValid($pad, $value) ? substr($value, 0, $len - $pad) : $value;
-	}
-
-	/**
-	 * Determine if the given padding for a value is valid.
-	 *
-	 * @param  string  $pad
-	 * @param  string  $value
-	 * @return bool
-	 */
-	protected function paddingIsValid($pad, $value)
-	{
-		$beforePad = strlen($value) - $pad;
-
-		return substr($value, $beforePad) == str_repeat(substr($value, -1), $pad);
-	}
-
-	/**
-	 * Verify that the encryption payload is valid.
-	 *
-	 * @param  array|mixed  $data
-	 * @return bool
-	 */
-	protected function invalidPayload($data)
-	{
-		return ! is_array($data) || ! isset($data['iv']) || ! isset($data['value']) || ! isset($data['mac']);
-	}
-
-	/**
-	 * Get the IV size for the cipher.
-	 *
-	 * @return int
-	 */
-	protected function getIvSize()
-	{
-		return mcrypt_get_iv_size($this->cipher, $this->mode);
-	}
-
-	/**
-	 * Get the random data source available for the OS.
-	 *
-	 * @return int
-	 */
-	protected function getRandomizer()
-	{
-		if (defined('MCRYPT_DEV_URANDOM')) return MCRYPT_DEV_URANDOM;
-
-		if (defined('MCRYPT_DEV_RANDOM')) return MCRYPT_DEV_RANDOM;
-
-		mt_srand();
-
-		return MCRYPT_RAND;
-	}
-
-	/**
 	 * Set the encryption key.
 	 *
 	 * @param  string  $key
@@ -333,42 +256,6 @@ class Encrypter {
 	public function setKey($key)
 	{
 		$this->key = (string) $key;
-	}
-
-	/**
-	 * Set the encryption cipher.
-	 *
-	 * @param  string  $cipher
-	 * @return void
-	 */
-	public function setCipher($cipher)
-	{
-		$this->cipher = $cipher;
-
-		$this->updateBlockSize();
-	}
-
-	/**
-	 * Set the encryption mode.
-	 *
-	 * @param  string  $mode
-	 * @return void
-	 */
-	public function setMode($mode)
-	{
-		$this->mode = $mode;
-
-		$this->updateBlockSize();
-	}
-
-	/**
-	 * Update the block size for the current cipher and mode.
-	 *
-	 * @return void
-	 */
-	protected function updateBlockSize()
-	{
-		$this->block = mcrypt_get_iv_size($this->cipher, $this->mode);
 	}
 
 }
