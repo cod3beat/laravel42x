@@ -65,23 +65,41 @@ class Encrypter {
     }
 
     /**
-	 * Encrypt the given value.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	public function encrypt($value)
+     * Encrypt the given value.
+     *
+     * @param  string $value
+     * @param bool $serialize
+     * @return string
+     * @throws \Exception
+     */
+	public function encrypt($value, $serialize = true)
 	{
-		$iv = mcrypt_create_iv($this->getIvSize(), $this->getRandomizer());
+        $iv = random_bytes(16);
 
-		$value = base64_encode($this->padAndMcrypt($value, $iv));
+        // First we will encrypt the value using OpenSSL. After this is encrypted we
+        // will proceed to calculating a MAC for the encrypted value so that this
+        // value can be verified later as not having been changed by the users.
+        $value = \openssl_encrypt(
+            $serialize ? serialize($value) : $value,
+            $this->cipher, $this->key, 0, $iv
+        );
 
-		// Once we have the encrypted value we will go ahead base64_encode the input
-		// vector and create the MAC for the encrypted value so we can verify its
-		// authenticity. Then, we'll JSON encode the data in a "payload" array.
-		$mac = $this->hash($iv = base64_encode($iv), $value);
+        if ($value === false) {
+            throw new \RuntimeException('Could not encrypt the data.');
+        }
 
-		return base64_encode(json_encode(compact('iv', 'value', 'mac')));
+        // Once we have the encrypted value we will go ahead base64_encode the input
+        // vector and create the MAC for the encrypted value so we can verify its
+        // authenticity. Then, we'll JSON encode the data in a "payload" array.
+        $mac = $this->hash($iv = base64_encode($iv), $value);
+
+        $json = json_encode(compact('iv', 'value', 'mac'));
+
+        if (! \is_string($json)) {
+            throw new \RuntimeException('Could not encrypt the data.');
+        }
+
+        return base64_encode($json);
 	}
 
 	/**
