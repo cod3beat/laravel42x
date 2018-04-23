@@ -216,9 +216,8 @@ class Encrypter {
      */
     protected function validPayload($payload): bool
     {
-        return \is_array($payload) && isset(
-                $payload['iv'], $payload['value'], $payload['mac']
-            );
+        return \is_array($payload) && isset($payload['iv'], $payload['value'], $payload['mac']) &&
+            \strlen(base64_decode($payload['iv'], true)) === openssl_cipher_iv_length($this->cipher);
     }
 
     /**
