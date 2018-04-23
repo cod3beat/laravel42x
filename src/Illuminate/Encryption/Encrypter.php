@@ -114,20 +114,6 @@ class Encrypter {
         return $this->encrypt($value, false);
     }
 
-	/**
-	 * Pad and use mcrypt on the given value and input vector.
-	 * @todo who uses this?
-	 * @param  string  $value
-	 * @param  string  $iv
-	 * @return string
-	 */
-	protected function padAndMcrypt($value, $iv)
-	{
-		$value = $this->addPadding(serialize($value));
-
-		return mcrypt_encrypt($this->cipher, $this->key, $value, $this->mode, $iv);
-	}
-
     /**
      * Decrypt the given value.
      *
@@ -235,6 +221,16 @@ class Encrypter {
         return hash_equals(
             hash_hmac('sha256', $payload['mac'], $bytes, true), $calculated
         );
+    }
+
+    /**
+     * Get the encryption key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**
