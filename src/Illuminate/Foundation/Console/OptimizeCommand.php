@@ -3,7 +3,7 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Illuminate\View\Engines\CompilerEngine;
-use ClassPreloader\Command\PreCompileCommand;
+use ClassPreloader\Console\PreCompileCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 class OptimizeCommand extends Command {
