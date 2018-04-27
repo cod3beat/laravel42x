@@ -212,19 +212,17 @@ class Str {
 	 */
 	public static function random($length = 16)
 	{
-		if (function_exists('openssl_random_pseudo_bytes'))
-		{
-			$bytes = openssl_random_pseudo_bytes($length * 2);
+        $string = '';
 
-			if ($bytes === false)
-			{
-				throw new \RuntimeException('Unable to generate random string.');
-			}
+        while (($len = strlen($string)) < $length) {
+            $size = $length - $len;
 
-			return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
-		}
+            $bytes = random_bytes($size);
 
-		return static::quickRandom($length);
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        }
+
+        return $string;
 	}
 
 	/**
