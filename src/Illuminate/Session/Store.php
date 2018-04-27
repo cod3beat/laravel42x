@@ -158,9 +158,9 @@ class Store implements SessionInterface {
 	 * @param  string  $id
 	 * @return bool
 	 */
-	public function isValidId($id)
-	{
-		return is_string($id) && preg_match('/^[a-f0-9]{40}$/', $id);
+	public function isValidId($id): bool
+    {
+        return \is_string($id) && ctype_alnum($id) && \strlen($id) === 40;
 	}
 
 	/**
