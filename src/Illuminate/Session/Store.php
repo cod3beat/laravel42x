@@ -1,5 +1,6 @@
 <?php namespace Illuminate\Session;
 
+use Illuminate\Support\Str;
 use SessionHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
@@ -168,9 +169,9 @@ class Store implements SessionInterface {
 	 *
 	 * @return string
 	 */
-	protected function generateSessionId()
-	{
-		return sha1(uniqid('', true).str_random(25).microtime(true));
+	protected function generateSessionId(): string
+    {
+        return Str::random(40);
 	}
 
 	/**
