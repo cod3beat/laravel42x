@@ -1,5 +1,6 @@
 <?php
 
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Events\Dispatcher;
@@ -14,7 +15,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
-	public function tearDown()
+    /**
+     * @var UserProviderInterface|ObjectProphecy
+     */
+    private $userProvider;
+    /**
+     * @var Store|ObjectProphecy
+     */
+    private $session;
+    /**
+     * @var Request|ObjectProphecy
+     */
+    private $request;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->userProvider = $this->prophesize(UserProviderInterface::class);
+        $this->session = $this->prophesize(Store::class);
+        $this->request = $this->prophesize(Request::class);
+    }
+
+    public function tearDown()
 	{
 		m::close();
 	}
@@ -22,6 +45,10 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testBasicReturnsNullOnValidAttempt()
 	{
+	    $guard = new Guard();
+
+
+
 		list($session, $provider, $request, $cookie) = $this->getMocks();
 		$guard = m::mock('Illuminate\Auth\Guard[check,attempt]', array($provider, $session));
 		$guard->shouldReceive('check')->once()->andReturn(false);
