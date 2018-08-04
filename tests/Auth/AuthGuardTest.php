@@ -162,14 +162,14 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testLoginStoresIdentifierInSession()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$mock = $this->getMock(Guard::class, array('getName'), array($provider, $session, $request));
-		$user = m::mock(UserInterface::class);
-		$mock->expects($this->once())->method('getName')->will($this->returnValue('foo'));
-		$user->shouldReceive('getAuthIdentifier')->once()->andReturn('bar');
-		$mock->getSession()->shouldReceive('put')->with('foo', 'bar')->once();
-		$session->shouldReceive('migrate')->once();
-		$mock->login($user);
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+		$user = $this->prophesize(UserInterface::class);
+		$user->getAuthIdentifier()->willReturn('foo');
+
+		$this->session->migrate(true)->shouldBeCalledTimes(1);
+		$this->session->put($guard->getName(), 'foo')->shouldBeCalledTimes(1);
+
+		$guard->login($user->reveal());
 	}
 
 
