@@ -148,21 +148,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$guard->attempt(['foo']);
 	}
 
-
-	public function testAttemptReturnsUserInterface()
-	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = $this->getMock(Guard::class, array('login'), array($provider, $session, $request));
-		$guard->setDispatcher($events = m::mock(Dispatcher::class));
-		$events->shouldReceive('fire')->once()->with('auth.attempt', array(array('foo'), false, true));
-		$user = $this->getMock(UserInterface::class);
-		$guard->getProvider()->shouldReceive('retrieveByCredentials')->once()->andReturn($user);
-		$guard->getProvider()->shouldReceive('validateCredentials')->with($user, array('foo'))->andReturn(true);
-		$guard->expects($this->once())->method('login')->with($this->equalTo($user));
-		$this->assertTrue($guard->attempt(array('foo')));
-	}
-
-
 	public function testAttemptReturnsFalseIfUserNotGiven()
 	{
 		$mock = $this->getGuard();
