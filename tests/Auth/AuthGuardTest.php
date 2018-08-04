@@ -136,14 +136,16 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-
 	public function testAttemptCallsRetrieveByCredentials()
 	{
-		$guard = $this->getGuard();
-		$guard->setDispatcher($events = m::mock(Dispatcher::class));
-		$events->shouldReceive('fire')->once()->with('auth.attempt', array(array('foo'), false, true));
-		$guard->getProvider()->shouldReceive('retrieveByCredentials')->once()->with(array('foo'));
-		$guard->attempt(array('foo'));
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $events = $this->prophesize(Dispatcher::class);
+		$guard->setDispatcher($events->reveal());
+
+		$events->fire('auth.attempt', [['foo'], false, true])->shouldBeCalledTimes(1);
+		$this->userProvider->retrieveByCredentials(['foo'])->shouldBeCalledTimes(1);
+
+		$guard->attempt(['foo']);
 	}
 
 
