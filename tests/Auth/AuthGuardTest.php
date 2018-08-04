@@ -186,12 +186,23 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testIsAuthedReturnsTrueWhenUserIsNotNull()
 	{
-		$user = m::mock(UserInterface::class);
-		$mock = $this->getGuard();
-		$mock->setUser($user);
-		$this->assertTrue($mock->check());
-		$this->assertFalse($mock->guest());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $user = $this->prophesize(UserInterface::class);
+
+        $guard->setUser($user->reveal());
+
+        $this->assertTrue($guard->check());
 	}
+
+    public function testIsNotGuessWhenUserIsNotNull()
+    {
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $user = $this->prophesize(UserInterface::class);
+
+        $guard->setUser($user->reveal());
+
+        $this->assertFalse($guard->guest());
+    }
 
 
 	public function testIsAuthedReturnsFalseWhenUserIsNull()
