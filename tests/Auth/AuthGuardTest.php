@@ -159,7 +159,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertFalse($guard->attempt(array('foo')));
 	}
 
-
 	public function testLoginStoresIdentifierInSession()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
@@ -172,21 +171,18 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$guard->login($user->reveal());
 	}
 
-
 	public function testLoginFiresLoginEvent()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$mock = $this->getMock(Guard::class, array('getName'), array($provider, $session, $request));
-		$mock->setDispatcher($events = m::mock(Dispatcher::class));
-		$user = m::mock(UserInterface::class);
-		$events->shouldReceive('fire')->once()->with('auth.login', array($user, false));
-		$mock->expects($this->once())->method('getName')->will($this->returnValue('foo'));
-		$user->shouldReceive('getAuthIdentifier')->once()->andReturn('bar');
-		$mock->getSession()->shouldReceive('put')->with('foo', 'bar')->once();
-		$session->shouldReceive('migrate')->once();
-		$mock->login($user);
-	}
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $events = $this->prophesize(Dispatcher::class);
+        $guard->setDispatcher($events->reveal());
+        $user = $this->prophesize(UserInterface::class);
+        $user->getAuthIdentifier()->willReturn('foo');
 
+        $events->fire('auth.login', [$user, false])->shouldBeCalledTimes(1);
+
+		$guard->login($user->reveal());
+	}
 
 	public function testIsAuthedReturnsTrueWhenUserIsNotNull()
 	{
