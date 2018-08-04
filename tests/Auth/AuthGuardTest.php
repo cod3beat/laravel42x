@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpParamsInspection */
 
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,18 +45,24 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testBasicReturnsNullOnValidAttempt()
 	{
-	    $guard = new Guard();
+	    $guard = new Guard(
+	        $this->userProvider->reveal(),
+            $this->session->reveal(),
+            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+        );
+	    $this->userProvider
+            ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
+            ->willReturn($this->prophesize(UserInterface::class)->reveal());
+        $this->userProvider
+            ->validateCredentials(
+                \Prophecy\Argument::type(UserInterface::class),
+                ['email' => 'foo@bar.com', 'password' => 'secret']
+            )->willReturn(true);
 
+        $guard->basic('email', $request);
 
-
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = m::mock('Illuminate\Auth\Guard[check,attempt]', array($provider, $session));
-		$guard->shouldReceive('check')->once()->andReturn(false);
-		$guard->shouldReceive('attempt')->once()->with(array('email' => 'foo@bar.com', 'password' => 'secret'))->andReturn(true);
-		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'));
-
-		$guard->basic('email', $request);
-	}
+        $this->assertTrue($guard->check());
+    }
 
 
 	public function testBasicReturnsNullWhenAlreadyLoggedIn()
