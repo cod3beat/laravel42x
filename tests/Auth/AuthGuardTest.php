@@ -94,15 +94,23 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertNull($guard->basic('email', $request));
 	}
 
-
 	public function testBasicReturnsResponseOnFailure()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = m::mock('Illuminate\Auth\Guard[check,attempt]', array($provider, $session));
-		$guard->shouldReceive('check')->once()->andReturn(false);
-		$guard->shouldReceive('attempt')->once()->with(array('email' => 'foo@bar.com', 'password' => 'secret'))->andReturn(false);
-		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'));
-		$response = $guard->basic('email', $request);
+        $guard = new Guard(
+            $this->userProvider->reveal(),
+            $this->session->reveal(),
+            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+        );
+        $this->userProvider
+            ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
+            ->willReturn($this->prophesize(UserInterface::class)->reveal());
+        $this->userProvider
+            ->validateCredentials(
+                \Prophecy\Argument::type(UserInterface::class),
+                ['email' => 'foo@bar.com', 'password' => 'secret']
+            )->willReturn(false);
+
+        $response = $guard->basic('email', $request);
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertEquals(401, $response->getStatusCode());
