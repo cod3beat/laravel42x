@@ -42,7 +42,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		m::close();
 	}
 
-
 	public function testBasicReturnsNullOnValidAttempt()
 	{
 	    $guard = new Guard(
@@ -59,19 +58,39 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
                 ['email' => 'foo@bar.com', 'password' => 'secret']
             )->willReturn(true);
 
+        $this->assertNull($guard->basic('email', $request));
+    }
+
+    public function testUserIsAuthenticatedWhenBasicAttemptIsValid()
+    {
+        $guard = new Guard(
+            $this->userProvider->reveal(),
+            $this->session->reveal(),
+            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+        );
+        $this->userProvider
+            ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
+            ->willReturn($this->prophesize(UserInterface::class)->reveal());
+        $this->userProvider
+            ->validateCredentials(
+                \Prophecy\Argument::type(UserInterface::class),
+                ['email' => 'foo@bar.com', 'password' => 'secret']
+            )->willReturn(true);
+
         $guard->basic('email', $request);
 
         $this->assertTrue($guard->check());
     }
 
-
 	public function testBasicReturnsNullWhenAlreadyLoggedIn()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = m::mock('Illuminate\Auth\Guard[check]', array($provider, $session));
+        $guard = new Guard(
+            $this->userProvider->reveal(),
+            $this->session->reveal(),
+            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+        );
 		$guard->shouldReceive('check')->once()->andReturn(true);
 		$guard->shouldReceive('attempt')->never();
-		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'));
 
 		$guard->basic('email', $request);
 	}
