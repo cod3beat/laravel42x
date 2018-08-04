@@ -167,7 +167,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$user->getAuthIdentifier()->willReturn('foo');
 
 		$this->session->migrate(true)->shouldBeCalledTimes(1);
-		$this->session->put($guard->getName(), 'foo')->shouldBeCalledTimes(1);
+		$this->session->put('login_82e5d2c56bdd0811318f0cf078b78bfc', 'foo')->shouldBeCalledTimes(1);
 
 		$guard->login($user->reveal());
 	}
