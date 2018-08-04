@@ -89,10 +89,9 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
             $this->session->reveal(),
             $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
         );
-		$guard->shouldReceive('check')->once()->andReturn(true);
-		$guard->shouldReceive('attempt')->never();
+        $guard->login($this->prophesize(UserInterface::class)->reveal());
 
-		$guard->basic('email', $request);
+		$this->assertNull($guard->basic('email', $request));
 	}
 
 
