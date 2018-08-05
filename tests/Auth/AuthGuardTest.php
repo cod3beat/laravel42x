@@ -211,13 +211,14 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->assertFalse($guard->check());
 	}
 
-
 	public function testUserMethodReturnsCachedUser()
 	{
-		$user = m::mock(UserInterface::class);
-		$mock = $this->getGuard();
-		$mock->setUser($user);
-		$this->assertEquals($user, $mock->user());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $user = $this->prophesize(UserInterface::class);
+
+		$guard->setUser($user->reveal());
+
+		$this->assertEquals($user->reveal(), $guard->user());
 	}
 
 
