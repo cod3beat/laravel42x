@@ -273,19 +273,18 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->assertNull($guard->user());
     }
 
-
 	public function testLogoutFiresLogoutEvent()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$mock = $this->getMock(Guard::class, array('clearUserDataFromStorage'), array($provider, $session, $request));
-		$mock->expects($this->once())->method('clearUserDataFromStorage');
-		$mock->setDispatcher($events = m::mock(Dispatcher::class));
-		$user = m::mock(UserInterface::class);
-		$user->shouldReceive('setRememberToken')->once();
-		$provider->shouldReceive('updateRememberToken')->once();
-		$mock->setUser($user);
-		$events->shouldReceive('fire')->once()->with('auth.logout', array($user));
-		$mock->logout();
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $user = $this->prophesize(UserInterface::class);
+        $guard->setUser($user->reveal());
+        $cookieJar = $this->prophesize(CookieJar::class);
+        $guard->setCookieJar($cookieJar->reveal());
+        $guard->setDispatcher(($dispatcher = $this->prophesize(Dispatcher::class))->reveal());
+
+        $dispatcher->fire('auth.logout', [$user])->shouldBeCalledTimes(1);
+
+        $guard->logout();
 	}
 
 
