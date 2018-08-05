@@ -304,13 +304,16 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testLoginUsingIdStoresInSessionAndLogsInWithUser()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = $this->getMock(Guard::class, array('login', 'user'), array($provider, $session, $request));
-		$guard->getSession()->shouldReceive('put')->once()->with($guard->getName(), 10);
-		$guard->getProvider()->shouldReceive('retrieveById')->once()->with(10)->andReturn($user = m::mock('Illuminate\Auth\UserInterface'));
-		$guard->expects($this->once())->method('login')->with($this->equalTo($user), $this->equalTo(false))->will($this->returnValue($user));
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $this->userProvider
+            ->retrieveById(10)
+            ->willReturn(($user = $this->prophesize(UserInterface::class))->reveal());
+        $user->getAuthIdentifier()->willReturn(10);
 
-		$this->assertEquals($user, $guard->loginUsingId(10));
+        $this->session->put('login_82e5d2c56bdd0811318f0cf078b78bfc', 10)->shouldBeCalledTimes(2);
+        $this->session->migrate(true)->shouldBeCalledTimes(1);
+
+		$guard->loginUsingId(10);
 	}
 
 
