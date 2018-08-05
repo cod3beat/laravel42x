@@ -270,23 +270,20 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $guard->logout();
 	}
 
-
 	public function testLoginMethodQueuesCookieWhenRemembering()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = new Illuminate\Auth\Guard($provider, $session, $request);
-		$guard->setCookieJar($cookie);
-		$foreverCookie = new Symfony\Component\HttpFoundation\Cookie($guard->getRecallerName(), 'foo');
-		$cookie->shouldReceive('forever')->once()->with($guard->getRecallerName(), 'foo|recaller')->andReturn($foreverCookie);
-		$cookie->shouldReceive('queue')->once()->with($foreverCookie);
-		$guard->getSession()->shouldReceive('put')->once()->with($guard->getName(), 'foo');
-		$session->shouldReceive('migrate')->once();
-		$user = m::mock(UserInterface::class);
-		$user->shouldReceive('getAuthIdentifier')->andReturn('foo');
-		$user->shouldReceive('getRememberToken')->andReturn('recaller');
-		$user->shouldReceive('setRememberToken')->never();
-		$provider->shouldReceive('updateRememberToken')->never();
-		$guard->login($user, true);
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $guard->setCookieJar(($cookieJar = $this->prophesize(CookieJar::class))->reveal());
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getAuthIdentifier()->willReturn('foo');
+        $user->getRememberToken()->willReturn('recaller');
+
+        $foreverCookie = new Symfony\Component\HttpFoundation\Cookie($guard->getRecallerName(), 'foo');
+        $cookieJar->forever($guard->getRecallerName(), 'foo|recaller')->willReturn($foreverCookie);
+        $cookieJar->queue($foreverCookie)->shouldBeCalledTimes(1);
+
+        $guard->login($user->reveal(), true);
 	}
 
 
