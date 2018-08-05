@@ -174,8 +174,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testLoginFiresLoginEvent()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $events = $this->prophesize(Dispatcher::class);
-        $guard->setDispatcher($events->reveal());
+        $guard->setDispatcher(($events = $this->prophesize(Dispatcher::class))->reveal());
         $user = $this->prophesize(UserInterface::class);
         $user->getAuthIdentifier()->willReturn('foo');
 
