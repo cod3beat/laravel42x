@@ -134,8 +134,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testAttemptCallsRetrieveByCredentials()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $events = $this->prophesize(Dispatcher::class);
-		$guard->setDispatcher($events->reveal());
+        $guard->setDispatcher(($events = $this->prophesize(Dispatcher::class))->reveal());
 
 		$events->fire('auth.attempt', [['foo'], false, true])->shouldBeCalledTimes(1);
 		$this->userProvider->retrieveByCredentials(['foo'])->shouldBeCalledTimes(1);
@@ -146,8 +145,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testAttemptReturnsFalseIfUserNotGiven()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $events = $this->prophesize(Dispatcher::class);
-        $guard->setDispatcher($events->reveal());
+        $guard->setDispatcher(($events = $this->prophesize(Dispatcher::class))->reveal());
 
         $this->userProvider->retrieveByCredentials(['foo'])->willReturn(null);
 
