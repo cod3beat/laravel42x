@@ -316,6 +316,17 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$guard->loginUsingId(10);
 	}
 
+    public function testLoginUsingIdStoresTheUser()
+    {
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+
+        $this->userProvider
+            ->retrieveById(10)
+            ->willReturn(($user = $this->prophesize(UserInterface::class))->reveal());
+
+        $this->assertEquals($user->reveal(), $guard->loginUsingId(10));
+    }
+
 
 	public function testUserUsesRememberCookieIfItExists()
 	{
