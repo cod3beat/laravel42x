@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Auth\Guard;
 use Illuminate\Auth\UserInterface;
-use Illuminate\Encryption\Encrypter;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Auth\UserProviderInterface;
 use Illuminate\Session\Store;
@@ -32,11 +31,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->userProvider = $this->prophesize(UserProviderInterface::class);
         $this->session = $this->prophesize(Store::class);
     }
-
-    public function tearDown()
-	{
-		m::close();
-	}
 
 	public function testBasicReturnsNullOnValidAttempt()
 	{
@@ -329,39 +323,17 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testUserUsesRememberCookieIfItExists()
 	{
-		$guard = $this->getGuard();
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET', array(), array($guard->getRecallerName() => 'id|recaller'));
-		$guard = new Illuminate\Auth\Guard($provider, $session, $request);
-		$guard->getSession()->shouldReceive('get')->once()->with($guard->getName())->andReturn(null);
-		$user = m::mock(UserInterface::class);
-		$guard->getProvider()->shouldReceive('retrieveByToken')->once()->with('id', 'recaller')->andReturn($user);
-		$this->assertEquals($user, $guard->user());
+        $guard = new Guard(
+            $this->userProvider->reveal(),
+            $this->session->reveal(),
+            Request::create('/', 'GET', array(), array('remember_82e5d2c56bdd0811318f0cf078b78bfc' => 'id|recaller'))
+        );
+
+        $this->userProvider
+            ->retrieveByToken('id', 'recaller')
+            ->willReturn(($user = $this->prophesize(UserInterface::class))->reveal());
+
+		$this->assertEquals($user->reveal(), $guard->user());
 		$this->assertTrue($guard->viaRemember());
 	}
-
-
-	protected function getGuard()
-	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		return new Illuminate\Auth\Guard($provider, $session, $request);
-	}
-
-
-	protected function getMocks()
-	{
-		return array(
-			m::mock(Store::class),
-			m::mock(UserProviderInterface::class),
-			Symfony\Component\HttpFoundation\Request::create('/', 'GET'),
-			m::mock(CookieJar::class),
-		);
-	}
-
-
-	protected function getCookieJar()
-	{
-		return new Illuminate\Cookie\CookieJar(Request::create('/foo', 'GET'), m::mock(Encrypter::class), array('domain' => 'foo.com', 'path' => '/', 'secure' => false, 'httpOnly' => false));
-	}
-
 }
