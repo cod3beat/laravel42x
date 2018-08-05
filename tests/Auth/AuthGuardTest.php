@@ -245,22 +245,19 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testLogoutRemovesSessionTokenAndRememberMeCookie()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$mock = $this->getMock(Guard::class, array('getName', 'getRecallerName'), array($provider, $session, $request));
-		$mock->setCookieJar($cookies = m::mock(CookieJar::class));
-		$user = m::mock(UserInterface::class);
-		$user->shouldReceive('setRememberToken')->once();
-		$mock->expects($this->once())->method('getName')->will($this->returnValue('foo'));
-		$mock->expects($this->once())->method('getRecallerName')->will($this->returnValue('bar'));
-		$provider->shouldReceive('updateRememberToken')->once();
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $user = $this->prophesize(UserInterface::class);
+        $guard->setUser($user->reveal());
+        $cookieJar = $this->prophesize(CookieJar::class);
+        $guard->setCookieJar($cookieJar->reveal());
 
-		$cookie = m::mock(Cookie::class);
-		$cookies->shouldReceive('forget')->once()->with('bar')->andReturn($cookie);
-		$cookies->shouldReceive('queue')->once()->with($cookie);
-		$mock->getSession()->shouldReceive('forget')->once()->with('foo');
-		$mock->setUser($user);
-		$mock->logout();
-		$this->assertNull($mock->getUser());
+        $this->session->forget('login_82e5d2c56bdd0811318f0cf078b78bfc')->shouldBeCalledTimes(1);
+        $cookieJar->forget('remember_82e5d2c56bdd0811318f0cf078b78bfc')
+            ->shouldBeCalledTimes(1)
+            ->willReturn($cookie = $this->prophesize(Cookie::class)->reveal());
+        $cookieJar->queue($cookie)->shouldBeCalledTimes(1);
+
+        $guard->logout();
 	}
 
 
