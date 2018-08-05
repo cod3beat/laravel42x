@@ -260,6 +260,19 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $guard->logout();
 	}
 
+    public function testLogoutWillNullifyTheUser()
+    {
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $user = $this->prophesize(UserInterface::class);
+        $guard->setUser($user->reveal());
+        $cookieJar = $this->prophesize(CookieJar::class);
+        $guard->setCookieJar($cookieJar->reveal());
+
+        $guard->logout();
+
+        $this->assertNull($guard->user());
+    }
+
 
 	public function testLogoutFiresLogoutEvent()
 	{
