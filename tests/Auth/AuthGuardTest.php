@@ -213,7 +213,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testUserMethodReturnsCachedUser()
 	{
-        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
         $user = $this->prophesize(UserInterface::class);
 
 		$guard->setUser($user->reveal());
