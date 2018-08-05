@@ -204,14 +204,11 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->assertFalse($guard->guest());
     }
 
-
 	public function testIsAuthedReturnsFalseWhenUserIsNull()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$mock = $this->getMock(Guard::class, array('user'), array($provider, $session, $request));
-		$mock->expects($this->exactly(2))->method('user')->will($this->returnValue(null));
-		$this->assertFalse($mock->check());
-		$this->assertTrue($mock->guest());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+
+        $this->assertFalse($guard->check());
 	}
 
 
