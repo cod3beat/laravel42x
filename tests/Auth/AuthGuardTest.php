@@ -23,10 +23,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
      * @var Store|ObjectProphecy
      */
     private $session;
-    /**
-     * @var Request|ObjectProphecy
-     */
-    private $request;
 
     protected function setUp()
     {
@@ -34,7 +30,6 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
         $this->userProvider = $this->prophesize(UserProviderInterface::class);
         $this->session = $this->prophesize(Store::class);
-        $this->request = $this->prophesize(Request::class);
     }
 
     public function tearDown()
@@ -138,7 +133,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testAttemptCallsRetrieveByCredentials()
 	{
-        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
         $events = $this->prophesize(Dispatcher::class);
 		$guard->setDispatcher($events->reveal());
 
@@ -150,7 +145,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testAttemptReturnsFalseIfUserNotGiven()
 	{
-        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
         $events = $this->prophesize(Dispatcher::class);
         $guard->setDispatcher($events->reveal());
 
@@ -161,7 +156,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testLoginStoresIdentifierInSession()
 	{
-        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
 		$user = $this->prophesize(UserInterface::class);
 		$user->getAuthIdentifier()->willReturn('foo');
 
