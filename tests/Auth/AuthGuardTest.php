@@ -276,13 +276,11 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testLogoutFiresLogoutEvent()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $user = $this->prophesize(UserInterface::class);
-        $guard->setUser($user->reveal());
-        $cookieJar = $this->prophesize(CookieJar::class);
-        $guard->setCookieJar($cookieJar->reveal());
-        $guard->setDispatcher(($dispatcher = $this->prophesize(Dispatcher::class))->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
+        $guard->setCookieJar(($cookieJar = $this->prophesize(CookieJar::class))->reveal());
+        $guard->setDispatcher(($event = $this->prophesize(Dispatcher::class))->reveal());
 
-        $dispatcher->fire('auth.logout', [$user])->shouldBeCalledTimes(1);
+        $event->fire('auth.logout', [$user])->shouldBeCalledTimes(1);
 
         $guard->logout();
 	}
