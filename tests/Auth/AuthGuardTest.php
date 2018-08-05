@@ -221,12 +221,13 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertEquals($user->reveal(), $guard->user());
 	}
 
-
 	public function testNullIsReturnedForUserIfNoUserFound()
 	{
-		$mock = $this->getGuard();
-		$mock->getSession()->shouldReceive('get')->once()->andReturn(null);
-		$this->assertNull($mock->user());
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+
+        $this->session->get('login_82e5d2c56bdd0811318f0cf078b78bfc')->willReturn(null);
+
+		$this->assertNull($guard->user());
 	}
 
 
