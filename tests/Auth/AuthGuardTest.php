@@ -187,9 +187,8 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testIsAuthedReturnsTrueWhenUserIsNotNull()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
-        $user = $this->prophesize(UserInterface::class);
 
-        $guard->setUser($user->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
 
         $this->assertTrue($guard->check());
 	}
@@ -197,9 +196,8 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
     public function testIsNotGuessWhenUserIsNotNull()
     {
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), $this->request->reveal());
-        $user = $this->prophesize(UserInterface::class);
 
-        $guard->setUser($user->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
 
         $this->assertFalse($guard->guest());
     }
@@ -214,9 +212,8 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testUserMethodReturnsCachedUser()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $user = $this->prophesize(UserInterface::class);
 
-		$guard->setUser($user->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
 
 		$this->assertEquals($user->reveal(), $guard->user());
 	}
