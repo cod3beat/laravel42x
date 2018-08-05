@@ -234,7 +234,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testUserIsSetToRetrievedUser()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $user = $this->prophesize(UserInterface::class);
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
 
         $this->session->get('login_82e5d2c56bdd0811318f0cf078b78bfc')->willReturn(111);
         $this->userProvider->retrieveById(111)->willReturn($user->reveal());
@@ -246,10 +246,8 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testLogoutRemovesSessionTokenAndRememberMeCookie()
 	{
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $user = $this->prophesize(UserInterface::class);
-        $guard->setUser($user->reveal());
-        $cookieJar = $this->prophesize(CookieJar::class);
-        $guard->setCookieJar($cookieJar->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
+        $guard->setCookieJar(($cookieJar = $this->prophesize(CookieJar::class))->reveal());
 
         $this->session->forget('login_82e5d2c56bdd0811318f0cf078b78bfc')->shouldBeCalledTimes(1);
         $cookieJar->forget('remember_82e5d2c56bdd0811318f0cf078b78bfc')
@@ -263,10 +261,8 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
     public function testLogoutWillNullifyTheUser()
     {
         $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
-        $user = $this->prophesize(UserInterface::class);
-        $guard->setUser($user->reveal());
-        $cookieJar = $this->prophesize(CookieJar::class);
-        $guard->setCookieJar($cookieJar->reveal());
+        $guard->setUser(($user = $this->prophesize(UserInterface::class))->reveal());
+        $guard->setCookieJar(($cookieJar = $this->prophesize(CookieJar::class))->reveal());
 
         $guard->logout();
 
