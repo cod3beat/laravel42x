@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpParamsInspection */
 
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -49,7 +50,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
             ->willReturn($this->prophesize(UserInterface::class)->reveal());
         $this->userProvider
             ->validateCredentials(
-                \Prophecy\Argument::type(UserInterface::class),
+                Argument::type(UserInterface::class),
                 ['email' => 'foo@bar.com', 'password' => 'secret']
             )->willReturn(true);
 
@@ -68,7 +69,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
             ->willReturn($this->prophesize(UserInterface::class)->reveal());
         $this->userProvider
             ->validateCredentials(
-                \Prophecy\Argument::type(UserInterface::class),
+                Argument::type(UserInterface::class),
                 ['email' => 'foo@bar.com', 'password' => 'secret']
             )->willReturn(true);
 
@@ -101,7 +102,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
             ->willReturn($this->prophesize(UserInterface::class)->reveal());
         $this->userProvider
             ->validateCredentials(
-                \Prophecy\Argument::type(UserInterface::class),
+                Argument::type(UserInterface::class),
                 ['email' => 'foo@bar.com', 'password' => 'secret']
             )->willReturn(false);
 
@@ -122,7 +123,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
             ->willReturn($this->prophesize(UserInterface::class)->reveal());
         $this->userProvider
             ->validateCredentials(
-                \Prophecy\Argument::type(UserInterface::class),
+                Argument::type(UserInterface::class),
                 ['email' => 'foo@bar.com', 'password' => 'secret']
             )->willReturn(false);
 
@@ -286,23 +287,18 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
         $guard->login($user->reveal(), true);
 	}
 
-
 	public function testLoginMethodCreatesRememberTokenIfOneDoesntExist()
 	{
-		list($session, $provider, $request, $cookie) = $this->getMocks();
-		$guard = new Illuminate\Auth\Guard($provider, $session, $request);
-		$guard->setCookieJar($cookie);
-		$foreverCookie = new Symfony\Component\HttpFoundation\Cookie($guard->getRecallerName(), 'foo');
-		$cookie->shouldReceive('forever')->once()->andReturn($foreverCookie);
-		$cookie->shouldReceive('queue')->once()->with($foreverCookie);
-		$guard->getSession()->shouldReceive('put')->once()->with($guard->getName(), 'foo');
-		$session->shouldReceive('migrate')->once();
-		$user = m::mock(UserInterface::class);
-		$user->shouldReceive('getAuthIdentifier')->andReturn('foo');
-		$user->shouldReceive('getRememberToken')->andReturn(null);
-		$user->shouldReceive('setRememberToken')->once();
-		$provider->shouldReceive('updateRememberToken')->once();
-		$guard->login($user, true);
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $guard->setCookieJar(($cookieJar = $this->prophesize(CookieJar::class))->reveal());
+        $user = $this->prophesize(UserInterface::class);
+        $user->getAuthIdentifier()->willReturn('foo');
+        $user->getRememberToken()->willReturn(null);
+
+        $user->setRememberToken(Argument::type('string'))->shouldBeCalledTimes(1);
+        $this->userProvider->updateRememberToken($user->reveal(), Argument::type('string'))->shouldBeCalledTimes(1);
+
+        $guard->login($user->reveal(), true);
 	}
 
 
