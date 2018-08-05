@@ -233,14 +233,15 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testUserIsSetToRetrievedUser()
 	{
-		$mock = $this->getGuard();
-		$mock->getSession()->shouldReceive('get')->once()->andReturn(1);
-		$user = m::mock(UserInterface::class);
-		$mock->getProvider()->shouldReceive('retrieveById')->once()->with(1)->andReturn($user);
-		$this->assertEquals($user, $mock->user());
-		$this->assertEquals($user, $mock->getUser());
-	}
+        $guard = new Guard($this->userProvider->reveal(), $this->session->reveal(), new Request());
+        $user = $this->prophesize(UserInterface::class);
 
+        $this->session->get('login_82e5d2c56bdd0811318f0cf078b78bfc')->willReturn(111);
+        $this->userProvider->retrieveById(111)->willReturn($user->reveal());
+
+        $this->assertEquals($user->reveal(), $guard->user());
+        $this->assertEquals($user->reveal(), $guard->getUser());
+	}
 
 	public function testLogoutRemovesSessionTokenAndRememberMeCookie()
 	{
