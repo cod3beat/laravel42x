@@ -10,7 +10,6 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Auth\UserProviderInterface;
 use Illuminate\Session\Store;
-use Mockery as m;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
