@@ -188,7 +188,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @param  \Symfony\Component\Console\Output\OutputInterface  $output
 	 * @return void
 	 */
-	public function renderException($e, $output)
+	public function renderException(\Exception $e, OutputInterface $output)
 	{
 		// If we have an exception handler instance, we will call that first in case
 		// it has some handlers that need to be run first. We will pass "true" as
