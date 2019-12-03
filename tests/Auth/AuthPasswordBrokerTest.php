@@ -1,11 +1,37 @@
-<?php
+<?php /** @noinspection PhpParamsInspection */
 
+use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
+use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Mail\Mailer;
 use Mockery as m;
 use Illuminate\Auth\Reminders\PasswordBroker;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class AuthPasswordBrokerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
-	public function tearDown()
+    /**
+     * @var ReminderRepositoryInterface|ObjectProphecy
+     */
+    private $reminderRepository;
+    /**
+     * @var UserProviderInterface|ObjectProphecy
+     */
+    private $userProvider;
+    /**
+     * @var Mailer|ObjectProphecy
+     */
+    private $mailer;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->reminderRepository = $this->prophesize(ReminderRepositoryInterface::class);
+        $this->userProvider = $this->prophesize(UserProviderInterface::class);
+        $this->mailer = $this->prophesize(Mailer::class);
+    }
+
+    public function tearDown()
 	{
 		m::close();
 	}
@@ -13,9 +39,15 @@ class AuthPasswordBrokerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testIfUserIsNotFoundErrorRedirectIsReturned()
 	{
-		$mocks = $this->getMocks();
-		$broker = $this->getMock('Illuminate\Auth\Reminders\PasswordBroker', array('getUser', 'makeErrorRedirect'), array_values($mocks));
-		$broker->expects($this->once())->method('getUser')->will($this->returnValue(null));
+		$broker = new PasswordBroker(
+            $this->reminderRepository->reveal(),
+            $this->userProvider->reveal(),
+            $this->mailer->reveal(),
+            'reminderView'
+        );
+
+		$this->userProvider->retrieveByCredentials(['credentials'])
+            ->willReturn(null);
 
 		$this->assertEquals(PasswordBroker::INVALID_USER, $broker->remind(array('credentials')));
 	}

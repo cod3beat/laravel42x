@@ -33,10 +33,10 @@
         "symfony/routing": "2.8.*",
         "symfony/security-core": "2.8.*",
         "symfony/translation": "2.8.*",
-        "jeremeamia/SuperClosure": "^2.4",
         "classpreloader/classpreloader": "^3.2",
         "pda/pheanstalk": "^3.1",
-        "classpreloader/console": "^2.1"
+        "classpreloader/console": "^2.1",
+        "jeremeamia/superclosure": "^2.4"
     },
     "replace": {
         "illuminate/auth": "self.version",

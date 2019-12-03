@@ -687,7 +687,7 @@ class Builder {
 		// compile the whole thing in the grammar and insert it into the SQL.
 		call_user_func($callback, $query);
 
-		$this->wheres[] = compact('type', 'operator', 'query', 'boolean');
+		$this->wheres[] = compact('type', 'query', 'boolean');
 
 		$this->mergeBindings($query);
 
