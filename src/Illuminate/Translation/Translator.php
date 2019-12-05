@@ -252,7 +252,7 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	{
 		$segments = parent::parseKey($key);
 
-		if (is_null($segments[0])) $segments[0] = '*';
+		if ($segments[0] === null) $segments[0] = '*';
 
 		return $segments;
 	}
