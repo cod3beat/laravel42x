@@ -40,8 +40,8 @@ class ValidationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testCustomResolverIsCalled()
 	{
 		unset($_SERVER['__validator.factory']);
-		$translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
-		$factory = new Factory($translator);
+		$translator = $this->prophesize(Symfony\Contracts\Translation\TranslatorInterface::class);
+		$factory = new Factory($translator->reveal());
 		$factory->resolver(function($translator, $data, $rules)
 		{
 			$_SERVER['__validator.factory'] = true;
@@ -50,7 +50,7 @@ class ValidationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$validator = $factory->make(array('foo' => 'bar'), array('baz' => 'boom'));
 
 		$this->assertTrue($_SERVER['__validator.factory']);
-		$this->assertEquals($translator, $validator->getTranslator());
+		$this->assertEquals($translator->reveal(), $validator->getTranslator());
 		$this->assertEquals(array('foo' => 'bar'), $validator->getData());
 		$this->assertEquals(array('baz' => array('boom')), $validator->getRules());
 		unset($_SERVER['__validator.factory']);
