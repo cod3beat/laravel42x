@@ -183,7 +183,7 @@ class Application extends \Symfony\Component\Console\Application {
 
 	/**
 	 * Render the given exception.
-	 *
+	 * @deprecated since Symfony 4.4, use "renderThrowable()" instead
 	 * @param  \Exception  $e
 	 * @param  \Symfony\Component\Console\Output\OutputInterface  $output
 	 * @return void
