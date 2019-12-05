@@ -2,14 +2,14 @@
 
 use Closure;
 use Illuminate\Container\Container;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Factory {
 
 	/**
 	 * The Translator implementation.
 	 *
-	 * @var \Symfony\Component\Translation\TranslatorInterface
+	 * @var \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	protected $translator;
 
@@ -65,7 +65,7 @@ class Factory {
 	/**
 	 * Create a new Validator factory instance.
 	 *
-	 * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
+	 * @param  \Symfony\Contracts\Translation\TranslatorInterface  $translator
 	 * @param  \Illuminate\Container\Container  $container
 	 * @return void
 	 */
@@ -206,7 +206,7 @@ class Factory {
 	/**
 	 * Get the Translator implementation.
 	 *
-	 * @return \Symfony\Component\Translation\TranslatorInterface
+	 * @return \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	public function getTranslator()
 	{
