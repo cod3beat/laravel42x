@@ -83,7 +83,7 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 				$namespace, $group, $locale, $item, $replace
 			);
 
-			if ( ! is_null($line)) break;
+			if ($line !== null) break;
 		}
 
 		// If the line doesn't exist, we will return back the key which was requested as
