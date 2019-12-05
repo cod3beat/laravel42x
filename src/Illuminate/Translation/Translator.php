@@ -3,7 +3,7 @@
 use Illuminate\Support\Collection;
 use Illuminate\Support\NamespacedItemResolver;
 use Symfony\Component\Translation\MessageSelector;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator extends NamespacedItemResolver implements TranslatorInterface {
 
