@@ -1389,13 +1389,13 @@ class ValidationValidatorTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	protected function getTranslator()
 	{
-		return m::mock('Symfony\Component\Translation\TranslatorInterface');
+		return m::mock(\Symfony\Contracts\Translation\TranslatorInterface::class);
 	}
 
 
 	protected function getRealTranslator()
 	{
-		$trans = new Symfony\Component\Translation\Translator('en', new Symfony\Component\Translation\MessageSelector);
+		$trans = new Symfony\Component\Translation\Translator('en');
 		$trans->addLoader('array', new Symfony\Component\Translation\Loader\ArrayLoader);
 		return $trans;
 	}
