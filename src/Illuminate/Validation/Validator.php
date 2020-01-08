@@ -7,7 +7,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Support\MessageBag;
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Contracts\MessageProviderInterface;
 
@@ -16,7 +16,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * The Translator implementation.
 	 *
-	 * @var \Symfony\Component\Translation\TranslatorInterface
+	 * @var \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	protected $translator;
 
@@ -130,7 +130,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Create a new Validator instance.
 	 *
-	 * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
+	 * @param  \Symfony\Contracts\Translation\TranslatorInterface  $translator
 	 * @param  array  $data
 	 * @param  array  $rules
 	 * @param  array  $messages
@@ -2292,7 +2292,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Get the Translator implementation.
 	 *
-	 * @return \Symfony\Component\Translation\TranslatorInterface
+	 * @return \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	public function getTranslator()
 	{
@@ -2302,7 +2302,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Set the Translator implementation.
 	 *
-	 * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
+	 * @param  \Symfony\Contracts\Translation\TranslatorInterface  $translator
 	 * @return void
 	 */
 	public function setTranslator(TranslatorInterface $translator)
