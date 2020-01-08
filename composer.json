@@ -89,7 +89,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-symfony4": "4.2.x-dev"
+            "dev-master": "4.2.x-dev"
         }
     },
     "suggest": {
