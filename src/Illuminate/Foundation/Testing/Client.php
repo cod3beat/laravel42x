@@ -1,10 +1,10 @@
 <?php namespace Illuminate\Foundation\Testing;
 
 use Illuminate\Foundation\Application;
-use Symfony\Component\HttpKernel\Client as BaseClient;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\BrowserKit\Request as DomRequest;
 
-class Client extends BaseClient {
+class Client extends HttpKernelBrowser {
 
 	/**
 	 * Convert a BrowserKit request into a Illuminate request.
