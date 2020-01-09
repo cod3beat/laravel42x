@@ -984,7 +984,7 @@ if ( ! function_exists('trans_choice'))
 	 */
 	function trans_choice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null)
 	{
-		return app('translator')->transChoice($id, $number, $parameters, $domain, $locale);
+        return app('translator')->trans($id, ['%count%' => $number] + $parameters, $domain, $locale);
 	}
 }
 
