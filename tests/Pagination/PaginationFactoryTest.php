@@ -93,7 +93,7 @@ class PaginationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 	{
 		$request = m::mock('Illuminate\Http\Request');
 		$view = m::mock('Illuminate\View\Factory');
-		$trans = m::mock('Symfony\Component\Translation\TranslatorInterface');
+		$trans = m::mock(\Symfony\Contracts\Translation\TranslatorInterface::class);
 		$view->shouldReceive('addNamespace')->once()->with('pagination', realpath(__DIR__.'/../../src/Illuminate/Pagination').'/views');
 
 		return new Factory($request, $view, $trans, 'page');
