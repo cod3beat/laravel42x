@@ -71,6 +71,26 @@ class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->assertEquals($expected, $translator->choice($id, $number));
 	}
 
+    public function testReturnMessageIfExactlyOneStandardRuleIsGiven()
+    {
+        $loader = $this->prophesize(LoaderInterface::class);
+        $translator = new Translator($loader->reveal(), 'en');
+
+        $this->assertEquals('There are two apples', $translator->choice('There are two apples', 2));
+    }
+
+    /**
+     * @dataProvider getNonMatchingMessages
+     */
+    public function testThrowExceptionIfMatchingMessageCannotBeFound($id, $number)
+    {
+        $this->expectException('Symfony\Component\Translation\Exception\InvalidArgumentException');
+        $loader = $this->prophesize(LoaderInterface::class);
+        $translator = new Translator($loader->reveal(), 'en');
+
+        $translator->choice($id, $number);
+    }
+
 	protected function getLoader()
 	{
 		return m::mock(LoaderInterface::class);
