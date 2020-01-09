@@ -132,7 +132,7 @@ class Listener {
 			$memory, $this->sleep, $this->maxTries
 		);
 
-		return new Process($command, $this->commandPath, null, null, $timeout);
+		return Process::fromShellCommandline($command, $this->commandPath, null, null, $timeout);
 	}
 
 	/**
