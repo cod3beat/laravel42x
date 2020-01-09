@@ -71,10 +71,11 @@ class TailCommand extends Command {
 
 		$lines = $this->option('lines');
 
-        Process::fromShellCommandline('tail -f -n '.$lines.' '.escapeshellarg($path))->setTimeout(null)->run(function($type, $line) use ($output)
-		{
-			$output->write($line);
-		});
+        Process::fromShellCommandline('tail -f -n '.$lines.' '.escapeshellarg($path))
+            ->setTimeout(null)
+            ->run(function($type, $line) use ($output) {
+                $output->write($line);
+            });
 	}
 
 	/**
