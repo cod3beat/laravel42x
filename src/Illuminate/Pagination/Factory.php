@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\View\Factory as ViewFactory;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Factory {
 
@@ -23,7 +23,7 @@ class Factory {
 	/**
 	 * The translator implementation.
 	 *
-	 * @var \Symfony\Component\Translation\TranslatorInterface
+	 * @var \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	protected $trans;
 
@@ -67,7 +67,7 @@ class Factory {
 	 *
 	 * @param  \Symfony\Component\HttpFoundation\Request  $request
 	 * @param  \Illuminate\View\Factory  $view
-	 * @param  \Symfony\Component\Translation\TranslatorInterface  $trans
+	 * @param  \Symfony\Contracts\Translation\TranslatorInterface  $trans
 	 * @param  string  $pageName
 	 * @return void
 	 */
@@ -279,7 +279,7 @@ class Factory {
 	/**
 	 * Get the translator instance.
 	 *
-	 * @return \Symfony\Component\Translation\TranslatorInterface
+	 * @return \Symfony\Contracts\Translation\TranslatorInterface
 	 */
 	public function getTranslator()
 	{
