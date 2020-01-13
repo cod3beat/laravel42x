@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\NamespacedItemResolver;
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator extends NamespacedItemResolver implements TranslatorInterface {
@@ -55,8 +54,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string  $locale
 	 * @return bool
 	 */
-	public function has($key, $locale = null)
-	{
+	public function has($key, $locale = null): bool
+    {
 		return $this->get($key, array(), $locale) !== $key;
 	}
 
@@ -68,8 +67,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string  $locale
 	 * @return string
 	 */
-	public function get($key, array $replace = array(), $locale = null)
-	{
+	public function get($key, array $replace = array(), $locale = null): string
+    {
 		list($namespace, $group, $item) = $this->parseKey($key);
 
 		// Here we will get the locale that should be used for the language line. If one
@@ -124,8 +123,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  array   $replace
 	 * @return string
 	 */
-	protected function makeReplacements($line, array $replace)
-	{
+	protected function makeReplacements($line, array $replace): string
+    {
 		$replace = $this->sortReplacements($replace);
 
 		foreach ($replace as $key => $value)
@@ -143,7 +142,7 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @return array
 	 */
 	protected function sortReplacements(array $replace)
-	{
+    {
 		return (new Collection($replace))->sortBy(function($r)
 		{
 			return mb_strlen($r) * -1;
@@ -159,8 +158,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string  $locale
 	 * @return string
 	 */
-	public function choice($key, $number, array $replace = array(), $locale = null)
-	{
+	public function choice($key, $number, array $replace = array(), $locale = null): string
+    {
 		$line = $this->get($key, $replace, $locale = $locale ?: $this->locale);
 
 		$replace['count'] = $number;
@@ -192,8 +191,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string  $locale
 	 * @return string
 	 */
-	public function transChoice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null)
-	{
+	public function transChoice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null): string
+    {
 		return $this->choice($id, $number, $parameters, $locale);
 	}
 
@@ -225,8 +224,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string  $locale
 	 * @return bool
 	 */
-	protected function isLoaded($namespace, $group, $locale)
-	{
+	protected function isLoaded($namespace, $group, $locale): bool
+    {
 		return isset($this->loaded[$namespace][$group][$locale]);
 	}
 
@@ -263,8 +262,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 * @param  string|null  $locale
 	 * @return array
 	 */
-	protected function parseLocale($locale)
-	{
+	protected function parseLocale($locale): array
+    {
 		if ($locale !== null)
 		{
 			return array_filter(array($locale, $this->fallback));
@@ -276,10 +275,10 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	/**
 	 * Get the message selector instance.
 	 *
-	 * @return \Symfony\Component\Translation\MessageSelector
+	 * @return MessageSelector
 	 */
-	public function getSelector()
-	{
+	public function getSelector(): MessageSelector
+    {
 		if ( ! isset($this->selector))
 		{
 			$this->selector = new MessageSelector;
@@ -291,7 +290,7 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	/**
 	 * Set the message selector instance.
 	 *
-	 * @param  \Symfony\Component\Translation\MessageSelector  $selector
+	 * @param  MessageSelector  $selector
 	 * @return void
 	 */
 	public function setSelector(MessageSelector $selector)
@@ -304,8 +303,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 *
 	 * @return \Illuminate\Translation\LoaderInterface
 	 */
-	public function getLoader()
-	{
+	public function getLoader(): LoaderInterface
+    {
 		return $this->loader;
 	}
 
@@ -314,8 +313,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 *
 	 * @return string
 	 */
-	public function locale()
-	{
+	public function locale(): string
+    {
 		return $this->getLocale();
 	}
 
@@ -324,8 +323,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 *
 	 * @return string
 	 */
-	public function getLocale()
-	{
+	public function getLocale(): string
+    {
 		return $this->locale;
 	}
 
@@ -345,8 +344,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
 	 *
 	 * @return string
 	 */
-	public function getFallback()
-	{
+	public function getFallback(): string
+    {
 		return $this->fallback;
 	}
 
