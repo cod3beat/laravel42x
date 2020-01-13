@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Translation\LoaderInterface;
+use Illuminate\Translation\MessageSelector;
 use Mockery as m;
 use Illuminate\Translation\Translator;
 
@@ -54,11 +55,13 @@ class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
 	{
 		$t = $this->getMock('Illuminate\Translation\Translator', array('get'), array($this->getLoader(), 'en'));
 		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array('replace')), $this->equalTo('en'))->will($this->returnValue('line'));
-		$t->setSelector($selector = m::mock('Symfony\Component\Translation\MessageSelector'));
+		$t->setSelector($selector = m::mock(MessageSelector::class));
 		$selector->shouldReceive('choose')->once()->with('line', 10, 'en')->andReturn('choiced');
 
 		$t->choice('foo', 10, array('replace'));
 	}
+
+    // TEST FROM SYMFONY
 
     /**
      * @test
@@ -84,7 +87,7 @@ class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
      */
     public function testThrowExceptionIfMatchingMessageCannotBeFound($id, $number)
     {
-        $this->expectException('Symfony\Component\Translation\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $loader = $this->prophesize(LoaderInterface::class);
         $translator = new Translator($loader->reveal(), 'en');
 
@@ -186,5 +189,4 @@ class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
             ['', '||', 1],
         ];
     }
-
 }
