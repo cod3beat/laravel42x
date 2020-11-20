@@ -72,6 +72,9 @@
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "^7.1"
     },
+    "conflict": {
+        "symfony/polyfill-php80": "*"
+    },
     "autoload": {
         "classmap": [
             "src/Illuminate/Queue/IlluminateQueueClosure.php"
