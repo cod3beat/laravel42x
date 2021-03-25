@@ -1,21 +1,26 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Console\Migrations\MigrateCommand;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseMigrationMigrateCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicMigrationsCallMigratorWithProperArguments()
-	{
-		$command = new MigrateCommand($migrator = m::mock('Illuminate\Database\Migrations\Migrator'), __DIR__.'/vendor');
-		$app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
-		$command->setLaravel($app);
+    public function testBasicMigrationsCallMigratorWithProperArguments()
+    {
+        $command = new MigrateCommand(
+            $migrator = m::mock('Illuminate\Database\Migrations\Migrator'),
+            __DIR__ . '/vendor'
+        );
+        $app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
+        $command->setLaravel($app);
 		$migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('run')->once()->with(__DIR__.'/database/migrations', false);
 		$migrator->shouldReceive('getNotes')->andReturn(array());

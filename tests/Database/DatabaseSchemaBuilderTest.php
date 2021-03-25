@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Schema\Builder;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseSchemaBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseSchemaBuilderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testHasTableCorrectlyCallsGrammar()
-	{
-		$connection = m::mock('Illuminate\Database\Connection');
-		$grammar = m::mock('StdClass');
-		$connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
+    public function testHasTableCorrectlyCallsGrammar()
+    {
+        $connection = m::mock('Illuminate\Database\Connection');
+        $grammar = m::mock('StdClass');
+        $connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
 		$builder = new Builder($connection);
 		$grammar->shouldReceive('compileTableExists')->once()->andReturn('sql');
 		$connection->shouldReceive('getTablePrefix')->once()->andReturn('prefix_');

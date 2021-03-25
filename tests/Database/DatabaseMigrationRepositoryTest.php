@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseMigrationRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testGetRanMigrationsListMigrationsByPackage()
-	{
-		$repo = $this->getRepository();
-		$query = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+    public function testGetRanMigrationsListMigrationsByPackage()
+    {
+        $repo = $this->getRepository();
+        $query = m::mock('stdClass');
+        $connectionMock = m::mock('Illuminate\Database\Connection');
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('lists')->once()->with('migration')->andReturn('bar');

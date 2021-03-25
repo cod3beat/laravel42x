@@ -1,20 +1,25 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseConnectorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseConnectorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testOptionResolution()
-	{
-		$connector = new Illuminate\Database\Connectors\Connector;
-		$connector->setDefaultOptions(array(0 => 'foo', 1 => 'bar'));
-		$this->assertEquals(array(0 => 'baz', 1 => 'bar', 2 => 'boom'), $connector->getOptions(array('options' => array(0 => 'baz', 2 => 'boom'))));
+    public function testOptionResolution()
+    {
+        $connector = new Illuminate\Database\Connectors\Connector;
+        $connector->setDefaultOptions(array(0 => 'foo', 1 => 'bar'));
+        $this->assertEquals(
+            array(0 => 'baz', 1 => 'bar', 2 => 'boom'),
+            $connector->getOptions(array('options' => array(0 => 'baz', 2 => 'boom')))
+        );
 	}
 
 

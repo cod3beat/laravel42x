@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Seeder;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseSeederTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseSeederTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testCallResolveTheClassAndCallsRun()
-	{
-		$seeder = new Seeder;
-		$seeder->setContainer($container = m::mock('Illuminate\Container\Container'));
-		$output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+    public function testCallResolveTheClassAndCallsRun()
+    {
+        $seeder = new Seeder;
+        $seeder->setContainer($container = m::mock('Illuminate\Container\Container'));
+        $output = m::mock('Symfony\Component\Console\Output\OutputInterface');
 		$output->shouldReceive('writeln')->once()->andReturn('foo');
 		$command = m::mock('Illuminate\Console\Command');
 		$command->shouldReceive('getOutput')->once()->andReturn($output);

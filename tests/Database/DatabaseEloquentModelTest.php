@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseEloquentModelTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
+    protected function tearDown(): void
+    {
+        m::close();
 
-		Illuminate\Database\Eloquent\Model::unsetEventDispatcher();
-		Carbon\Carbon::resetToStringFormat();
-	}
+        Illuminate\Database\Eloquent\Model::unsetEventDispatcher();
+        Carbon\Carbon::resetToStringFormat();
+    }
 
 
-	public function testAttributeManipulation()
-	{
+    public function testAttributeManipulation()
+    {
 		$model = new EloquentModelStub;
 		$model->name = 'foo';
 		$this->assertEquals('foo', $model->name);

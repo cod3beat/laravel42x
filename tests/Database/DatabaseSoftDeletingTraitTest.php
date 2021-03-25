@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseSoftDeletingTraitTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testDeleteSetsSoftDeletedColumn()
-	{
-		$model = m::mock('DatabaseSoftDeletingTraitStub');
-		$model->shouldDeferMissing();
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('StdClass'));
+    public function testDeleteSetsSoftDeletedColumn()
+    {
+        $model = m::mock('DatabaseSoftDeletingTraitStub');
+        $model->shouldDeferMissing();
+        $model->shouldReceive('newQuery')->andReturn($query = m::mock('StdClass'));
 		$query->shouldReceive('where')->once()->with('id', 1)->andReturn($query);
 		$query->shouldReceive('update')->once()->with(['deleted_at' => 'date-time']);
 		$model->delete();

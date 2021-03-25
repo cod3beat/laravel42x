@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseConnectionTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseConnectionTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSettingDefaultCallsGetDefaultGrammar()
-	{
-		$connection = $this->getMockConnection();
-		$mock = m::mock('StdClass');
-		$connection->expects($this->once())->method('getDefaultQueryGrammar')->will($this->returnValue($mock));
+    public function testSettingDefaultCallsGetDefaultGrammar()
+    {
+        $connection = $this->getMockConnection();
+        $mock = m::mock('StdClass');
+        $connection->expects($this->once())->method('getDefaultQueryGrammar')->will($this->returnValue($mock));
 		$connection->useDefaultQueryGrammar();
 		$this->assertEquals($mock, $connection->getQueryGrammar());
 	}

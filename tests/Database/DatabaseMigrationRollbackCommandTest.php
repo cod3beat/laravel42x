@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Console\Migrations\RollbackCommand;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseMigrationRollbackCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigrationRollbackCommandTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testRollbackCommandCallsMigratorWithProperArguments()
-	{
-		$command = new RollbackCommand($migrator = m::mock('Illuminate\Database\Migrations\Migrator'));
-		$command->setLaravel(new AppDatabaseMigrationRollbackStub());
-		$migrator->shouldReceive('setConnection')->once()->with(null);
+    public function testRollbackCommandCallsMigratorWithProperArguments()
+    {
+        $command = new RollbackCommand($migrator = m::mock('Illuminate\Database\Migrations\Migrator'));
+        $command->setLaravel(new AppDatabaseMigrationRollbackStub());
+        $migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('rollback')->once()->with(false);
 		$migrator->shouldReceive('getNotes')->andReturn(array());
 

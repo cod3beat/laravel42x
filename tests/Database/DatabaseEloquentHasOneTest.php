@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentHasOneTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSaveMethodSetsForeignKeyOnModel()
-	{
-		$relation = $this->getRelation();
-		$mockModel = $this->getMock('Illuminate\Database\Eloquent\Model', array('save'));
-		$mockModel->expects($this->once())->method('save')->will($this->returnValue(true));
+    public function testSaveMethodSetsForeignKeyOnModel()
+    {
+        $relation = $this->getRelation();
+        $mockModel = $this->getMock('Illuminate\Database\Eloquent\Model', array('save'));
+        $mockModel->expects($this->once())->method('save')->will($this->returnValue(true));
 		$result = $relation->save($mockModel);
 
 		$attributes = $result->getAttributes();

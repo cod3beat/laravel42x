@@ -1,22 +1,28 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentHasManyThroughTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentHasManyThroughTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testRelationIsProperlyInitialized()
-	{
-		$relation = $this->getRelation();
-		$model = m::mock('Illuminate\Database\Eloquent\Model');
-		$relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(function($array = array()) { return new Collection($array); });
+    public function testRelationIsProperlyInitialized()
+    {
+        $relation = $this->getRelation();
+        $model = m::mock('Illuminate\Database\Eloquent\Model');
+        $relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(
+            function ($array = array()) {
+                return new Collection($array);
+            }
+        );
 		$model->shouldReceive('setRelation')->once()->with('foo', m::type('Illuminate\Database\Eloquent\Collection'));
 		$models = $relation->initRelation(array($model), 'foo');
 

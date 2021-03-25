@@ -1,21 +1,25 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseMigrationMakeCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicCreateGivesCreatorProperArguments()
-	{
-		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__.'/vendor');
-		$app = array('path' => __DIR__);
-		$command->setLaravel($app);
+    public function testBasicCreateGivesCreatorProperArguments()
+    {
+        $command = new DatabaseMigrationMakeCommandTestStub(
+            $creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__ . '/vendor'
+        );
+        $app = array('path' => __DIR__);
+        $command->setLaravel($app);
 		$creator->shouldReceive('create')->once()->with('create_foo', __DIR__.'/database/migrations', null, false);
 
 		$this->runCommand($command, array('name' => 'create_foo'));

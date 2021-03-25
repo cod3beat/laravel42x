@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseSoftDeletingScopeTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseSoftDeletingScopeTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testApplyingScopeToABuilder()
-	{
-		$scope = m::mock('Illuminate\Database\Eloquent\SoftDeletingScope[extend]');
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
-		$builder->shouldReceive('getModel')->once()->andReturn($model = m::mock('StdClass'));
+    public function testApplyingScopeToABuilder()
+    {
+        $scope = m::mock('Illuminate\Database\Eloquent\SoftDeletingScope[extend]');
+        $builder = m::mock('Illuminate\Database\Eloquent\Builder');
+        $builder->shouldReceive('getModel')->once()->andReturn($model = m::mock('StdClass'));
 		$model->shouldReceive('getQualifiedDeletedAtColumn')->once()->andReturn('table.deleted_at');
 		$builder->shouldReceive('whereNull')->once()->with('table.deleted_at');
 		$scope->shouldReceive('extend')->once();

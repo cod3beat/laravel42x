@@ -1,24 +1,30 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
 class DatabaseConnectionFactoryPDOStub extends PDO {
 	public function __construct() {}
 }
 
-class DatabaseConnectionFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testMakeCallsCreateConnection()
-	{
-		$factory = $this->getMock('Illuminate\Database\Connectors\ConnectionFactory', array('createConnector', 'createConnection'), array($container = m::mock('Illuminate\Container\Container')));
-		$container->shouldReceive('bound')->andReturn(false);
-		$connector = m::mock('stdClass');
+    public function testMakeCallsCreateConnection()
+    {
+        $factory = $this->getMock(
+            'Illuminate\Database\Connectors\ConnectionFactory',
+            array('createConnector', 'createConnection'),
+            array($container = m::mock('Illuminate\Container\Container'))
+        );
+        $container->shouldReceive('bound')->andReturn(false);
+        $connector = m::mock('stdClass');
 		$config = array('driver' => 'mysql', 'prefix' => 'prefix', 'database' => 'database', 'name' => 'foo');
 		$pdo = new DatabaseConnectionFactoryPDOStub;
 		$connector->shouldReceive('connect')->once()->with($config)->andReturn($pdo);

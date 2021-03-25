@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentPivotTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentPivotTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPropertiesAreSetCorrectly()
-	{
-		$parent = m::mock('Illuminate\Database\Eloquent\Model[getConnectionName]');
-		$parent->shouldReceive('getConnectionName')->once()->andReturn('connection');
-		$pivot = new Pivot($parent, array('foo' => 'bar'), 'table', true);
+    public function testPropertiesAreSetCorrectly()
+    {
+        $parent = m::mock('Illuminate\Database\Eloquent\Model[getConnectionName]');
+        $parent->shouldReceive('getConnectionName')->once()->andReturn('connection');
+        $pivot = new Pivot($parent, array('foo' => 'bar'), 'table', true);
 
 		$this->assertEquals(array('foo' => 'bar'), $pivot->getAttributes());
 		$this->assertEquals('connection', $pivot->getConnectionName());

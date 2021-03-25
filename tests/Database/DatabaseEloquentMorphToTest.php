@@ -1,22 +1,25 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentMorphToTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testLookupDictionaryIsProperlyConstructed()
-	{
-		$relation = $this->getRelation();
-		$relation->addEagerConstraints(array(
-			$one = (object) array('morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'),
+    public function testLookupDictionaryIsProperlyConstructed()
+    {
+        $relation = $this->getRelation();
+        $relation->addEagerConstraints(
+            array(
+                $one = (object)array('morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'),
 			$two = (object) array('morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'),
 			$three = (object) array('morph_type' => 'morph_type_2', 'foreign_key' => 'foreign_key_2'),
 		));
