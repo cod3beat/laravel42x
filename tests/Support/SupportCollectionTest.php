@@ -1,19 +1,21 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Support\Collection;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class SupportCollectionTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportCollectionTest extends BackwardCompatibleTestCase
+{
 
-	public function testFirstReturnsFirstItemInCollection()
-	{
-		$c = new Collection(array('foo', 'bar'));
-		$this->assertEquals('foo', $c->first());
-	}
+    public function testFirstReturnsFirstItemInCollection()
+    {
+        $c = new Collection(array('foo', 'bar'));
+        $this->assertEquals('foo', $c->first());
+    }
 
 
-	public function testLastReturnsLastItemInCollection()
-	{
+    public function testLastReturnsLastItemInCollection()
+    {
 		$c = new Collection(array('foo', 'bar'));
 
 		$this->assertEquals('bar', $c->last());
@@ -285,14 +287,14 @@ class SupportCollectionTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testRandom()
-	{
-		$data = new Collection(array(1, 2, 3, 4, 5, 6));
-		$random = $data->random();
-		$this->assertInternalType('integer', $random);
-		$this->assertContains($random, $data->all());
-		$random = $data->random(3);
-		$this->assertCount(3, $random);
-	}
+    {
+        $data = new Collection(array(1, 2, 3, 4, 5, 6));
+        $random = $data->random();
+        $this->assertIsInt($random);
+        $this->assertContains($random, $data->all());
+        $random = $data->random(3);
+        $this->assertCount(3, $random);
+    }
 
 
 	public function testRandomOnEmpty()

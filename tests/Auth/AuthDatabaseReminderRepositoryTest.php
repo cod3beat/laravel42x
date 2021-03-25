@@ -19,16 +19,16 @@ class AuthDatabaseReminderRepositoryTest extends BackwardCompatibleTestCase
         $repo = $this->getRepo();
         $repo->getConnection()->shouldReceive('table')->with('table')->andReturn($query = m::mock('StdClass'));
         $query->shouldReceive('where')->with('email', 'email')->andReturn($query);
-		$query->shouldReceive('delete')->once();
-		$query->shouldReceive('insert')->once();
-		$user = m::mock(RemindableInterface::class);
-		$user->shouldReceive('getReminderEmail')->andReturn('email');
+        $query->shouldReceive('delete')->once();
+        $query->shouldReceive('insert')->once();
+        $user = m::mock(RemindableInterface::class);
+        $user->shouldReceive('getReminderEmail')->andReturn('email');
 
-		$results = $repo->create($user);
+        $results = $repo->create($user);
 
-		$this->assertInternalType('string', $results);
-		$this->assertGreaterThan(1, strlen($results));
-	}
+        $this->assertIsString($results);
+        $this->assertGreaterThan(1, strlen($results));
+    }
 
 
 	public function testExistReturnsFalseIfNoRowFoundForUser()

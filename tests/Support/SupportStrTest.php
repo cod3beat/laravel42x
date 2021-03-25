@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Str;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class SupportStrTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportStrTest extends BackwardCompatibleTestCase
+{
 
-	/**
-	* Test the Str::words method.
-	*
-	* @group laravel
-	*/
-	public function testStringCanBeLimitedByWords()
-	{
-		$this->assertEquals('Taylor...', Str::words('Taylor Otwell', 1));
-		$this->assertEquals('Taylor___', Str::words('Taylor Otwell', 1, '___'));
+    /**
+     * Test the Str::words method.
+     *
+     * @group laravel
+     */
+    public function testStringCanBeLimitedByWords()
+    {
+        $this->assertEquals('Taylor...', Str::words('Taylor Otwell', 1));
+        $this->assertEquals('Taylor___', Str::words('Taylor Otwell', 1, '___'));
 		$this->assertEquals('Taylor Otwell', Str::words('Taylor Otwell', 3));
 	}
 
@@ -133,20 +135,20 @@ class SupportStrTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testQuickRandom()
-	{
-		$randomInteger = mt_rand(1, 100);
-		$this->assertEquals($randomInteger, strlen(Str::quickRandom($randomInteger)));
-		$this->assertInternalType('string', Str::quickRandom());
-		$this->assertEquals(16, strlen(Str::quickRandom()));
-	}
+    {
+        $randomInteger = mt_rand(1, 100);
+        $this->assertEquals($randomInteger, strlen(Str::quickRandom($randomInteger)));
+        $this->assertIsString(Str::quickRandom());
+        $this->assertEquals(16, strlen(Str::quickRandom()));
+    }
 
 
 	public function testRandom()
-	{
-		$this->assertEquals(16, strlen(Str::random()));
-		$randomInteger = mt_rand(1, 100);
-		$this->assertEquals($randomInteger, strlen(Str::random($randomInteger)));
-		$this->assertInternalType('string', Str::random());
-	}
+    {
+        $this->assertEquals(16, strlen(Str::random()));
+        $randomInteger = mt_rand(1, 100);
+        $this->assertEquals($randomInteger, strlen(Str::random($randomInteger)));
+        $this->assertIsString(Str::random());
+    }
 
 }
