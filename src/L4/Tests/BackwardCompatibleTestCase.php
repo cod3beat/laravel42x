@@ -3,8 +3,8 @@
 namespace L4\Tests;
 
 use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class BackwardCompatibleTestCase extends TestCase
@@ -33,7 +33,7 @@ class BackwardCompatibleTestCase extends TestCase
      * @param bool $callOriginalMethods
      * @param object $proxyTarget
      *
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      *
      * @throws Exception
      */
