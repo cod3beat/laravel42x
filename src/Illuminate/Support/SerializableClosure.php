@@ -1,21 +1,22 @@
 <?php namespace Illuminate\Support;
 
-use SuperClosure\SerializableClosure as SuperClosure;
+use Opis\Closure\SerializableClosure as SuperClosure;
 
 /**
  * Extends SuperClosure for backwards compatibility.
  */
-class SerializableClosure extends SuperClosure {
+class SerializableClosure extends SuperClosure
+{
 
-	/**
-	 * The code for the closure
-	 *
-	 * @var string
-	 */
-	protected $code;
+    /**
+     * The code for the closure
+     *
+     * @var string
+     */
+    protected $code;
 
-	/**
-	 * The variables that were "used" or imported from the parent scope
+    /**
+     * The variables that were "used" or imported from the parent scope
 	 *
 	 * @var array
 	 */
