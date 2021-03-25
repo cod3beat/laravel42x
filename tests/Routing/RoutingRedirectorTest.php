@@ -1,19 +1,21 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Routing\Redirector;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class RoutingRedirectorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingRedirectorTest extends BackwardCompatibleTestCase
+{
 
-	protected $headers;
-	protected $request;
-	protected $url;
-	protected $session;
-	protected $redirect;
+    protected $headers;
+    protected $request;
+    protected $url;
+    protected $session;
+    protected $redirect;
 
-	public function setUp()
-	{
-		$this->headers = m::mock('Symfony\Component\HttpFoundation\HeaderBag');
+    public function setUp()
+    {
+        $this->headers = m::mock('Symfony\Component\HttpFoundation\HeaderBag');
 
 		$this->request = m::mock('Illuminate\Http\Request');
 		$this->request->headers = $this->headers;
@@ -23,27 +25,27 @@ class RoutingRedirectorTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->url->shouldReceive('to')->with('bar', array(), null)->andReturn('http://foo.com/bar');
 		$this->url->shouldReceive('to')->with('bar', array(), true)->andReturn('https://foo.com/bar');
 		$this->url->shouldReceive('to')->with('login', array(), null)->andReturn('http://foo.com/login');
-		$this->url->shouldReceive('to')->with('http://foo.com/bar', array(), null)->andReturn('http://foo.com/bar');
-		$this->url->shouldReceive('to')->with('/', array(), null)->andReturn('http://foo.com/');
+        $this->url->shouldReceive('to')->with('http://foo.com/bar', array(), null)->andReturn('http://foo.com/bar');
+        $this->url->shouldReceive('to')->with('/', array(), null)->andReturn('http://foo.com/');
 
-		$this->session = m::mock('Illuminate\Session\Store');
+        $this->session = m::mock('Illuminate\Session\Store');
 
-		$this->redirect = new Redirector($this->url);
-		$this->redirect->setSession($this->session);
-	}
-
-
-	public function tearDown()
-	{
-		m::close();
-	}
+        $this->redirect = new Redirector($this->url);
+        $this->redirect->setSession($this->session);
+    }
 
 
-	public function testBasicRedirectTo()
-	{
-		$response = $this->redirect->to('bar');
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
-		$this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+
+    public function testBasicRedirectTo()
+    {
+        $response = $this->redirect->to('bar');
+
+        $this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
 		$this->assertEquals('http://foo.com/bar', $response->getTargetUrl());
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($this->session, $response->getSession());

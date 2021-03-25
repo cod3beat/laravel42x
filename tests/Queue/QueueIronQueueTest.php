@@ -1,27 +1,34 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueIronQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueIronQueueTest extends BackwardCompatibleTestCase
+{
 
-	public function setUp()
-	{
-		parent::setUp();
+    public function setUp()
+    {
+        parent::setUp();
 
-		$this->markTestSkipped();
-	}
+        $this->markTestSkipped();
+    }
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPushProperlyPushesJobOntoIron()
-	{
-		$queue = new Illuminate\Queue\IronQueue($iron = m::mock('IronMQ'), m::mock('Illuminate\Http\Request'), 'default', true);
-		$crypt = m::mock('Illuminate\Encryption\Encrypter');
-		$queue->setEncrypter($crypt);
+    public function testPushProperlyPushesJobOntoIron()
+    {
+        $queue = new Illuminate\Queue\IronQueue(
+            $iron = m::mock('IronMQ'),
+            m::mock('Illuminate\Http\Request'),
+            'default',
+            true
+        );
+        $crypt = m::mock('Illuminate\Encryption\Encrypter');
+        $queue->setEncrypter($crypt);
 		$crypt->shouldReceive('encrypt')->once()->with(json_encode(array('job' => 'foo', 'data' => array(1, 2, 3), 'attempts' => 1, 'queue' => 'default')))->andReturn('encrypted');
 		$iron->shouldReceive('postMessage')->once()->with('default', 'encrypted', array())->andReturn((object) array('id' => 1));
 		$queue->push('foo', array(1, 2, 3));

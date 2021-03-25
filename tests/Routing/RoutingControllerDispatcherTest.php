@@ -1,31 +1,38 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use Illuminate\Routing\Controller;
 use Illuminate\Container\Container;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Routing\ControllerDispatcher;
+use Illuminate\Routing\Route;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class RoutingControllerDispatcherTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingControllerDispatcherTest extends BackwardCompatibleTestCase
+{
 
-	public function setUp()
-	{
-		$_SERVER['ControllerDispatcherTestControllerStub'] = null;
-	}
-
-
-	public function tearDown()
-	{
-		unset($_SERVER['ControllerDispatcherTestControllerStub']);
-		m::close();
-	}
+    public function setUp()
+    {
+        $_SERVER['ControllerDispatcherTestControllerStub'] = null;
+    }
 
 
-	public function testBasicDispatchToMethod()
-	{
-		$request = Request::create('controller');
-		$route = new Route(array('GET'), 'controller', array('uses' => function() {}));
+    protected function tearDown(): void
+    {
+        unset($_SERVER['ControllerDispatcherTestControllerStub']);
+        m::close();
+    }
+
+
+    public function testBasicDispatchToMethod()
+    {
+        $request = Request::create('controller');
+        $route = new Route(
+            array('GET'), 'controller', array(
+            'uses' => function () {
+            }
+        )
+        );
 		$route->bind($request);
 		$dispatcher = new ControllerDispatcher(m::mock('Illuminate\Routing\RouteFiltererInterface'), new Container);
 

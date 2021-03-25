@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Queue\QueueManager;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class QueueManagerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueManagerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testDefaultConnectionCanBeResolved()
-	{
-		$app = array(
-			'config' => array(
-				'queue.default' => 'sync',
+    public function testDefaultConnectionCanBeResolved()
+    {
+        $app = array(
+            'config' => array(
+                'queue.default' => 'sync',
 				'queue.connections.sync' => array('driver' => 'sync'),
 			),
 			'encrypter' => $encrypter = m::mock('Illuminate\Encryption\Encrypter'),

@@ -1,20 +1,26 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueRedisQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueRedisQueueTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPushProperlyPushesJobOntoRedis()
-	{
-		$queue = $this->getMock('Illuminate\Queue\RedisQueue', array('getRandomId'), array($redis = m::mock('Illuminate\Redis\Database'), 'default'));
-		$queue->expects($this->once())->method('getRandomId')->will($this->returnValue('foo'));
-		$redis->shouldReceive('connection')->once()->andReturn($redis);
+    public function testPushProperlyPushesJobOntoRedis()
+    {
+        $queue = $this->getMock(
+            'Illuminate\Queue\RedisQueue',
+            array('getRandomId'),
+            array($redis = m::mock('Illuminate\Redis\Database'), 'default')
+        );
+        $queue->expects($this->once())->method('getRandomId')->will($this->returnValue('foo'));
+        $redis->shouldReceive('connection')->once()->andReturn($redis);
 		$redis->shouldReceive('rpush')->once()->with('queues:default', json_encode(array('job' => 'foo', 'data' => array('data'), 'id' => 'foo', 'attempts' => 1)));
 
 		$id = $queue->push('foo', array('data'));

@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueListenerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueListenerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testRunProcessCallsProcess()
-	{
-		$process = m::mock('Symfony\Component\Process\Process')->makePartial();
-		$process->shouldReceive('run')->once();
-		$listener = m::mock('Illuminate\Queue\Listener')->makePartial();
+    public function testRunProcessCallsProcess()
+    {
+        $process = m::mock('Symfony\Component\Process\Process')->makePartial();
+        $process->shouldReceive('run')->once();
+        $listener = m::mock('Illuminate\Queue\Listener')->makePartial();
 		$listener->shouldReceive('memoryExceeded')->once()->with(1)->andReturn(false);
 
 		$listener->runProcess($process, 1);

@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueRedisJobTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueRedisJobTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFireProperlyCallsTheJobHandler()
-	{
-		$job = $this->getJob();
-		$job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
-		$handler->shouldReceive('fire')->once()->with($job, array('data'));
+    public function testFireProperlyCallsTheJobHandler()
+    {
+        $job = $this->getJob();
+        $job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
+        $handler->shouldReceive('fire')->once()->with($job, array('data'));
 
 		$job->fire();
 	}

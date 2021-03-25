@@ -1,21 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Routing\Generators\ControllerGenerator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class RoutingControllerGeneratorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingControllerGeneratorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFullControllerCanBeCreated()
-	{
-		$gen = new ControllerGenerator($files = m::mock('Illuminate\Filesystem\Filesystem[put]'));
-		$controller = file_get_contents(__DIR__.'/fixtures/controller.php');
-		$files->shouldReceive('put')->once()->andReturnUsing(function($path, $actual)
+    public function testFullControllerCanBeCreated()
+    {
+        $gen = new ControllerGenerator($files = m::mock('Illuminate\Filesystem\Filesystem[put]'));
+        $controller = file_get_contents(__DIR__ . '/fixtures/controller.php');
+        $files->shouldReceive('put')->once()->andReturnUsing(
+            function ($path, $actual)
 		{
 			$_SERVER['__controller.actual'] = $actual;
 		});

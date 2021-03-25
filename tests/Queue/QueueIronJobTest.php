@@ -1,27 +1,29 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueIronJobTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueIronJobTest extends BackwardCompatibleTestCase
+{
 
-	public function setUp()
-	{
-		parent::setUp();
+    public function setUp()
+    {
+        parent::setUp();
 
-		$this->markTestSkipped();
-	}
+        $this->markTestSkipped();
+    }
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFireProperlyCallsTheJobHandler()
-	{
-		$job = $this->getJob();
-		$job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
-		$handler->shouldReceive('fire')->once()->with($job, array('data'));
+    public function testFireProperlyCallsTheJobHandler()
+    {
+        $job = $this->getJob();
+        $job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
+        $handler->shouldReceive('fire')->once()->with($job, array('data'));
 
 		$job->fire();
 	}

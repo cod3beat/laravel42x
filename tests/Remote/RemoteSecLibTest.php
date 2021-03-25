@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class RemoteSecLibGatewayTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RemoteSecLibGatewayTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testHostAndPortSetCorrectly()
-	{
-		$gateway = $this->getGateway();
-		$this->assertEquals('127.0.0.1', $gateway->getHost());
-		$this->assertEquals(22, $gateway->getPort());
+    public function testHostAndPortSetCorrectly()
+    {
+        $gateway = $this->getGateway();
+        $this->assertEquals('127.0.0.1', $gateway->getHost());
+        $this->assertEquals(22, $gateway->getPort());
 	}
 
 
