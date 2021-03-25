@@ -1,22 +1,24 @@
 <?php
 
-use Illuminate\Database\Connection;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Database\Connection;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class AuthDatabaseReminderRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class AuthDatabaseReminderRepositoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testCreateInsertsNewRecordIntoTable()
-	{
-		$repo = $this->getRepo();
-		$repo->getConnection()->shouldReceive('table')->with('table')->andReturn($query = m::mock('StdClass'));
-		$query->shouldReceive('where')->with('email', 'email')->andReturn($query);
+    public function testCreateInsertsNewRecordIntoTable()
+    {
+        $repo = $this->getRepo();
+        $repo->getConnection()->shouldReceive('table')->with('table')->andReturn($query = m::mock('StdClass'));
+        $query->shouldReceive('where')->with('email', 'email')->andReturn($query);
 		$query->shouldReceive('delete')->once();
 		$query->shouldReceive('insert')->once();
 		$user = m::mock(RemindableInterface::class);

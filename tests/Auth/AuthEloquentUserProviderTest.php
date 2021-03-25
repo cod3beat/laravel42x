@@ -1,24 +1,26 @@
 <?php
 
+use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Database\Connection;
 use Illuminate\Hashing\HasherInterface;
-use Illuminate\Auth\EloquentUserProvider;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class AuthEloquentUserProviderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testRetrieveByIDReturnsUser()
-	{
-		$provider = $this->getProviderMock();
-		$mock = m::mock('stdClass');
-		$mock->shouldReceive('newQuery')->once()->andReturn($mock);
+    public function testRetrieveByIDReturnsUser()
+    {
+        $provider = $this->getProviderMock();
+        $mock = m::mock('stdClass');
+        $mock->shouldReceive('newQuery')->once()->andReturn($mock);
 		$mock->shouldReceive('find')->once()->with(1)->andReturn('bar');
 		$provider->expects($this->once())->method('createModel')->will($this->returnValue($mock));
 		$user = $provider->retrieveByID(1);

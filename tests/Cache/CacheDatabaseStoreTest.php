@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Cache\DatabaseStore;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class CacheDatabaseStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheDatabaseStoreTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testNullIsReturnedWhenItemNotFound()
-	{
-		$store = $this->getStore();
-		$table = m::mock('StdClass');
-		$store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
+    public function testNullIsReturnedWhenItemNotFound()
+    {
+        $store = $this->getStore();
+        $table = m::mock('StdClass');
+        $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
 		$table->shouldReceive('where')->once()->with('key', '=', 'prefixfoo')->andReturn($table);
 		$table->shouldReceive('first')->once()->andReturn(null);
 

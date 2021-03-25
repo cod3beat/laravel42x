@@ -1,13 +1,15 @@
 <?php /** @noinspection PhpParamsInspection */
 
+use Illuminate\Auth\Reminders\PasswordBroker;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
 use Illuminate\Auth\UserProviderInterface;
 use Illuminate\Mail\Mailer;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
-use Illuminate\Auth\Reminders\PasswordBroker;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class AuthPasswordBrokerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
+{
 
     /**
      * @var ReminderRepositoryInterface|ObjectProphecy
@@ -31,10 +33,10 @@ class AuthPasswordBrokerTest extends \L4\Tests\BackwardCompatibleTestCase {
         $this->mailer = $this->prophesize(Mailer::class);
     }
 
-    public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
 	public function testIfUserIsNotFoundErrorRedirectIsReturned()
