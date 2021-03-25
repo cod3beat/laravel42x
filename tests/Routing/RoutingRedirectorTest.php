@@ -13,17 +13,17 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
     protected $session;
     protected $redirect;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->headers = m::mock('Symfony\Component\HttpFoundation\HeaderBag');
 
-		$this->request = m::mock('Illuminate\Http\Request');
-		$this->request->headers = $this->headers;
+        $this->request = m::mock('Illuminate\Http\Request');
+        $this->request->headers = $this->headers;
 
-		$this->url = m::mock('Illuminate\Routing\UrlGenerator');
-		$this->url->shouldReceive('getRequest')->andReturn($this->request);
-		$this->url->shouldReceive('to')->with('bar', array(), null)->andReturn('http://foo.com/bar');
-		$this->url->shouldReceive('to')->with('bar', array(), true)->andReturn('https://foo.com/bar');
+        $this->url = m::mock('Illuminate\Routing\UrlGenerator');
+        $this->url->shouldReceive('getRequest')->andReturn($this->request);
+        $this->url->shouldReceive('to')->with('bar', array(), null)->andReturn('http://foo.com/bar');
+        $this->url->shouldReceive('to')->with('bar', array(), true)->andReturn('https://foo.com/bar');
 		$this->url->shouldReceive('to')->with('login', array(), null)->andReturn('http://foo.com/login');
         $this->url->shouldReceive('to')->with('http://foo.com/bar', array(), null)->andReturn('http://foo.com/bar');
         $this->url->shouldReceive('to')->with('/', array(), null)->andReturn('http://foo.com/');

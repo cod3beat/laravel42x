@@ -11,7 +11,7 @@ use Mockery as m;
 class RoutingControllerDispatcherTest extends BackwardCompatibleTestCase
 {
 
-    public function setUp()
+    protected function setUp(): void
     {
         $_SERVER['ControllerDispatcherTestControllerStub'] = null;
     }

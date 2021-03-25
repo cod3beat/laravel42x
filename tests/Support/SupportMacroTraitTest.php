@@ -1,21 +1,24 @@
 <?php
 
 
-class SupportMacroTraitTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
 
-	private $macroTrait;
+class SupportMacroTraitTest extends BackwardCompatibleTestCase
+{
 
-	public function setUp()
-	{
-		$this->macroTrait = $this->createObjectForTrait();
-	}
+    private $macroTrait;
 
-	private function createObjectForTrait()
-	{
-		$traitName = 'Illuminate\Support\Traits\MacroableTrait';
+    protected function setUp(): void
+    {
+        $this->macroTrait = $this->createObjectForTrait();
+    }
 
-		return $this->getObjectForTrait($traitName);
-	}
+    private function createObjectForTrait()
+    {
+        $traitName = 'Illuminate\Support\Traits\MacroableTrait';
+
+        return $this->getObjectForTrait($traitName);
+    }
 
 
 	public function testRegisterMacro()

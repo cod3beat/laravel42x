@@ -6,7 +6,7 @@ use Mockery as m;
 class SupportFacadeTest extends BackwardCompatibleTestCase
 {
 
-    public function setUp()
+    protected function setUp(): void
     {
         Illuminate\Support\Facades\Facade::clearResolvedInstances();
         FacadeStub::setFacadeApplication(null);
