@@ -24,7 +24,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
      */
     private $mailer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
