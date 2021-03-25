@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\View\Compilers\BladeCompiler;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class ViewBladeCompilerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ViewBladeCompilerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testIsExpiredReturnsTrueIfCompiledFileDoesntExist()
-	{
-		$compiler = new BladeCompiler($files = $this->getFiles(), __DIR__);
-		$files->shouldReceive('exists')->once()->with(__DIR__.'/'.md5('foo'))->andReturn(false);
-		$this->assertTrue($compiler->isExpired('foo'));
+    public function testIsExpiredReturnsTrueIfCompiledFileDoesntExist()
+    {
+        $compiler = new BladeCompiler($files = $this->getFiles(), __DIR__);
+        $files->shouldReceive('exists')->once()->with(__DIR__ . '/' . md5('foo'))->andReturn(false);
+        $this->assertTrue($compiler->isExpired('foo'));
 	}
 
 

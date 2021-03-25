@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class CacheRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheRepositoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testGetReturnsValueFromCache()
-	{
-		$repo = $this->getRepository();
-		$repo->getStore()->shouldReceive('get')->once()->with('foo')->andReturn('bar');
-		$this->assertEquals('bar', $repo->get('foo'));
+    public function testGetReturnsValueFromCache()
+    {
+        $repo = $this->getRepository();
+        $repo->getStore()->shouldReceive('get')->once()->with('foo')->andReturn('bar');
+        $this->assertEquals('bar', $repo->get('foo'));
 	}
 
 

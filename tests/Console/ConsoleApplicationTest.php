@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ConsoleApplicationTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ConsoleApplicationTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testAddSetsLaravelInstance()
-	{
-		$app = $this->getMock('Illuminate\Console\Application', array('addToParent'));
-		$app->setLaravel('foo');
-		$command = m::mock('Illuminate\Console\Command');
+    public function testAddSetsLaravelInstance()
+    {
+        $app = $this->getMock('Illuminate\Console\Application', array('addToParent'));
+        $app->setLaravel('foo');
+        $command = m::mock('Illuminate\Console\Command');
 		$command->shouldReceive('setLaravel')->once()->with('foo');
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->add($command);

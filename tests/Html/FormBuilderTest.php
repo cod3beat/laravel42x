@@ -1,39 +1,41 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Http\Request;
 use Illuminate\Html\FormBuilder;
 use Illuminate\Html\HtmlBuilder;
-use Illuminate\Routing\UrlGenerator;
+use Illuminate\Http\Request;
 use Illuminate\Routing\RouteCollection;
+use Illuminate\Routing\UrlGenerator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class FormBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FormBuilderTest extends BackwardCompatibleTestCase
+{
 
-	/**
-	 * Setup the test environment.
-	 */
-	public function setUp()
-	{
-		$this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
-		$this->htmlBuilder = new HtmlBuilder($this->urlGenerator);
-		$this->formBuilder =  new FormBuilder($this->htmlBuilder, $this->urlGenerator, '');
-	}
-
-
-	/**
-	 * Destroy the test environment.
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    /**
+     * Setup the test environment.
+     */
+    protected function setUp(): void
+    {
+        $this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
+        $this->htmlBuilder = new HtmlBuilder($this->urlGenerator);
+        $this->formBuilder = new FormBuilder($this->htmlBuilder, $this->urlGenerator, '');
+    }
 
 
-	public function testOpeningForm()
-	{
-		$form1 = $this->formBuilder->open(array('method' => 'GET'));
-		$form2 = $this->formBuilder->open(array('method' => 'POST', 'class' => 'form', 'id' => 'id-form'));
-		$form3 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16'));
+    /**
+     * Destroy the test environment.
+     */
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
+
+    public function testOpeningForm()
+    {
+        $form1 = $this->formBuilder->open(array('method' => 'GET'));
+        $form2 = $this->formBuilder->open(array('method' => 'POST', 'class' => 'form', 'id' => 'id-form'));
+        $form3 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16'));
 		$form4 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16', 'files' => true));
 		$form5 = $this->formBuilder->open(array('method' => 'PUT'));
 
@@ -256,35 +258,50 @@ class FormBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testFormSelectYear()
 	{
-		$select1 = $this->formBuilder->selectYear('year', 2000, 2020);
-		$select2 = $this->formBuilder->selectYear('year', 2000, 2020, null, array('id' => 'foo'));
-		$select3 = $this->formBuilder->selectYear('year', 2000, 2020, '2000');
+        $select1 = $this->formBuilder->selectYear('year', 2000, 2020);
+        $select2 = $this->formBuilder->selectYear('year', 2000, 2020, null, array('id' => 'foo'));
+        $select3 = $this->formBuilder->selectYear('year', 2000, 2020, '2000');
 
-		$this->assertContains('<select name="year"><option value="2000">2000</option><option value="2001">2001</option>', $select1);
-		$this->assertContains('<select id="foo" name="year"><option value="2000">2000</option><option value="2001">2001</option>', $select2);
-		$this->assertContains('<select name="year"><option value="2000" selected="selected">2000</option><option value="2001">2001</option>', $select3);
-	}
+        $this->assertStringContainsString(
+            '<select name="year"><option value="2000">2000</option><option value="2001">2001</option>',
+            $select1
+        );
+        $this->assertStringContainsString(
+            '<select id="foo" name="year"><option value="2000">2000</option><option value="2001">2001</option>',
+            $select2
+        );
+        $this->assertStringContainsString(
+            '<select name="year"><option value="2000" selected="selected">2000</option><option value="2001">2001</option>',
+            $select3
+        );
+    }
 
 
 	public function testFormSelectRange()
-	{
-		$range = $this->formBuilder->selectRange('dob', 1900, 2013);
+    {
+        $range = $this->formBuilder->selectRange('dob', 1900, 2013);
 
-		$this->assertContains('<select name="dob"><option value="1900">1900</option>', $range);
-		$this->assertContains('<option value="2013">2013</option>', $range);
-	}
+        $this->assertStringContainsString('<select name="dob"><option value="1900">1900</option>', $range);
+        $this->assertStringContainsString('<option value="2013">2013</option>', $range);
+    }
 
 
 	public function testFormSelectMonth()
-	{
-		$month1 = $this->formBuilder->selectMonth('month');
-		$month2 = $this->formBuilder->selectMonth('month', '1');
-		$month3 = $this->formBuilder->selectMonth('month', null, array('id' => 'foo'));
+    {
+        $month1 = $this->formBuilder->selectMonth('month');
+        $month2 = $this->formBuilder->selectMonth('month', '1');
+        $month3 = $this->formBuilder->selectMonth('month', null, array('id' => 'foo'));
 
-		$this->assertContains('<select name="month"><option value="1">January</option><option value="2">February</option>', $month1);
-		$this->assertContains('<select name="month"><option value="1" selected="selected">January</option>', $month2);
-		$this->assertContains('<select id="foo" name="month"><option value="1">January</option>', $month3);
-	}
+        $this->assertStringContainsString(
+            '<select name="month"><option value="1">January</option><option value="2">February</option>',
+            $month1
+        );
+        $this->assertStringContainsString(
+            '<select name="month"><option value="1" selected="selected">January</option>',
+            $month2
+        );
+        $this->assertStringContainsString('<select id="foo" name="month"><option value="1">January</option>', $month3);
+    }
 
 
 	public function testFormCheckbox()

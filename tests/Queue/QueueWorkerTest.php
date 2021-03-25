@@ -1,21 +1,26 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
-use Illuminate\Queue\Worker;
 
-class QueueWorkerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueWorkerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testJobIsPoppedOffQueueAndProcessed()
-	{
-		$worker = $this->getMock('Illuminate\Queue\Worker', array('process'), array($manager = m::mock('Illuminate\Queue\QueueManager')));
-		$manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
-		$manager->shouldReceive('getName')->andReturn('connection');
+    public function testJobIsPoppedOffQueueAndProcessed()
+    {
+        $worker = $this->getMock(
+            'Illuminate\Queue\Worker',
+            array('process'),
+            array($manager = m::mock('Illuminate\Queue\QueueManager'))
+        );
+        $manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
+        $manager->shouldReceive('getName')->andReturn('connection');
 		$job = m::mock('Illuminate\Queue\Jobs\Job');
 		$connection->shouldReceive('pop')->once()->with('queue')->andReturn($job);
 		$worker->expects($this->once())->method('process')->with($this->equalTo('connection'), $this->equalTo($job), $this->equalTo(0), $this->equalTo(0));
@@ -88,33 +93,37 @@ class QueueWorkerTest extends \L4\Tests\BackwardCompatibleTestCase {
 	}
 
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testJobIsReleasedWhenExceptionIsThrown()
-	{
-		$worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
-		$job = m::mock('Illuminate\Queue\Jobs\Job');
-		$job->shouldReceive('fire')->once()->andReturnUsing(function() { throw new RuntimeException; });
-		$job->shouldReceive('isDeleted')->once()->andReturn(false);
-		$job->shouldReceive('release')->once()->with(5);
+    public function testJobIsReleasedWhenExceptionIsThrown()
+    {
+        $this->expectException(RuntimeException::class);
+        $worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
+        $job = m::mock('Illuminate\Queue\Jobs\Job');
+        $job->shouldReceive('fire')->once()->andReturnUsing(
+            function () {
+                throw new RuntimeException;
+            }
+        );
+        $job->shouldReceive('isDeleted')->once()->andReturn(false);
+        $job->shouldReceive('release')->once()->with(5);
 
-		$worker->process('connection', $job, 0, 5);
-	}
+        $worker->process('connection', $job, 0, 5);
+    }
 
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testJobIsNotReleasedWhenExceptionIsThrownButJobIsDeleted()
-	{
-		$worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
-		$job = m::mock('Illuminate\Queue\Jobs\Job');
-		$job->shouldReceive('fire')->once()->andReturnUsing(function() { throw new RuntimeException; });
-		$job->shouldReceive('isDeleted')->once()->andReturn(true);
-		$job->shouldReceive('release')->never();
+    public function testJobIsNotReleasedWhenExceptionIsThrownButJobIsDeleted()
+    {
+        $this->expectException(RuntimeException::class);
+        $worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
+        $job = m::mock('Illuminate\Queue\Jobs\Job');
+        $job->shouldReceive('fire')->once()->andReturnUsing(
+            function () {
+                throw new RuntimeException;
+            }
+        );
+        $job->shouldReceive('isDeleted')->once()->andReturn(true);
+        $job->shouldReceive('release')->never();
 
-		$worker->process('connection', $job, 0, 5);
-	}
+        $worker->process('connection', $job, 0, 5);
+    }
 
 }

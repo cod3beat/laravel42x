@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class QueueSyncJobTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueSyncJobTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFireResolvesAndFiresJobClass()
-	{
-		$container = m::mock('Illuminate\Container\Container');
-		$job = new Illuminate\Queue\Jobs\SyncJob($container, 'Foo', '"data"');
-		$handler = m::mock('StdClass');
+    public function testFireResolvesAndFiresJobClass()
+    {
+        $container = m::mock('Illuminate\Container\Container');
+        $job = new Illuminate\Queue\Jobs\SyncJob($container, 'Foo', '"data"');
+        $handler = m::mock('StdClass');
 		$container->shouldReceive('make')->once()->with('Foo')->andReturn($handler);
 		$handler->shouldReceive('fire')->once()->with($job, 'data');
 

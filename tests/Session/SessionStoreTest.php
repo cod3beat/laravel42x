@@ -1,20 +1,28 @@
 <?php
 
+use Illuminate\Cookie\CookieJar;
+use Illuminate\Session\CookieSessionHandler;
+use Illuminate\Session\Store;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\Request;
 
-class SessionStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SessionStoreTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSessionIsLoadedFromHandler()
-	{
-		$session = $this->getSession();
-		$session->getHandler()->shouldReceive('read')->once()->with($this->getSessionId())->andReturn(serialize(array('foo' => 'bar', 'bagged' => array('name' => 'taylor'))));
-		$session->registerBag(new Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag('bagged'));
+    public function testSessionIsLoadedFromHandler()
+    {
+        $session = $this->getSession();
+        $session->getHandler()->shouldReceive('read')->once()->with($this->getSessionId())->andReturn(
+            serialize(array('foo' => 'bar', 'bagged' => array('name' => 'taylor')))
+        );
+        $session->registerBag(new Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag('bagged'));
 		$session->start();
 
 		$this->assertEquals('bar', $session->get('foo'));
@@ -244,17 +252,17 @@ class SessionStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testHandlerNeedsRequest()
-	{
-		$session = $this->getSession();
-		$this->assertFalse($session->handlerNeedsRequest());
-		$session->getHandler()->shouldReceive('setRequest')->never();
+    {
+        $session = $this->getSession();
+        $this->assertFalse($session->handlerNeedsRequest());
+        $session->getHandler()->shouldReceive('setRequest')->never();
 
-		$session = new \Illuminate\Session\Store('test', m::mock(new \Illuminate\Session\CookieSessionHandler(new \Illuminate\Cookie\CookieJar(), 60)));
-		$this->assertTrue($session->handlerNeedsRequest());
-		$session->getHandler()->shouldReceive('setRequest')->once();
-		$request = new \Symfony\Component\HttpFoundation\Request();
-		$session->setRequestOnHandler($request);
-	}
+        $session = new Store('test', m::mock(new CookieSessionHandler(new CookieJar(), 60)));
+        $this->assertTrue($session->handlerNeedsRequest());
+        $session->getHandler()->shouldReceive('setRequest')->once();
+        $request = new Request();
+        $session->setRequestOnHandler($request);
+    }
 
 
 	public function testToken()

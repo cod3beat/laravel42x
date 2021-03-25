@@ -2,22 +2,28 @@
 
 use Illuminate\Translation\LoaderInterface;
 use Illuminate\Translation\MessageSelector;
-use Mockery as m;
 use Illuminate\Translation\Translator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class TranslationTranslatorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class TranslationTranslatorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testHasMethodReturnsFalseWhenReturnedTranslationIsNull()
-	{
-		$t = $this->getMock('Illuminate\Translation\Translator', array('get'), array($this->getLoader(), 'en'));
-		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array()), $this->equalTo('bar'))->will($this->returnValue('foo'));
-		$this->assertFalse($t->has('foo', 'bar'));
+    public function testHasMethodReturnsFalseWhenReturnedTranslationIsNull()
+    {
+        $t = $this->getMock('Illuminate\Translation\Translator', array('get'), array($this->getLoader(), 'en'));
+        $t->expects($this->once())->method('get')->with(
+            $this->equalTo('foo'),
+            $this->equalTo(array()),
+            $this->equalTo('bar')
+        )->will($this->returnValue('foo'));
+        $this->assertFalse($t->has('foo', 'bar'));
 
 		$t = $this->getMock('Illuminate\Translation\Translator', array('get'), array($this->getLoader(), 'en', 'sp'));
 		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array()), $this->equalTo('bar'))->will($this->returnValue('bar'));

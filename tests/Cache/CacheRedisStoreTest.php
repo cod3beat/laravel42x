@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class CacheRedisStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheRedisStoreTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testGetReturnsNullWhenNotFound()
-	{
-		$redis = $this->getRedis();
-		$redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
-		$redis->getRedis()->shouldReceive('get')->once()->with('prefix:foo')->andReturn(null);
+    public function testGetReturnsNullWhenNotFound()
+    {
+        $redis = $this->getRedis();
+        $redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
+        $redis->getRedis()->shouldReceive('get')->once()->with('prefix:foo')->andReturn(null);
 		$this->assertNull($redis->get('foo'));
 	}
 

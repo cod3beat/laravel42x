@@ -1,18 +1,21 @@
-<?php /** @noinspection PhpParamsInspection */
+<?php
+/** @noinspection PhpParamsInspection */
 
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Cookie;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Auth\Guard;
 use Illuminate\Auth\UserInterface;
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Cookie\CookieJar;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Session\Store;
+use L4\Tests\BackwardCompatibleTestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
+class AuthGuardTest extends BackwardCompatibleTestCase
+{
 
     /**
      * @var UserProviderInterface|ObjectProphecy
@@ -23,7 +26,7 @@ class AuthGuardTest extends \L4\Tests\BackwardCompatibleTestCase {
      */
     private $session;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

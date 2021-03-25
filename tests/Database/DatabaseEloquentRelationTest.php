@@ -1,21 +1,25 @@
 <?php
 
-use Mockery as m;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentRelationTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSetRelationFail()
-	{
-		$parent = new EloquentRelationResetModelStub;
-		$relation =new EloquentRelationResetModelStub;
-		$parent->setRelation('test',$relation);
+    public function testSetRelationFail()
+    {
+        $parent = new EloquentRelationResetModelStub;
+        $relation = new EloquentRelationResetModelStub;
+        $parent->setRelation('test', $relation);
 		$parent->setRelation('foo','bar');
 		$this->assertTrue(!array_key_exists('foo', $parent->toArray()));
 	}
@@ -85,10 +89,25 @@ class EloquentRelationQueryStub extends Illuminate\Database\Query\Builder {
 	public function __construct() {}
 }
 
-class EloquentRelationStub extends \Illuminate\Database\Eloquent\Relations\Relation {
-	public function addConstraints() {}
-	public function addEagerConstraints(array $models) {}
-	public function initRelation(array $models, $relation) {}
-	public function match(array $models, \Illuminate\Database\Eloquent\Collection $results, $relation) {}
-	public function getResults() {}
+class EloquentRelationStub extends Relation
+{
+    public function addConstraints()
+    {
+    }
+
+    public function addEagerConstraints(array $models)
+    {
+    }
+
+    public function initRelation(array $models, $relation)
+    {
+    }
+
+    public function match(array $models, Collection $results, $relation)
+    {
+    }
+
+    public function getResults()
+    {
+    }
 }

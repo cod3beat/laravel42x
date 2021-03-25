@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ConfigRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ConfigRepositoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testHasGroupIndicatesIfConfigGroupExists()
-	{
-		$config = $this->getRepository();
-		$config->getLoader()->shouldReceive('exists')->once()->with('group', 'namespace')->andReturn(false);
-		$this->assertFalse($config->hasGroup('namespace::group'));
+    public function testHasGroupIndicatesIfConfigGroupExists()
+    {
+        $config = $this->getRepository();
+        $config->getLoader()->shouldReceive('exists')->once()->with('group', 'namespace')->andReturn(false);
+        $this->assertFalse($config->hasGroup('namespace::group'));
 	}
 
 

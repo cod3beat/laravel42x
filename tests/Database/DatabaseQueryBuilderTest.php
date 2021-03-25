@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression as Raw;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseQueryBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicSelect()
-	{
-		$builder = $this->getBuilder();
-		$builder->select('*')->from('users');
-		$this->assertEquals('select * from "users"', $builder->toSql());
+    public function testBasicSelect()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users');
+        $this->assertEquals('select * from "users"', $builder->toSql());
 	}
 
 
@@ -1177,15 +1179,13 @@ class DatabaseQueryBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
 	}
 
 
-	/**
-	 * @expectedException BadMethodCallException
-	 */
-	public function testBuilderThrowsExpectedExceptionWithUndefinedMethod()
-	{
-		$builder = $this->getBuilder();
+    public function testBuilderThrowsExpectedExceptionWithUndefinedMethod()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $builder = $this->getBuilder();
 
-		$builder->noValidMethodHere();
-	}
+        $builder->noValidMethodHere();
+    }
 
 
 	public function setupCacheTestQuery($cache, $driver)

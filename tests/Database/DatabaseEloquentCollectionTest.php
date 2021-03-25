@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentCollectionTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testAddingItemsToCollection()
-	{
-		$c = new Collection(array('foo'));
-		$c->add('bar')->add('baz');
-		$this->assertEquals(array('foo', 'bar', 'baz'), $c->all());
+    public function testAddingItemsToCollection()
+    {
+        $c = new Collection(array('foo'));
+        $c->add('bar')->add('baz');
+        $this->assertEquals(array('foo', 'bar', 'baz'), $c->all());
 	}
 
 

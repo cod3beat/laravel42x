@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Pagination\Paginator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class PaginationPaginatorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PaginationPaginatorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPaginationContextIsSetupCorrectly()
-	{
-		$p = new Paginator($factory = m::mock('Illuminate\Pagination\Factory'), array('foo', 'bar', 'baz'), 3, 2);
-		$factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
-		$p->setupPaginationContext();
+    public function testPaginationContextIsSetupCorrectly()
+    {
+        $p = new Paginator($factory = m::mock('Illuminate\Pagination\Factory'), array('foo', 'bar', 'baz'), 3, 2);
+        $factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
+        $p->setupPaginationContext();
 
 		$this->assertEquals(2, $p->getLastPage());
 		$this->assertEquals(1, $p->getCurrentPage());

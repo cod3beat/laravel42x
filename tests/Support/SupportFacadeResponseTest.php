@@ -1,20 +1,22 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Support\Facades\Response;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class SupportFacadeResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportFacadeResponseTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testArrayableSendAsJson()
-	{
-		$data = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
-		$data->shouldReceive('toArray')->andReturn(array('foo' => 'bar'));
+    public function testArrayableSendAsJson()
+    {
+        $data = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
+        $data->shouldReceive('toArray')->andReturn(array('foo' => 'bar'));
 
 		$response = Response::json($data);
 		$this->assertEquals('{"foo":"bar"}', $response->getContent());

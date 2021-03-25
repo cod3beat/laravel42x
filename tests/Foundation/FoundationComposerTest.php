@@ -1,20 +1,26 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class FoundationComposerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationComposerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testDumpAutoloadRunsTheCorrectCommand()
-	{
-		$composer = $this->getMock('Illuminate\Foundation\Composer', array('getProcess'), array($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__));
-		$files->shouldReceive('exists')->once()->with(__DIR__.'/composer.phar')->andReturn(true);
-		$process = m::mock('stdClass');
+    public function testDumpAutoloadRunsTheCorrectCommand()
+    {
+        $composer = $this->getMock(
+            'Illuminate\Foundation\Composer',
+            array('getProcess'),
+            array($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__)
+        );
+        $files->shouldReceive('exists')->once()->with(__DIR__ . '/composer.phar')->andReturn(true);
+        $process = m::mock('stdClass');
 		$composer->expects($this->once())->method('getProcess')->will($this->returnValue($process));
 		$process->shouldReceive('setCommandLine')->once()->with('"'.PHP_BINARY.'" composer.phar dump-autoload');
 		$process->shouldReceive('run')->once();

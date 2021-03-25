@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Schema\Blueprint;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseSQLiteSchemaGrammarTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicCreateTable()
-	{
-		$blueprint = new Blueprint('users');
-		$blueprint->create();
-		$blueprint->increments('id');
+    public function testBasicCreateTable()
+    {
+        $blueprint = new Blueprint('users');
+        $blueprint->create();
+        $blueprint->increments('id');
 		$blueprint->string('email');
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 

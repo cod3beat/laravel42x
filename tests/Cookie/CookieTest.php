@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Cookie\CookieJar;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 use Symfony\Component\HttpFoundation\Request;
 
-class CookieTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CookieTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testCookiesAreCreatedWithProperOptions()
-	{
-		$cookie = $this->getCreator();
-		$cookie->setDefaultPathAndDomain('foo', 'bar');
-		$c = $cookie->make('color', 'blue', 10, '/path', '/domain', true, false);
+    public function testCookiesAreCreatedWithProperOptions()
+    {
+        $cookie = $this->getCreator();
+        $cookie->setDefaultPathAndDomain('foo', 'bar');
+        $c = $cookie->make('color', 'blue', 10, '/path', '/domain', true, false);
 		$this->assertEquals('blue', $c->getValue());
 		$this->assertFalse($c->isHttpOnly());
 		$this->assertTrue($c->isSecure());

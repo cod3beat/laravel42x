@@ -1,22 +1,30 @@
 <?php
 
-use Mockery as m;
+use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
-use Illuminate\Support\Contracts\ArrayableInterface;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class ViewTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ViewTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testDataCanBeSetOnView()
-	{
-		$view = new View(m::mock('Illuminate\View\Factory'), m::mock('Illuminate\View\Engines\EngineInterface'), 'view', 'path', array());
-		$view->with('foo', 'bar');
-		$view->with(array('baz' => 'boom'));
+    public function testDataCanBeSetOnView()
+    {
+        $view = new View(
+            m::mock('Illuminate\View\Factory'),
+            m::mock('Illuminate\View\Engines\EngineInterface'),
+            'view',
+            'path',
+            array()
+        );
+        $view->with('foo', 'bar');
+        $view->with(array('baz' => 'boom'));
 		$this->assertEquals(array('foo' => 'bar', 'baz' => 'boom'), $view->getData());
 
 
@@ -187,20 +195,20 @@ class ViewTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testWithErrors()
-	{
-		$view = $this->getView();
-		$errors = array('foo' => 'bar', 'qu' => 'ux');
-		$this->assertSame($view, $view->withErrors($errors));
-		$this->assertInstanceOf('Illuminate\Support\MessageBag', $view->errors);
-		$foo = $view->errors->get('foo');
-		$this->assertEquals($foo[0], 'bar');
-		$qu = $view->errors->get('qu');
-		$this->assertEquals($qu[0], 'ux');
-		$data = array('foo' => 'baz');
-		$this->assertSame($view, $view->withErrors(new \Illuminate\Support\MessageBag($data)));
-		$foo = $view->errors->get('foo');
-		$this->assertEquals($foo[0], 'baz');
-	}
+    {
+        $view = $this->getView();
+        $errors = array('foo' => 'bar', 'qu' => 'ux');
+        $this->assertSame($view, $view->withErrors($errors));
+        $this->assertInstanceOf('Illuminate\Support\MessageBag', $view->errors);
+        $foo = $view->errors->get('foo');
+        $this->assertEquals($foo[0], 'bar');
+        $qu = $view->errors->get('qu');
+        $this->assertEquals($qu[0], 'ux');
+        $data = array('foo' => 'baz');
+        $this->assertSame($view, $view->withErrors(new MessageBag($data)));
+        $foo = $view->errors->get('foo');
+        $this->assertEquals($foo[0], 'baz');
+    }
 
 
 	protected function getView()

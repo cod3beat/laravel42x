@@ -1,20 +1,28 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class RoutingMakeControllerCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testGeneratorIsCalledWithProperOptions()
-	{
-		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__);
-		$gen->shouldReceive('make')->once()->with('FooController', __DIR__, array('only' => array(), 'except' => array()));
-		$this->runCommand($command, array('name' => 'FooController'));
+    public function testGeneratorIsCalledWithProperOptions()
+    {
+        $command = new Illuminate\Routing\Console\MakeControllerCommand(
+            $gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__
+        );
+        $gen->shouldReceive('make')->once()->with(
+            'FooController',
+            __DIR__,
+            array('only' => array(), 'except' => array())
+        );
+        $this->runCommand($command, array('name' => 'FooController'));
 	}
 
 

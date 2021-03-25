@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class AuthDatabaseUserProviderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class AuthDatabaseUserProviderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testRetrieveByIDReturnsUserWhenUserIsFound()
-	{
-		$conn = m::mock('Illuminate\Database\Connection');
-		$conn->shouldReceive('table')->once()->with('foo')->andReturn($conn);
-		$conn->shouldReceive('find')->once()->with(1)->andReturn(array('id' => 1, 'name' => 'Dayle'));
+    public function testRetrieveByIDReturnsUserWhenUserIsFound()
+    {
+        $conn = m::mock('Illuminate\Database\Connection');
+        $conn->shouldReceive('table')->once()->with('foo')->andReturn($conn);
+        $conn->shouldReceive('find')->once()->with(1)->andReturn(array('id' => 1, 'name' => 'Dayle'));
 		$hasher = m::mock('Illuminate\Hashing\HasherInterface');
 		$provider = new Illuminate\Auth\DatabaseUserProvider($conn, $hasher, 'foo');
 		$user = $provider->retrieveByID(1);

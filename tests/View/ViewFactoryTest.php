@@ -1,21 +1,24 @@
 <?php
 
-use Mockery as m;
+use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Factory;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class ViewFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ViewFactoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testMakeCreatesNewViewInstanceWithProperPathAndEngine()
-	{
-		unset($_SERVER['__test.view']);
+    public function testMakeCreatesNewViewInstanceWithProperPathAndEngine()
+    {
+        unset($_SERVER['__test.view']);
 
-		$factory = $this->getFactory();
+        $factory = $this->getFactory();
 		$factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn('path.php');
 		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn($engine = m::mock('Illuminate\View\Engines\EngineInterface'));
 		$factory->getFinder()->shouldReceive('addExtension')->once()->with('php');
@@ -357,18 +360,26 @@ class ViewFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testExceptionsInSectionsAreThrown()
-	{
-		$engine = new \Illuminate\View\Engines\CompilerEngine(m::mock('Illuminate\View\Compilers\CompilerInterface'));
-		$engine->getCompiler()->shouldReceive('getCompiledPath')->andReturnUsing(function($path) { return $path; });
-		$engine->getCompiler()->shouldReceive('isExpired')->twice()->andReturn(false);
-		$factory = $this->getFactory();
-		$factory->getEngineResolver()->shouldReceive('resolve')->twice()->andReturn($engine);
-		$factory->getFinder()->shouldReceive('find')->once()->with('layout')->andReturn(__DIR__.'/fixtures/section-exception-layout.php');
-		$factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn(__DIR__.'/fixtures/section-exception.php');
-		$factory->getDispatcher()->shouldReceive('fire')->times(4);
+    {
+        $engine = new CompilerEngine(m::mock('Illuminate\View\Compilers\CompilerInterface'));
+        $engine->getCompiler()->shouldReceive('getCompiledPath')->andReturnUsing(
+            function ($path) {
+                return $path;
+            }
+        );
+        $engine->getCompiler()->shouldReceive('isExpired')->twice()->andReturn(false);
+        $factory = $this->getFactory();
+        $factory->getEngineResolver()->shouldReceive('resolve')->twice()->andReturn($engine);
+        $factory->getFinder()->shouldReceive('find')->once()->with('layout')->andReturn(
+            __DIR__ . '/fixtures/section-exception-layout.php'
+        );
+        $factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn(
+            __DIR__ . '/fixtures/section-exception.php'
+        );
+        $factory->getDispatcher()->shouldReceive('fire')->times(4);
 
-		$this->expectException('Exception', 'section exception message');
-		$factory->make('view')->render();
+        $this->expectException('Exception', 'section exception message');
+        $factory->make('view')->render();
 	}
 
 

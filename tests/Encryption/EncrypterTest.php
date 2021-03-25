@@ -1,16 +1,18 @@
 <?php
 
 use Illuminate\Encryption\Encrypter;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class EncrypterTest extends \L4\Tests\BackwardCompatibleTestCase {
+class EncrypterTest extends BackwardCompatibleTestCase
+{
 
-	public function testEncryption()
-	{
-		$e = $this->getEncrypter();
-		$this->assertNotEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
-		$encrypted = $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-		$this->assertEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->decrypt($encrypted));
-	}
+    public function testEncryption()
+    {
+        $e = $this->getEncrypter();
+        $this->assertNotEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
+        $encrypted = $e->encrypt('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+        $this->assertEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->decrypt($encrypted));
+    }
 
 
 	public function testEncryptionWithCustomCipher()
@@ -21,17 +23,15 @@ class EncrypterTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertEquals('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', $e->decrypt($encrypted));
 	}
 
-	/**
-	 * @expectedException Illuminate\Encryption\DecryptException
-	 * @expectedExceptionMessage The payload is invalid.
-	 */
-	public function testExceptionThrownWhenPayloadIsInvalid()
-	{
-		$e = $this->getEncrypter();
-		$payload = $e->encrypt('foo');
-		$payload = str_shuffle($payload);
-		$e->decrypt($payload);
-	}
+    public function testExceptionThrownWhenPayloadIsInvalid()
+    {
+        $this->expectException(Illuminate\Encryption\DecryptException::class);
+        $this->expectExceptionMessage("The payload is invalid.");
+        $e = $this->getEncrypter();
+        $payload = $e->encrypt('foo');
+        $payload = str_shuffle($payload);
+        $e->decrypt($payload);
+    }
 
 
 	protected function getEncrypter()

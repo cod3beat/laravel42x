@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class MailMessageTest extends \L4\Tests\BackwardCompatibleTestCase {
+class MailMessageTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicAttachment()
-	{
-		$swift = m::mock('StdClass');
-		$message = $this->getMock('Illuminate\Mail\Message', array('createAttachmentFromPath'), array($swift));
-		$attachment = m::mock('StdClass');
+    public function testBasicAttachment()
+    {
+        $swift = m::mock('StdClass');
+        $message = $this->getMock('Illuminate\Mail\Message', array('createAttachmentFromPath'), array($swift));
+        $attachment = m::mock('StdClass');
 		$message->expects($this->once())->method('createAttachmentFromPath')->with($this->equalTo('foo.jpg'))->will($this->returnValue($attachment));
 		$swift->shouldReceive('attach')->once()->with($attachment);
 		$attachment->shouldReceive('setContentType')->once()->with('image/jpeg');

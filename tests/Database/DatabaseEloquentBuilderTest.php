@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFindMethod()
-	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
-		$builder->setModel($this->getMockModel());
-		$builder->getQuery()->shouldReceive('where')->once()->with('foo_table.foo', '=', 'bar');
+    public function testFindMethod()
+    {
+        $builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
+        $builder->setModel($this->getMockModel());
+        $builder->getQuery()->shouldReceive('where')->once()->with('foo_table.foo', '=', 'bar');
 		$builder->shouldReceive('first')->with(array('column'))->andReturn('baz');
 
 		$result = $builder->find('bar', array('column'));
@@ -56,28 +58,24 @@ class DatabaseEloquentBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Model', $result);
 	}
 
-	/**
-	 * @expectedException Illuminate\Database\Eloquent\ModelNotFoundException
-	 */
-	public function testFindOrFailMethodThrowsModelNotFoundException()
-	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
-		$builder->setModel($this->getMockModel());
-		$builder->getQuery()->shouldReceive('where')->once()->with('foo_table.foo', '=', 'bar');
-		$builder->shouldReceive('first')->with(array('column'))->andReturn(null);
-		$result = $builder->findOrFail('bar', array('column'));
-	}
+    public function testFindOrFailMethodThrowsModelNotFoundException()
+    {
+        $this->expectException(Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
+        $builder->setModel($this->getMockModel());
+        $builder->getQuery()->shouldReceive('where')->once()->with('foo_table.foo', '=', 'bar');
+        $builder->shouldReceive('first')->with(array('column'))->andReturn(null);
+        $result = $builder->findOrFail('bar', array('column'));
+    }
 
-	/**
-	 * @expectedException Illuminate\Database\Eloquent\ModelNotFoundException
-	 */
-	public function testFirstOrFailMethodThrowsModelNotFoundException()
-	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
-		$builder->setModel($this->getMockModel());
-		$builder->shouldReceive('first')->with(array('column'))->andReturn(null);
-		$result = $builder->firstOrFail(array('column'));
-	}
+    public function testFirstOrFailMethodThrowsModelNotFoundException()
+    {
+        $this->expectException(Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
+        $builder->setModel($this->getMockModel());
+        $builder->shouldReceive('first')->with(array('column'))->andReturn(null);
+        $result = $builder->firstOrFail(array('column'));
+    }
 
 
 	public function testFindWithMany()

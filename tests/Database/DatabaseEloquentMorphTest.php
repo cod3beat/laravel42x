@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentMorphTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentMorphTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testMorphOneSetsProperConstraints()
-	{
-		$relation = $this->getOneRelation();
-	}
+    public function testMorphOneSetsProperConstraints()
+    {
+        $relation = $this->getOneRelation();
+    }
 
 
 	public function testMorphOneEagerConstraintsAreProperlyAdded()

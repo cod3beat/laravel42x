@@ -1,20 +1,25 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class DatabaseMigratorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigratorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testMigrationAreRunUpWhenOutstandingMigrationsExist()
-	{
-		$migrator = $this->getMock('Illuminate\Database\Migrations\Migrator', array('resolve'), array(
-			m::mock('Illuminate\Database\Migrations\MigrationRepositoryInterface'),
-			$resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'),
+    public function testMigrationAreRunUpWhenOutstandingMigrationsExist()
+    {
+        $migrator = $this->getMock(
+            'Illuminate\Database\Migrations\Migrator',
+            array('resolve'),
+            array(
+                m::mock('Illuminate\Database\Migrations\MigrationRepositoryInterface'),
+                $resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'),
 			m::mock('Illuminate\Filesystem\Filesystem'),
 		));
 		$migrator->getFilesystem()->shouldReceive('glob')->once()->with(__DIR__.'/*_*.php')->andReturn(array(

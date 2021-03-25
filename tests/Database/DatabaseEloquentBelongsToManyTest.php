@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentBelongsToManyTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testModelsAreProperlyHydrated()
-	{
-		$model1 = new EloquentBelongsToManyModelStub;
-		$model1->fill(array('name' => 'taylor', 'pivot_user_id' => 1, 'pivot_role_id' => 2));
-		$model2 = new EloquentBelongsToManyModelStub;
+    public function testModelsAreProperlyHydrated()
+    {
+        $model1 = new EloquentBelongsToManyModelStub;
+        $model1->fill(array('name' => 'taylor', 'pivot_user_id' => 1, 'pivot_role_id' => 2));
+        $model2 = new EloquentBelongsToManyModelStub;
 		$model2->fill(array('name' => 'dayle', 'pivot_user_id' => 3, 'pivot_role_id' => 4));
 		$models = array($model1, $model2);
 

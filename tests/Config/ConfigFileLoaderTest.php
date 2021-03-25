@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ConfigFileLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ConfigFileLoaderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testEmptyArrayIsReturnedOnNullPath()
-	{
-		$loader = $this->getLoader();
-		$this->assertEquals(array(), $loader->load('local', 'group', 'namespace'));
-	}
+    public function testEmptyArrayIsReturnedOnNullPath()
+    {
+        $loader = $this->getLoader();
+        $this->assertEquals(array(), $loader->load('local', 'group', 'namespace'));
+    }
 
 
 	public function testBasicArrayIsReturned()

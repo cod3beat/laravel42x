@@ -1,20 +1,23 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class FoundationEnvironmentDetectorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testEnvironmentDetection()
-	{
-		$env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
-		$env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(false);
-		$result = $env->detect(array(
+    public function testEnvironmentDetection()
+    {
+        $env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
+        $env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(false);
+        $result = $env->detect(
+            array(
 			'local'   => array('localhost')
 		));
 		$this->assertEquals('production', $result);

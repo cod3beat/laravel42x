@@ -1,22 +1,25 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
+use Symfony\Component\HttpFoundation\Cookie;
 
-class HttpRedirectResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
+class HttpRedirectResponseTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
-	public function testHeaderOnRedirect()
-	{
-		$response = new RedirectResponse('foo.bar');
-		$this->assertNull($response->headers->get('foo'));
-		$response->header('foo', 'bar');
-		$this->assertEquals('bar', $response->headers->get('foo'));
+    public function testHeaderOnRedirect()
+    {
+        $response = new RedirectResponse('foo.bar');
+        $this->assertNull($response->headers->get('foo'));
+        $response->header('foo', 'bar');
+        $this->assertEquals('bar', $response->headers->get('foo'));
 		$response->header('foo', 'baz', false);
 		$this->assertEquals('bar', $response->headers->get('foo'));
 		$response->header('foo', 'baz');
@@ -35,15 +38,15 @@ class HttpRedirectResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testWithCookieOnRedirect()
-	{
-		$response = new RedirectResponse('foo.bar');
-		$this->assertEquals(0, count($response->headers->getCookies()));
-		$this->assertEquals($response, $response->withCookie(new \Symfony\Component\HttpFoundation\Cookie('foo', 'bar')));
-		$cookies = $response->headers->getCookies();
-		$this->assertEquals(1, count($cookies));
-		$this->assertEquals('foo', $cookies[0]->getName());
-		$this->assertEquals('bar', $cookies[0]->getValue());
-	}
+    {
+        $response = new RedirectResponse('foo.bar');
+        $this->assertEquals(0, count($response->headers->getCookies()));
+        $this->assertEquals($response, $response->withCookie(new Cookie('foo', 'bar')));
+        $cookies = $response->headers->getCookies();
+        $this->assertEquals(1, count($cookies));
+        $this->assertEquals('foo', $cookies[0]->getName());
+        $this->assertEquals('bar', $cookies[0]->getValue());
+    }
 
 
 	public function testInputOnRedirect()

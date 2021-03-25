@@ -1,21 +1,26 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
-use Illuminate\Database\Migrations\MigrationCreator;
 
-class DatabaseMigrationCreatorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicCreateMethodStoresMigrationFile()
-	{
-		$creator = $this->getCreator();
-		unset($_SERVER['__migration.creator']);
-		$creator->afterCreate(function() { $_SERVER['__migration.creator'] = true; });
+    public function testBasicCreateMethodStoresMigrationFile()
+    {
+        $creator = $this->getCreator();
+        unset($_SERVER['__migration.creator']);
+        $creator->afterCreate(
+            function () {
+                $_SERVER['__migration.creator'] = true;
+            }
+        );
 		$creator->expects($this->any())->method('getDatePrefix')->will($this->returnValue('foo'));
 		$creator->getFilesystem()->shouldReceive('get')->once()->with($creator->getStubPath().'/blank.stub')->andReturn('{{class}}');
 		$creator->getFilesystem()->shouldReceive('put')->once()->with('foo/foo_create_bar.php', 'CreateBar');

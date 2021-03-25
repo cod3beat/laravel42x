@@ -1,20 +1,22 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Pagination\BootstrapPresenter;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class PaginationBootstrapPresenterTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPresenterCanBeCreated()
-	{
-		$presenter = $this->getPresenter();
-	}
+    public function testPresenterCanBeCreated()
+    {
+        $presenter = $this->getPresenter();
+    }
 
 
 	public function testSimpleRangeIsReturnedWhenCantBuildSlier()

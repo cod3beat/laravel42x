@@ -1,21 +1,26 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentMorphToManyTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentMorphToManyTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testEagerConstraintsAreProperlyAdded()
-	{
-		$relation = $this->getRelation();
-		$relation->getQuery()->shouldReceive('whereIn')->once()->with('taggables.taggable_id', array(1, 2));
-		$relation->getQuery()->shouldReceive('where')->once()->with('taggables.taggable_type', get_class($relation->getParent()));
+    public function testEagerConstraintsAreProperlyAdded()
+    {
+        $relation = $this->getRelation();
+        $relation->getQuery()->shouldReceive('whereIn')->once()->with('taggables.taggable_id', array(1, 2));
+        $relation->getQuery()->shouldReceive('where')->once()->with(
+            'taggables.taggable_type',
+            get_class($relation->getParent())
+        );
 		$model1 = new EloquentMorphToManyModelStub;
 		$model1->id = 1;
 		$model2 = new EloquentMorphToManyModelStub;

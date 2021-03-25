@@ -1,27 +1,28 @@
 <?php
 
-use Mockery as m;
-
 use Aws\Sqs\SqsClient;
 use Guzzle\Service\Resource\Model;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class QueueSqsQueueTest extends \L4\Tests\BackwardCompatibleTestCase {
+class QueueSqsQueueTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
-	public function setUp() {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
 
-		$this->markTestSkipped();
+        // Use Mockery to mock the SqsClient
+        $this->sqs = m::mock('Aws\Sqs\SqsClient');
 
-		// Use Mockery to mock the SqsClient
-		$this->sqs = m::mock('Aws\Sqs\SqsClient');
-
-		$this->account = '1234567891011';
-		$this->queueName = 'emails';
-		$this->baseUrl = 'https://sqs.someregion.amazonaws.com';
+        $this->account = '1234567891011';
+        $this->queueName = 'emails';
+        $this->baseUrl = 'https://sqs.someregion.amazonaws.com';
 
 		// This is how the modified getQueue builds the queueUrl
 		$this->queueUrl = $this->baseUrl . '/' . $this->account . '/' . $this->queueName;

@@ -1,19 +1,21 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ViewFinderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ViewFinderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicViewFinding()
-	{
-		$finder = $this->getFinder();
-		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo.blade.php')->andReturn(true);
+    public function testBasicViewFinding()
+    {
+        $finder = $this->getFinder();
+        $finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__ . '/foo.blade.php')->andReturn(true);
 
 		$this->assertEquals(__DIR__.'/foo.blade.php', $finder->find('foo'));
 	}
@@ -74,37 +76,31 @@ class ViewFinderTest extends \L4\Tests\BackwardCompatibleTestCase {
 	}
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testExceptionThrownWhenViewNotFound()
-	{
-		$finder = $this->getFinder();
-		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo.blade.php')->andReturn(false);
-		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo.php')->andReturn(false);
+    public function testExceptionThrownWhenViewNotFound()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $finder = $this->getFinder();
+        $finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__ . '/foo.blade.php')->andReturn(false);
+        $finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__ . '/foo.php')->andReturn(false);
 
-		$finder->find('foo');
-	}
+        $finder->find('foo');
+    }
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testExceptionThrownOnInvalidViewName()
-	{
-		$finder = $this->getFinder();
-		$finder->find('name::');
-	}
+    public function testExceptionThrownOnInvalidViewName()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $finder = $this->getFinder();
+        $finder->find('name::');
+    }
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testExceptionThrownWhenNoHintPathIsRegistered()
-	{
-		$finder = $this->getFinder();
-		$finder->find('name::foo');
-	}
+    public function testExceptionThrownWhenNoHintPathIsRegistered()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $finder = $this->getFinder();
+        $finder->find('name::foo');
+    }
 
 
 	public function testAddingExtensionPrependsNotAppends()

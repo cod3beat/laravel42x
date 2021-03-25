@@ -1,21 +1,33 @@
 <?php
 
 use Illuminate\Filesystem\Filesystem;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ProviderRepositoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ProviderRepositoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testServicesAreRegisteredWhenManifestIsNotRecompiled()
-	{
-		$repo = m::mock('Illuminate\Foundation\ProviderRepository[createProvider,loadManifest,shouldRecompile]', array(m::mock('Illuminate\Filesystem\Filesystem'), array(__DIR__)));
-		$repo->shouldReceive('loadManifest')->once()->andReturn(array('when' => array(), 'eager' => array('foo'), 'deferred' => array('deferred'), 'providers' => array('providers')));
-		$repo->shouldReceive('shouldRecompile')->once()->andReturn(false);
+    public function testServicesAreRegisteredWhenManifestIsNotRecompiled()
+    {
+        $repo = m::mock(
+            'Illuminate\Foundation\ProviderRepository[createProvider,loadManifest,shouldRecompile]',
+            array(m::mock('Illuminate\Filesystem\Filesystem'), array(__DIR__))
+        );
+        $repo->shouldReceive('loadManifest')->once()->andReturn(
+            array(
+                'when' => array(),
+                'eager' => array('foo'),
+                'deferred' => array('deferred'),
+                'providers' => array('providers')
+            )
+        );
+        $repo->shouldReceive('shouldRecompile')->once()->andReturn(false);
 		$app = m::mock('Illuminate\Foundation\Application')->makePartial();
 		$provider = m::mock('Illuminate\Support\ServiceProvider');
 		$repo->shouldReceive('createProvider')->once()->with($app, 'foo')->andReturn($provider);

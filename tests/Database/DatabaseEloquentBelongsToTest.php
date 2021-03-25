@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class DatabaseEloquentBelongsToTest extends \L4\Tests\BackwardCompatibleTestCase {
+class DatabaseEloquentBelongsToTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testUpdateMethodRetrievesModelAndUpdates()
-	{
-		$relation = $this->getRelation();
-		$mock = m::mock('Illuminate\Database\Eloquent\Model');
-		$mock->shouldReceive('fill')->once()->with(array('attributes'))->andReturn($mock);
+    public function testUpdateMethodRetrievesModelAndUpdates()
+    {
+        $relation = $this->getRelation();
+        $mock = m::mock('Illuminate\Database\Eloquent\Model');
+        $mock->shouldReceive('fill')->once()->with(array('attributes'))->andReturn($mock);
 		$mock->shouldReceive('save')->once()->andReturn(true);
 		$relation->getQuery()->shouldReceive('first')->once()->andReturn($mock);
 
