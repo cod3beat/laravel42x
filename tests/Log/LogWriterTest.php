@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Log\Writer;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class LogWriterTest extends \L4\Tests\BackwardCompatibleTestCase {
+class LogWriterTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testFileHandlerCanBeAdded()
-	{
-		$writer = new Writer($monolog = m::mock('Monolog\Logger'));
-		$monolog->shouldReceive('pushHandler')->once()->with(m::type('Monolog\Handler\StreamHandler'));
-		$writer->useFiles(__DIR__);
+    public function testFileHandlerCanBeAdded()
+    {
+        $writer = new Writer($monolog = m::mock('Monolog\Logger'));
+        $monolog->shouldReceive('pushHandler')->once()->with(m::type('Monolog\Handler\StreamHandler'));
+        $writer->useFiles(__DIR__);
 	}
 
 

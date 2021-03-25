@@ -1,39 +1,41 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Http\Request;
 use Illuminate\Html\FormBuilder;
 use Illuminate\Html\HtmlBuilder;
-use Illuminate\Routing\UrlGenerator;
+use Illuminate\Http\Request;
 use Illuminate\Routing\RouteCollection;
+use Illuminate\Routing\UrlGenerator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class FormBuilderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FormBuilderTest extends BackwardCompatibleTestCase
+{
 
-	/**
-	 * Setup the test environment.
-	 */
-	public function setUp()
-	{
-		$this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
-		$this->htmlBuilder = new HtmlBuilder($this->urlGenerator);
-		$this->formBuilder =  new FormBuilder($this->htmlBuilder, $this->urlGenerator, '');
-	}
-
-
-	/**
-	 * Destroy the test environment.
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    /**
+     * Setup the test environment.
+     */
+    public function setUp()
+    {
+        $this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
+        $this->htmlBuilder = new HtmlBuilder($this->urlGenerator);
+        $this->formBuilder = new FormBuilder($this->htmlBuilder, $this->urlGenerator, '');
+    }
 
 
-	public function testOpeningForm()
-	{
-		$form1 = $this->formBuilder->open(array('method' => 'GET'));
-		$form2 = $this->formBuilder->open(array('method' => 'POST', 'class' => 'form', 'id' => 'id-form'));
-		$form3 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16'));
+    /**
+     * Destroy the test environment.
+     */
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
+
+    public function testOpeningForm()
+    {
+        $form1 = $this->formBuilder->open(array('method' => 'GET'));
+        $form2 = $this->formBuilder->open(array('method' => 'POST', 'class' => 'form', 'id' => 'id-form'));
+        $form3 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16'));
 		$form4 = $this->formBuilder->open(array('method' => 'GET', 'accept-charset' => 'UTF-16', 'files' => true));
 		$form5 = $this->formBuilder->open(array('method' => 'PUT'));
 

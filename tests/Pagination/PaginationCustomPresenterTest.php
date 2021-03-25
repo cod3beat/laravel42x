@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class PaginationCustomPresenterTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PaginationCustomPresenterTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testGetPageLinkWrapper()
-	{
-		$customPresenter = m::mock('Illuminate\Pagination\Presenter');
-		$customPresenter->shouldReceive('getPageLinkWrapper')
-			->once()
+    public function testGetPageLinkWrapper()
+    {
+        $customPresenter = m::mock('Illuminate\Pagination\Presenter');
+        $customPresenter->shouldReceive('getPageLinkWrapper')
+            ->once()
 			->andReturnUsing(function($url, $page) {
 				return '<a href="' . $url . '">' . $page . '</a>';
 			});

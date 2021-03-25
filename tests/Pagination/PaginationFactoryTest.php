@@ -1,20 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Pagination\Factory;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PaginationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PaginationFactoryTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testCreationOfEnvironment()
-	{
-		$env = $this->getFactory();
-	}
+    public function testCreationOfEnvironment()
+    {
+        $env = $this->getFactory();
+    }
 
 
 	public function testPaginatorCanBeCreated()
@@ -90,13 +93,16 @@ class PaginationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	protected function getFactory()
-	{
-		$request = m::mock('Illuminate\Http\Request');
-		$view = m::mock('Illuminate\View\Factory');
-		$trans = m::mock(\Symfony\Contracts\Translation\TranslatorInterface::class);
-		$view->shouldReceive('addNamespace')->once()->with('pagination', realpath(__DIR__.'/../../src/Illuminate/Pagination').'/views');
+    {
+        $request = m::mock('Illuminate\Http\Request');
+        $view = m::mock('Illuminate\View\Factory');
+        $trans = m::mock(TranslatorInterface::class);
+        $view->shouldReceive('addNamespace')->once()->with(
+            'pagination',
+            realpath(__DIR__ . '/../../src/Illuminate/Pagination') . '/views'
+        );
 
-		return new Factory($request, $view, $trans, 'page');
-	}
+        return new Factory($request, $view, $trans, 'page');
+    }
 
 }

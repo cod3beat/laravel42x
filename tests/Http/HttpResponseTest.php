@@ -1,21 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Support\Contracts\JsonableInterface;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
+use Symfony\Component\HttpFoundation\Cookie;
 
-class HttpResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
+class HttpResponseTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testJsonResponsesAreConvertedAndHeadersAreSet()
-	{
-		$response = new Illuminate\Http\Response(new JsonableStub);
-		$this->assertEquals('foo', $response->getContent());
-		$this->assertEquals('application/json', $response->headers->get('Content-Type'));
+    public function testJsonResponsesAreConvertedAndHeadersAreSet()
+    {
+        $response = new Illuminate\Http\Response(new JsonableStub);
+        $this->assertEquals('foo', $response->getContent());
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
 
 		$response = new Illuminate\Http\Response();
 		$response->setContent(array('foo' => 'bar'));
@@ -47,15 +50,15 @@ class HttpResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	public function testWithCookie()
-	{
-		$response = new Illuminate\Http\Response();
-		$this->assertEquals(0, count($response->headers->getCookies()));
-		$this->assertEquals($response, $response->withCookie(new \Symfony\Component\HttpFoundation\Cookie('foo', 'bar')));
-		$cookies = $response->headers->getCookies();
-		$this->assertEquals(1, count($cookies));
-		$this->assertEquals('foo', $cookies[0]->getName());
-		$this->assertEquals('bar', $cookies[0]->getValue());
-	}
+    {
+        $response = new Illuminate\Http\Response();
+        $this->assertEquals(0, count($response->headers->getCookies()));
+        $this->assertEquals($response, $response->withCookie(new Cookie('foo', 'bar')));
+        $cookies = $response->headers->getCookies();
+        $this->assertEquals(1, count($cookies));
+        $this->assertEquals('foo', $cookies[0]->getName());
+        $this->assertEquals('bar', $cookies[0]->getValue());
+    }
 
 
 	public function testGetOriginalContent()

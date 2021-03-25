@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class MailMailerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class MailMailerTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testMailerSendSendsMessageWithProperViewContent()
-	{
-		unset($_SERVER['__mailer.test']);
-		$mailer = $this->getMock('Illuminate\Mail\Mailer', array('createMessage'), $this->getMocks());
-		$message = m::mock('StdClass');
+    public function testMailerSendSendsMessageWithProperViewContent()
+    {
+        unset($_SERVER['__mailer.test']);
+        $mailer = $this->getMock('Illuminate\Mail\Mailer', array('createMessage'), $this->getMocks());
+        $message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', array('data', 'message' => $message))->andReturn($view);

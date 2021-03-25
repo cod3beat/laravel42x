@@ -1,22 +1,24 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Http\Request;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class HttpRequestTest extends \L4\Tests\BackwardCompatibleTestCase {
+class HttpRequestTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testInstanceMethod()
-	{
-		$request = Request::create('', 'GET');
-		$this->assertSame($request, $request->instance());
-	}
+    public function testInstanceMethod()
+    {
+        $request = Request::create('', 'GET');
+        $this->assertSame($request, $request->instance());
+    }
 
 
 	public function testRootMethod()
