@@ -14,7 +14,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
     /**
      * Setup the test environment.
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->urlGenerator = new UrlGenerator(new RouteCollection, Request::create('/foo', 'GET'));
         $this->htmlBuilder = new HtmlBuilder($this->urlGenerator);

@@ -10,7 +10,7 @@ use Mockery as m;
 class QueueSqsJobTest extends BackwardCompatibleTestCase
 {
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->markTestSkipped();
 
@@ -19,8 +19,8 @@ class QueueSqsJobTest extends BackwardCompatibleTestCase
         $this->service = 'sqs';
         $this->region = 'someregion';
         $this->account = '1234567891011';
-		$this->queueName = 'emails';
-		$this->baseUrl = 'https://sqs.someregion.amazonaws.com';
+        $this->queueName = 'emails';
+        $this->baseUrl = 'https://sqs.someregion.amazonaws.com';
 
 		// The Aws\Common\AbstractClient needs these three constructor parameters
 		$this->credentials = new Credentials( $this->key, $this->secret );

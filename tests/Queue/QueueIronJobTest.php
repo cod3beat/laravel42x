@@ -6,7 +6,7 @@ use Mockery as m;
 class QueueIronJobTest extends BackwardCompatibleTestCase
 {
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -13,16 +13,16 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
         m::close();
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->markTestSkipped();
 
         // Use Mockery to mock the SqsClient
         $this->sqs = m::mock('Aws\Sqs\SqsClient');
 
-		$this->account = '1234567891011';
-		$this->queueName = 'emails';
-		$this->baseUrl = 'https://sqs.someregion.amazonaws.com';
+        $this->account = '1234567891011';
+        $this->queueName = 'emails';
+        $this->baseUrl = 'https://sqs.someregion.amazonaws.com';
 
 		// This is how the modified getQueue builds the queueUrl
 		$this->queueUrl = $this->baseUrl . '/' . $this->account . '/' . $this->queueName;
