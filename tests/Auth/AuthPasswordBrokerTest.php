@@ -55,16 +55,14 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException UnexpectedValueException
-	 */
-	public function testGetUserThrowsExceptionIfUserDoesntImplementRemindable()
-	{
-		$broker = $this->getBroker($mocks = $this->getMocks());
-		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('foo'))->andReturn('bar');
+    public function testGetUserThrowsExceptionIfUserDoesntImplementRemindable()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $broker = $this->getBroker($mocks = $this->getMocks());
+        $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('foo'))->andReturn('bar');
 
-		$broker->getUser(array('foo'));
-	}
+        $broker->getUser(array('foo'));
+    }
 
 
 	public function testUserIsRetrievedByCredentials()

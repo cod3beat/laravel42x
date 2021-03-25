@@ -93,25 +93,25 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testIfDriverIsntSetExceptionIsThrown()
-	{
-		$factory = new Illuminate\Database\Connectors\ConnectionFactory($container = m::mock('Illuminate\Container\Container'));
-		$factory->createConnector(array('foo'));
-	}
+    public function testIfDriverIsntSetExceptionIsThrown()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $factory = new Illuminate\Database\Connectors\ConnectionFactory(
+            $container = m::mock('Illuminate\Container\Container')
+        );
+        $factory->createConnector(array('foo'));
+    }
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testExceptionIsThrownOnUnsupportedDriver()
-	{
-		$factory = new Illuminate\Database\Connectors\ConnectionFactory($container = m::mock('Illuminate\Container\Container'));
-		$container->shouldReceive('bound')->once()->andReturn(false);
-		$factory->createConnector(array('driver' => 'foo'));
-	}
+    public function testExceptionIsThrownOnUnsupportedDriver()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $factory = new Illuminate\Database\Connectors\ConnectionFactory(
+            $container = m::mock('Illuminate\Container\Container')
+        );
+        $container->shouldReceive('bound')->once()->andReturn(false);
+        $factory->createConnector(array('driver' => 'foo'));
+    }
 
 
 	public function testCustomConnectorsCanBeResolvedViaContainer()

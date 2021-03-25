@@ -184,22 +184,21 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		}
 	}
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testTransactionMethodDisallowPDOChanging()
-	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', array('beginTransaction', 'commit', 'rollBack'));
-		$pdo->expects($this->once())->method('beginTransaction');
-		$pdo->expects($this->once())->method('rollBack');
-		$pdo->expects($this->never())->method('commit');
+    public function testTransactionMethodDisallowPDOChanging()
+    {
+        $this->expectException(RuntimeException::class);
+        $pdo = $this->getMock('DatabaseConnectionTestMockPDO', array('beginTransaction', 'commit', 'rollBack'));
+        $pdo->expects($this->once())->method('beginTransaction');
+        $pdo->expects($this->once())->method('rollBack');
+        $pdo->expects($this->never())->method('commit');
 
-		$mock = $this->getMockConnection(array(), $pdo);
+        $mock = $this->getMockConnection(array(), $pdo);
 
-		$mock->setReconnector(function ($connection)
-		{
-			$connection->setPDO(null);
-		});
+        $mock->setReconnector(
+            function ($connection) {
+                $connection->setPDO(null);
+            }
+        );
 
 		$mock->transaction(function ($connection) { $connection->reconnect(); });
 	}
