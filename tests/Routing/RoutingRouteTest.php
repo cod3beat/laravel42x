@@ -1,20 +1,44 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class RoutingRouteTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingRouteTest extends BackwardCompatibleTestCase
+{
 
-	public function testBasicDispatchingOfRoutes()
-	{
-		$router = $this->getRouter();
-		$router->get('foo/bar', function() { return 'hello'; });
-		$this->assertEquals('hello', $router->dispatch(Request::create('foo/bar', 'GET'))->getContent());
+    public function testBasicDispatchingOfRoutes()
+    {
+        $router = $this->getRouter();
+        $router->get(
+            'foo/bar',
+            function () {
+                return 'hello';
+            }
+        );
+        $this->assertEquals('hello', $router->dispatch(Request::create('foo/bar', 'GET'))->getContent());
 
-		$router = $this->getRouter();
-		$route = $router->get('foo/bar', array('domain' => 'api.{name}.bar', function($name) { return $name; }));
-		$route = $router->get('foo/bar', array('domain' => 'api.{name}.baz', function($name) { return $name; }));
+        $router = $this->getRouter();
+        $route = $router->get(
+            'foo/bar',
+            array(
+                'domain' => 'api.{name}.bar',
+                function ($name) {
+                    return $name;
+                }
+            )
+        );
+        $route = $router->get(
+            'foo/bar',
+            array(
+                'domain' => 'api.{name}.baz',
+                function ($name) {
+                    return $name;
+                }
+            )
+        );
 		$this->assertEquals('taylor', $router->dispatch(Request::create('http://api.taylor.bar/foo/bar', 'GET'))->getContent());
 		$this->assertEquals('dayle', $router->dispatch(Request::create('http://api.dayle.baz/foo/bar', 'GET'))->getContent());
 
@@ -145,26 +169,38 @@ class RoutingRouteTest extends \L4\Tests\BackwardCompatibleTestCase {
 	}
 
 
-	/**
-	 * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 */
-	public function testRoutesDontMatchNonMatchingPathsWithLeadingOptionals()
-	{
-		$router = $this->getRouter();
-		$router->get('{baz?}', function($age = 25) { return $age; });
-		$this->assertEquals('25', $router->dispatch(Request::create('foo/bar', 'GET'))->getContent());
-	}
+    public function testRoutesDontMatchNonMatchingPathsWithLeadingOptionals()
+    {
+        $this->expectException(Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $router = $this->getRouter();
+        $router->get(
+            '{baz?}',
+            function ($age = 25) {
+                return $age;
+            }
+        );
+        $this->assertEquals('25', $router->dispatch(Request::create('foo/bar', 'GET'))->getContent());
+    }
 
 
-	/**
-	 * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 */
-	public function testRoutesDontMatchNonMatchingDomain()
-	{
-		$router = $this->getRouter();
-		$route = $router->get('foo/bar', array('domain' => 'api.foo.bar', function() { return 'hello'; }));
-		$this->assertEquals('hello', $router->dispatch(Request::create('http://api.baz.boom/foo/bar', 'GET'))->getContent());
-	}
+    public function testRoutesDontMatchNonMatchingDomain()
+    {
+        $this->expectException(Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $router = $this->getRouter();
+        $route = $router->get(
+            'foo/bar',
+            array(
+                'domain' => 'api.foo.bar',
+                function () {
+                    return 'hello';
+                }
+            )
+        );
+        $this->assertEquals(
+            'hello',
+            $router->dispatch(Request::create('http://api.baz.boom/foo/bar', 'GET'))->getContent()
+        );
+    }
 
 
 	public function testDispatchingOfControllers()
@@ -581,16 +617,19 @@ class RoutingRouteTest extends \L4\Tests\BackwardCompatibleTestCase {
 	}
 
 
-	/**
-	 * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-	 */
-	public function testModelBindingWithNullReturn()
-	{
-		$router = $this->getRouter();
-		$router->get('foo/{bar}', function($name) { return $name; });
-		$router->model('bar', 'RouteModelBindingNullStub');
-		$router->dispatch(Request::create('foo/taylor', 'GET'))->getContent();
-	}
+    public function testModelBindingWithNullReturn()
+    {
+        $this->expectException(Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $router = $this->getRouter();
+        $router->get(
+            'foo/{bar}',
+            function ($name) {
+                return $name;
+            }
+        );
+        $router->model('bar', 'RouteModelBindingNullStub');
+        $router->dispatch(Request::create('foo/taylor', 'GET'))->getContent();
+    }
 
 
 	public function testModelBindingWithCustomNullReturn()
@@ -874,17 +913,18 @@ class RouteTestControllerDispatchStub extends Illuminate\Routing\Controller {
 	}
 }
 
-class RouteTestControllerRemoveFilterStub extends \Illuminate\Routing\Controller {
-	public function __construct()
-	{
-		$this->beforeFilter('removeBefore', array('only' => 'beforeRoute'));
-		$this->beforeFilter('@inlineBeforeFilter', array('only' => 'beforeRoute'));
-		$this->afterFilter('removeAfter', array('only' => 'afterRoute'));
-		$this->afterFilter('@inlineAfterFilter', array('only' => 'afterRoute'));
+class RouteTestControllerRemoveFilterStub extends Controller
+{
+    public function __construct()
+    {
+        $this->beforeFilter('removeBefore', array('only' => 'beforeRoute'));
+        $this->beforeFilter('@inlineBeforeFilter', array('only' => 'beforeRoute'));
+        $this->afterFilter('removeAfter', array('only' => 'afterRoute'));
+        $this->afterFilter('@inlineAfterFilter', array('only' => 'afterRoute'));
 
-		$this->forgetBeforeFilter('removeBefore');
-		$this->forgetBeforeFilter('@inlineBeforeFilter');
-		$this->forgetAfterFilter('removeAfter');
+        $this->forgetBeforeFilter('removeBefore');
+        $this->forgetBeforeFilter('@inlineBeforeFilter');
+        $this->forgetAfterFilter('removeAfter');
 		$this->forgetAfterFilter('@inlineAfterFilter');
 	}
 	public function beforeRoute()

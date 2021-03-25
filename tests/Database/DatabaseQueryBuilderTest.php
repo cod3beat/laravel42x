@@ -1179,15 +1179,13 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException BadMethodCallException
-	 */
-	public function testBuilderThrowsExpectedExceptionWithUndefinedMethod()
-	{
-		$builder = $this->getBuilder();
+    public function testBuilderThrowsExpectedExceptionWithUndefinedMethod()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $builder = $this->getBuilder();
 
-		$builder->noValidMethodHere();
-	}
+        $builder->noValidMethodHere();
+    }
 
 
 	public function setupCacheTestQuery($cache, $driver)

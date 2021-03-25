@@ -114,13 +114,11 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException Illuminate\Database\Eloquent\ModelNotFoundException
-	 */
-	public function testFindOrFailMethodThrowsModelNotFoundException()
-	{
-		$result = EloquentModelFindNotFoundStub::findOrFail(1);
-	}
+    public function testFindOrFailMethodThrowsModelNotFoundException()
+    {
+        $this->expectException(Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $result = EloquentModelFindNotFoundStub::findOrFail(1);
+    }
 
 
 	public function testFindMethodWithArrayCallsQueryBuilderCorrectly()
@@ -628,15 +626,13 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException Illuminate\Database\Eloquent\MassAssignmentException
-	 */
-	public function testGlobalGuarded()
-	{
-		$model = new EloquentModelStub;
-		$model->guard(array('*'));
-		$model->fill(array('name' => 'foo', 'age' => 'bar', 'votes' => 'baz'));
-	}
+    public function testGlobalGuarded()
+    {
+        $this->expectException(Illuminate\Database\Eloquent\MassAssignmentException::class);
+        $model = new EloquentModelStub;
+        $model->guard(array('*'));
+        $model->fill(array('name' => 'foo', 'age' => 'bar', 'votes' => 'baz'));
+    }
 
 
 	public function testHasOneCreatesProperRelation()
@@ -847,14 +843,12 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException LogicException
-	 */
-	public function testGetModelAttributeMethodThrowsExceptionIfNotRelation()
-	{
-		$model = new EloquentModelStub;
-		$relation = $model->incorrect_relation_stub;
-	}
+    public function testGetModelAttributeMethodThrowsExceptionIfNotRelation()
+    {
+        $this->expectException(LogicException::class);
+        $model = new EloquentModelStub;
+        $relation = $model->incorrect_relation_stub;
+    }
 
 
 	public function testModelIsBootedOnUnserialize()

@@ -93,33 +93,37 @@ class QueueWorkerTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testJobIsReleasedWhenExceptionIsThrown()
-	{
-		$worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
-		$job = m::mock('Illuminate\Queue\Jobs\Job');
-		$job->shouldReceive('fire')->once()->andReturnUsing(function() { throw new RuntimeException; });
-		$job->shouldReceive('isDeleted')->once()->andReturn(false);
-		$job->shouldReceive('release')->once()->with(5);
+    public function testJobIsReleasedWhenExceptionIsThrown()
+    {
+        $this->expectException(RuntimeException::class);
+        $worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
+        $job = m::mock('Illuminate\Queue\Jobs\Job');
+        $job->shouldReceive('fire')->once()->andReturnUsing(
+            function () {
+                throw new RuntimeException;
+            }
+        );
+        $job->shouldReceive('isDeleted')->once()->andReturn(false);
+        $job->shouldReceive('release')->once()->with(5);
 
-		$worker->process('connection', $job, 0, 5);
-	}
+        $worker->process('connection', $job, 0, 5);
+    }
 
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testJobIsNotReleasedWhenExceptionIsThrownButJobIsDeleted()
-	{
-		$worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
-		$job = m::mock('Illuminate\Queue\Jobs\Job');
-		$job->shouldReceive('fire')->once()->andReturnUsing(function() { throw new RuntimeException; });
-		$job->shouldReceive('isDeleted')->once()->andReturn(true);
-		$job->shouldReceive('release')->never();
+    public function testJobIsNotReleasedWhenExceptionIsThrownButJobIsDeleted()
+    {
+        $this->expectException(RuntimeException::class);
+        $worker = new Illuminate\Queue\Worker(m::mock('Illuminate\Queue\QueueManager'));
+        $job = m::mock('Illuminate\Queue\Jobs\Job');
+        $job->shouldReceive('fire')->once()->andReturnUsing(
+            function () {
+                throw new RuntimeException;
+            }
+        );
+        $job->shouldReceive('isDeleted')->once()->andReturn(true);
+        $job->shouldReceive('release')->never();
 
-		$worker->process('connection', $job, 0, 5);
-	}
+        $worker->process('connection', $job, 0, 5);
+    }
 
 }

@@ -1347,15 +1347,13 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testExceptionThrownOnIncorrectParameterCount()
-	{
-		$trans = $this->getTranslator();
-		$v = new Validator($trans, array(), array('foo' => 'required_if:foo'));
-		$v->passes();
-	}
+    public function testExceptionThrownOnIncorrectParameterCount()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $trans = $this->getTranslator();
+        $v = new Validator($trans, array(), array('foo' => 'required_if:foo'));
+        $v->passes();
+    }
 
 
 	public function testValidateEach()
@@ -1382,16 +1380,14 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testValidateEachWithNonArrayWithoutArrayRule()
-	{
-		$trans = $this->getRealTranslator();
-		$v = new Validator($trans, ['foo' => 'string'], ['foo' => 'numeric']);
-		$v->each('foo', ['min:7|max:13']);
-		$this->assertFalse($v->passes());
-	}
+    public function testValidateEachWithNonArrayWithoutArrayRule()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $trans = $this->getRealTranslator();
+        $v = new Validator($trans, ['foo' => 'string'], ['foo' => 'numeric']);
+        $v->each('foo', ['min:7|max:13']);
+        $this->assertFalse($v->passes());
+    }
 
 
 	protected function getTranslator()

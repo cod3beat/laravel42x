@@ -71,14 +71,15 @@ class LogWriterTest extends BackwardCompatibleTestCase
 	}
 
 
-	/**
-	 * @expectedException RuntimeException
-	 */
-	public function testListenShortcutFailsWithNoDispatcher()
-	{
-		$writer = new Writer($monolog = m::mock('Monolog\Logger'));
-		$writer->listen(function() {});
-	}
+    public function testListenShortcutFailsWithNoDispatcher()
+    {
+        $this->expectException(RuntimeException::class);
+        $writer = new Writer($monolog = m::mock('Monolog\Logger'));
+        $writer->listen(
+            function () {
+            }
+        );
+    }
 
 
 	public function testListenShortcut()
