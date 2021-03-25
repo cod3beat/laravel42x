@@ -1,20 +1,22 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class FoundationViewPublisherTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationViewPublisherTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testPackageViewPublishing()
-	{
-		$pub = new Illuminate\Foundation\ViewPublisher($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
-		$pub->setPackagePath(__DIR__.'/vendor');
-		$files->shouldReceive('isDirectory')->once()->with(__DIR__.'/vendor/foo/bar/src/views')->andReturn(true);
+    public function testPackageViewPublishing()
+    {
+        $pub = new Illuminate\Foundation\ViewPublisher($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
+        $pub->setPackagePath(__DIR__ . '/vendor');
+        $files->shouldReceive('isDirectory')->once()->with(__DIR__ . '/vendor/foo/bar/src/views')->andReturn(true);
 		$files->shouldReceive('isDirectory')->once()->with(__DIR__.'/packages/foo/bar')->andReturn(true);
 		$files->shouldReceive('copyDirectory')->once()->with(__DIR__.'/vendor/foo/bar/src/views', __DIR__.'/packages/foo/bar')->andReturn(true);
 

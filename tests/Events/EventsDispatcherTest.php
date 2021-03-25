@@ -1,21 +1,28 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Events\Dispatcher;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class EventsDispatcherTest extends \L4\Tests\BackwardCompatibleTestCase {
+class EventsDispatcherTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicEventExecution()
-	{
-		unset($_SERVER['__event.test']);
-		$d = new Dispatcher;
-		$d->listen('foo', function($foo) { $_SERVER['__event.test'] = $foo; });
+    public function testBasicEventExecution()
+    {
+        unset($_SERVER['__event.test']);
+        $d = new Dispatcher;
+        $d->listen(
+            'foo',
+            function ($foo) {
+                $_SERVER['__event.test'] = $foo;
+            }
+        );
 		$d->fire('foo', array('bar'));
 		$this->assertEquals('bar', $_SERVER['__event.test']);
 	}

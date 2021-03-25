@@ -1,20 +1,27 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class FoundationViewPublishCommandTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationViewPublishCommandTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testCommandCallsPublisherWithProperPackageName()
-	{
-		$command = new Illuminate\Foundation\Console\ViewPublishCommand($pub = m::mock('Illuminate\Foundation\ViewPublisher'));
-		$pub->shouldReceive('publishPackage')->once()->with('foo');
-		$command->run(new Symfony\Component\Console\Input\ArrayInput(array('package' => 'foo')), new Symfony\Component\Console\Output\NullOutput);
+    public function testCommandCallsPublisherWithProperPackageName()
+    {
+        $command = new Illuminate\Foundation\Console\ViewPublishCommand(
+            $pub = m::mock('Illuminate\Foundation\ViewPublisher')
+        );
+        $pub->shouldReceive('publishPackage')->once()->with('foo');
+        $command->run(
+            new Symfony\Component\Console\Input\ArrayInput(array('package' => 'foo')),
+            new Symfony\Component\Console\Output\NullOutput
+        );
 	}
 
 }

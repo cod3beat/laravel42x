@@ -1,21 +1,23 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Foundation\Application;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class FoundationApplicationTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationApplicationTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSetLocaleSetsLocaleAndFiresLocaleChangedEvent()
-	{
-		$app = new Application;
-		$app['config'] = $config = m::mock('StdClass');
-		$config->shouldReceive('set')->once()->with('app.locale', 'foo');
+    public function testSetLocaleSetsLocaleAndFiresLocaleChangedEvent()
+    {
+        $app = new Application;
+        $app['config'] = $config = m::mock('StdClass');
+        $config->shouldReceive('set')->once()->with('app.locale', 'foo');
 		$app['translator'] = $trans = m::mock('StdClass');
 		$trans->shouldReceive('setLocale')->once()->with('foo');
 		$app['events'] = $events = m::mock('StdClass');

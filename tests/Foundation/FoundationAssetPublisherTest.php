@@ -1,19 +1,21 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class FoundationAssetPublisherTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationAssetPublisherTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicPathPublishing()
-	{
-		$pub = new Illuminate\Foundation\AssetPublisher($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
-		$files->shouldReceive('copyDirectory')->once()->with('foo', __DIR__.'/packages/bar')->andReturn(true);
+    public function testBasicPathPublishing()
+    {
+        $pub = new Illuminate\Foundation\AssetPublisher($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
+        $files->shouldReceive('copyDirectory')->once()->with('foo', __DIR__ . '/packages/bar')->andReturn(true);
 
 		$this->assertTrue($pub->publish('bar', 'foo'));
 	}
