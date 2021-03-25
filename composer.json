@@ -39,7 +39,8 @@
         "classpreloader/classpreloader": "^3.2",
         "pda/pheanstalk": "^3.1",
         "classpreloader/console": "^2.1",
-        "jeremeamia/superclosure": "^2.4"
+        "jeremeamia/superclosure": "^2.4",
+        "voku/portable-ascii": "^1.5"
     },
     "replace": {
         "illuminate/auth": "self.version",
