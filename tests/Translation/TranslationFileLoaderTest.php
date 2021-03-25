@@ -1,22 +1,23 @@
 <?php
 
-use Mockery as m;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class TranslationFileLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class TranslationFileLoaderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testLoadMethodWithoutNamespacesProperlyCallsLoader()
-	{
-		$loader = new FileLoader($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
-		$files->shouldReceive('exists')->once()->with(__DIR__.'/en/foo.php')->andReturn(true);
-		$files->shouldReceive('getRequire')->once()->with(__DIR__.'/en/foo.php')->andReturn(array('messages'));
+    public function testLoadMethodWithoutNamespacesProperlyCallsLoader()
+    {
+        $loader = new FileLoader($files = m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
+        $files->shouldReceive('exists')->once()->with(__DIR__ . '/en/foo.php')->andReturn(true);
+        $files->shouldReceive('getRequire')->once()->with(__DIR__ . '/en/foo.php')->andReturn(array('messages'));
 
 		$this->assertEquals(array('messages'), $loader->load('en', 'foo', null));
 	}

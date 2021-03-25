@@ -1,20 +1,24 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ValidationDatabasePresenceVerifierTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ValidationDatabasePresenceVerifierTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicCount()
-	{
-		$verifier = new Illuminate\Validation\DatabasePresenceVerifier($db = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$verifier->setConnection('connection');
-		$db->shouldReceive('connection')->once()->with('connection')->andReturn($conn = m::mock('StdClass'));
+    public function testBasicCount()
+    {
+        $verifier = new Illuminate\Validation\DatabasePresenceVerifier(
+            $db = m::mock('Illuminate\Database\ConnectionResolverInterface')
+        );
+        $verifier->setConnection('connection');
+        $db->shouldReceive('connection')->once()->with('connection')->andReturn($conn = m::mock('StdClass'));
 		$conn->shouldReceive('table')->once()->with('table')->andReturn($builder = m::mock('StdClass'));
 		$builder->shouldReceive('where')->with('column', '=', 'value')->andReturn($builder);
 		$extra = array('foo' => 'NULL', 'bar' => 'NOT_NULL', 'baz' => 'taylor', 'faz' => true);

@@ -1,19 +1,21 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class SessionMiddlewareTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SessionMiddlewareTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSessionIsProperlyStartedAndClosed()
-	{
-		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET');
-		$response = new Symfony\Component\HttpFoundation\Response;
+    public function testSessionIsProperlyStartedAndClosed()
+    {
+        $request = Symfony\Component\HttpFoundation\Request::create('/', 'GET');
+        $response = new Symfony\Component\HttpFoundation\Response;
 
 		$middle = new Illuminate\Session\Middleware(
 			$app = m::mock('Symfony\Component\HttpKernel\HttpKernelInterface'),

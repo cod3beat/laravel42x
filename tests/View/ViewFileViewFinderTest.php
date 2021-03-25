@@ -1,19 +1,21 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class ViewFinderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ViewFinderTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testBasicViewFinding()
-	{
-		$finder = $this->getFinder();
-		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo.blade.php')->andReturn(true);
+    public function testBasicViewFinding()
+    {
+        $finder = $this->getFinder();
+        $finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__ . '/foo.blade.php')->andReturn(true);
 
 		$this->assertEquals(__DIR__.'/foo.blade.php', $finder->find('foo'));
 	}

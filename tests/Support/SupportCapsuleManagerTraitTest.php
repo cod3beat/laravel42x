@@ -1,24 +1,26 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Container\Container;
 use Illuminate\Support\Traits\CapsuleManagerTrait;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 
-class SupportCapsuleManagerTraitTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportCapsuleManagerTraitTest extends BackwardCompatibleTestCase
+{
 
-	use CapsuleManagerTrait;
+    use CapsuleManagerTrait;
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
-	public function testSetupContainerForCapsule()
-	{
-		$this->container = null;
-		$app = new Container;
+    public function testSetupContainerForCapsule()
+    {
+        $this->container = null;
+        $app = new Container;
 
-		$this->assertNull($this->setupContainer($app));
+        $this->assertNull($this->setupContainer($app));
 		$this->assertEquals($app, $this->getContainer());
 		$this->assertInstanceOf('\Illuminate\Support\Fluent', $app['config']);
 	}

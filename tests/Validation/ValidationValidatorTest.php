@@ -1,22 +1,29 @@
 <?php
 
-use Mockery as m;
 use Illuminate\Validation\Validator;
+use L4\Tests\BackwardCompatibleTestCase;
+use Mockery as m;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ValidationValidatorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ValidationValidatorTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testSometimesWorksOnNestedArrays()
-	{
-		$trans = $this->getRealTranslator();
-		$v = new Validator($trans, array('foo' => array('bar' => array('baz' => ''))), array('foo.bar.baz' => 'sometimes|required'));
-		$this->assertFalse($v->passes());
+    public function testSometimesWorksOnNestedArrays()
+    {
+        $trans = $this->getRealTranslator();
+        $v = new Validator(
+            $trans,
+            array('foo' => array('bar' => array('baz' => ''))),
+            array('foo.bar.baz' => 'sometimes|required')
+        );
+        $this->assertFalse($v->passes());
 		$this->assertEquals(array('foo.bar.baz' => array('Required' => array())), $v->failed());
 
 		$trans = $this->getRealTranslator();
@@ -1388,9 +1395,9 @@ class ValidationValidatorTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 
 	protected function getTranslator()
-	{
-		return m::mock(\Symfony\Contracts\Translation\TranslatorInterface::class);
-	}
+    {
+        return m::mock(TranslatorInterface::class);
+    }
 
 
 	protected function getRealTranslator()

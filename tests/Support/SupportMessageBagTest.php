@@ -1,21 +1,23 @@
 <?php
 
 use Illuminate\Support\MessageBag;
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class SupportMessageBagTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportMessageBagTest extends BackwardCompatibleTestCase
+{
 
-	public function tearDown()
-	{
-		m::close();
-	}
+    protected function tearDown(): void
+    {
+        m::close();
+    }
 
 
-	public function testUniqueness()
-	{
-		$container = new MessageBag;
-		$container->add('foo', 'bar');
-		$container->add('foo', 'bar');
+    public function testUniqueness()
+    {
+        $container = new MessageBag;
+        $container->add('foo', 'bar');
+        $container->add('foo', 'bar');
 		$messages = $container->getMessages();
 		$this->assertEquals(array('bar'), $messages['foo']);
 	}

@@ -1,27 +1,29 @@
 <?php
 
+use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
-class SupportFacadeTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportFacadeTest extends BackwardCompatibleTestCase
+{
 
-	public function setUp()
-	{
-		Illuminate\Support\Facades\Facade::clearResolvedInstances();
-		FacadeStub::setFacadeApplication(null);
-	}
-
-
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function setUp()
+    {
+        Illuminate\Support\Facades\Facade::clearResolvedInstances();
+        FacadeStub::setFacadeApplication(null);
+    }
 
 
-	public function testFacadeCallsUnderlyingApplication()
-	{
-		$app = new ApplicationStub;
-		$app->setAttributes(array('foo' => $mock = m::mock('StdClass')));
-		$mock->shouldReceive('bar')->once()->andReturn('baz');
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
+
+    public function testFacadeCallsUnderlyingApplication()
+    {
+        $app = new ApplicationStub;
+        $app->setAttributes(array('foo' => $mock = m::mock('StdClass')));
+        $mock->shouldReceive('bar')->once()->andReturn('baz');
 		FacadeStub::setFacadeApplication($app);
 		$this->assertEquals('baz', FacadeStub::bar());
 	}
