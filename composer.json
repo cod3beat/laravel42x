@@ -14,7 +14,7 @@
         "d11wtq/boris": "~1.0",
         "ircmaxell/password-compat": "~1.0",
         "monolog/monolog": "~1.6",
-        "nesbot/carbon": "~1.0",
+        "nesbot/carbon": "~2.0",
         "phpseclib/phpseclib": "~2.0",
         "predis/predis": "^1.1",
         "stack/builder": "~1.0",
