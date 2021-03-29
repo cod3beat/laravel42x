@@ -1,17 +1,19 @@
 <?php namespace Illuminate\Support;
 
-use Patchwork\Utf8;
 use Illuminate\Support\Traits\MacroableTrait;
+use RuntimeException;
+use voku\helper\ASCII;
 
-class Str {
+class Str
+{
 
-	use MacroableTrait;
+    use MacroableTrait;
 
-	/**
-	 * The cache of snake-cased words.
-	 *
-	 * @var array
-	 */
+    /**
+     * The cache of snake-cased words.
+     *
+     * @var array
+     */
 	protected static $snakeCache = [];
 
 	/**
@@ -35,9 +37,9 @@ class Str {
 	 * @return string
 	 */
 	public static function ascii($value)
-	{
-		return Utf8::toAscii($value);
-	}
+    {
+        return ASCII::to_ascii($value);
+    }
 
 	/**
 	 * Convert a value to camel case.
@@ -202,14 +204,14 @@ class Str {
 		return Pluralizer::plural($value, $count);
 	}
 
-	/**
-	 * Generate a more truly "random" alpha-numeric string.
-	 *
-	 * @param  int  $length
-	 * @return string
-	 *
-	 * @throws \RuntimeException
-	 */
+    /**
+     * Generate a more truly "random" alpha-numeric string.
+     *
+     * @param int $length
+     * @return string
+     *
+     * @throws RuntimeException
+     */
 	public static function random($length = 16)
 	{
         $string = '';
