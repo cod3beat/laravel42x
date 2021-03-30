@@ -44,7 +44,7 @@
         "classpreloader/console": "^2.1",
         "opis/closure": "^3.6",
         "voku/portable-ascii": "^1.5",
-        "filp/whoops": "^2.11"
+        "filp/whoops": "~2.11"
     },
     "replace": {
         "illuminate/auth": "self.version",
