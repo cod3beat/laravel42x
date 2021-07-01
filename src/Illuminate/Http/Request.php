@@ -1,5 +1,6 @@
 <?php namespace Illuminate\Http;
 
+use Illuminate\Support\Str;
 use SplFileInfo;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -531,7 +532,7 @@ class Request extends SymfonyRequest {
 	 */
 	public function isJson()
 	{
-		return str_contains($this->header('CONTENT_TYPE'), '/json');
+		return Str::contains($this->header('CONTENT_TYPE'), '/json');
 	}
 
 	/**

@@ -3,6 +3,7 @@
 use Closure;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\Support\Contracts\ArrayableInterface as Arrayable;
 
@@ -450,12 +451,12 @@ class Factory {
 	 */
 	protected function parseClassEvent($class, $prefix)
 	{
-		if (str_contains($class, '@'))
+		if (Str::contains($class, '@'))
 		{
 			return explode('@', $class);
 		}
 
-		$method = str_contains($prefix, 'composing') ? 'compose' : 'create';
+		$method = Str::contains($prefix, 'composing') ? 'compose' : 'create';
 
 		return array($class, $method);
 	}

@@ -1,6 +1,7 @@
 <?php namespace Illuminate\Remote;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Net_SFTP, Crypt_RSA, System_SSH_Agent;
 
 class SecLibGateway implements GatewayInterface {
@@ -63,7 +64,7 @@ class SecLibGateway implements GatewayInterface {
 	 */
 	protected function setHostAndPort($host)
 	{
-		if ( ! str_contains($host, ':'))
+		if ( ! Str::contains($host, ':'))
 		{
 			$this->host = $host;
 		}

@@ -1,6 +1,7 @@
 <?php namespace Illuminate\Routing\Generators;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 class ControllerGenerator {
 
@@ -64,7 +65,7 @@ class ControllerGenerator {
 	 */
 	protected function writeFile($stub, $controller, $path)
 	{
-		if (str_contains($controller, '\\'))
+		if (Str::contains($controller, '\\'))
 		{
 			$this->makeDirectory($controller, $path);
 		}

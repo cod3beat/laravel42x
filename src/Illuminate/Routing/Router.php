@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -330,7 +331,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface {
 		// If the resource name contains a slash, we will assume the developer wishes to
 		// register these resource routes with a prefix so we will set that up out of
 		// the box so they don't have to mess with it. Otherwise, we will continue.
-		if (str_contains($name, '/'))
+		if (Str::contains($name, '/'))
 		{
 			$this->prefixedResource($name, $controller, $options);
 
@@ -420,7 +421,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface {
 	 */
 	public function getResourceUri($resource)
 	{
-		if ( ! str_contains($resource, '.')) return $resource;
+		if ( ! Str::contains($resource, '.')) return $resource;
 
 		// Once we have built the base URI, we'll remove the wildcard holder for this
 		// base resource name so that the individual route adders can suffix these
@@ -1153,7 +1154,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface {
 	 */
 	protected function parseFilter($callback)
 	{
-		if (is_string($callback) && ! str_contains($callback, '@'))
+		if (is_string($callback) && ! Str::contains($callback, '@'))
 		{
 			return $callback.'@filter';
 		}

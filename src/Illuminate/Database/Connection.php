@@ -1,5 +1,6 @@
 <?php namespace Illuminate\Database;
 
+use Illuminate\Support\Str;
 use PDO;
 use Closure;
 use DateTime;
@@ -667,7 +668,7 @@ class Connection implements ConnectionInterface {
 	 */
 	protected function causedByLostConnection(QueryException $e)
 	{
-		return str_contains($e->getPrevious()->getMessage(), 'server has gone away');
+		return Str::contains($e->getPrevious()->getMessage(), 'server has gone away');
 	}
 
 	/**

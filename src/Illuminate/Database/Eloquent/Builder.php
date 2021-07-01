@@ -4,6 +4,7 @@ use Closure;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Str;
 
 class Builder {
 
@@ -540,7 +541,7 @@ class Builder {
 	 */
 	protected function isNested($name, $relation)
 	{
-		$dots = str_contains($name, '.');
+		$dots = Str::contains($name, '.');
 
 		return $dots && starts_with($name, $relation.'.');
 	}

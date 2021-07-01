@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Connection;
 use Illuminate\Hashing\HasherInterface;
+use Illuminate\Support\Str;
 
 class DatabaseUserProvider implements UserProviderInterface {
 
@@ -106,7 +107,7 @@ class DatabaseUserProvider implements UserProviderInterface {
 
 		foreach ($credentials as $key => $value)
 		{
-			if ( ! str_contains($key, 'password'))
+			if ( ! Str::contains($key, 'password'))
 			{
 				$query->where($key, $value);
 			}

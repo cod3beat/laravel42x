@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 class SupportHelpersTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testArrayBuild()
@@ -190,10 +192,10 @@ class SupportHelpersTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testStrContains()
 	{
-		$this->assertTrue(str_contains('taylor', 'ylo'));
-		$this->assertTrue(str_contains('taylor', array('ylo')));
-		$this->assertFalse(str_contains('taylor', 'xxx'));
-		$this->assertFalse(str_contains('taylor', array('xxx')));
+		$this->assertTrue(Str::contains('taylor', 'ylo'));
+		$this->assertTrue(Str::contains('taylor', array('ylo')));
+		$this->assertFalse(Str::contains('taylor', 'xxx'));
+		$this->assertFalse(Str::contains('taylor', array('xxx')));
 	}
 
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Session\Store as SessionStore;
 use Symfony\Component\HttpFoundation\Response;
@@ -227,7 +228,7 @@ class Guard {
 	 */
 	protected function validRecaller($recaller)
 	{
-		if ( ! is_string($recaller) || ! str_contains($recaller, '|')) return false;
+		if ( ! is_string($recaller) || ! Str::contains($recaller, '|')) return false;
 
 		$segments = explode('|', $recaller);
 

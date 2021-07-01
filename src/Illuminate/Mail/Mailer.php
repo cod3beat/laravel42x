@@ -1,6 +1,7 @@
 <?php namespace Illuminate\Mail;
 
 use Closure;
+use Illuminate\Support\Str;
 use Swift_Mailer;
 use Swift_Message;
 use Illuminate\Log\Writer;
@@ -248,7 +249,7 @@ class Mailer {
 	 */
 	protected function getQueuedCallable(array $data)
 	{
-		if (str_contains($data['callback'], 'SerializableClosure'))
+		if (Str::contains($data['callback'], 'SerializableClosure'))
 		{
 			return with(unserialize($data['callback']))->getClosure();
 		}

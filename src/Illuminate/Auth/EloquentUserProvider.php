@@ -1,6 +1,7 @@
 <?php namespace Illuminate\Auth;
 
 use Illuminate\Hashing\HasherInterface;
+use Illuminate\Support\Str;
 
 class EloquentUserProvider implements UserProviderInterface {
 
@@ -88,7 +89,7 @@ class EloquentUserProvider implements UserProviderInterface {
 
 		foreach ($credentials as $key => $value)
 		{
-			if ( ! str_contains($key, 'password')) $query->where($key, $value);
+			if ( ! Str::contains($key, 'password')) $query->where($key, $value);
 		}
 
 		return $query->first();
