@@ -976,7 +976,7 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	public function testValidateImage()
 	{
 		$trans = $this->getRealTranslator();
-		$uploadedFile = array(__FILE__, '', null, null, null, true);
+		$uploadedFile = array(__FILE__, '', null, null, true);
 
 		$file = $this->getMock('Symfony\Component\HttpFoundation\File\UploadedFile', array('guessExtension'), $uploadedFile);
 		$file->expects($this->any())->method('guessExtension')->will($this->returnValue('php'));
@@ -1010,7 +1010,7 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	public function testValidateMime()
 	{
 		$trans = $this->getRealTranslator();
-		$uploadedFile = array(__FILE__, '', null, null, null, true);
+		$uploadedFile = array(__FILE__, '', null, null, true);
 
 		$file = $this->getMock('Symfony\Component\HttpFoundation\File\UploadedFile', array('guessExtension'), $uploadedFile);
 		$file->expects($this->any())->method('guessExtension')->will($this->returnValue('php'));
