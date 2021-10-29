@@ -3,12 +3,35 @@
 use ArrayObject;
 use Illuminate\Support\Contracts\JsonableInterface;
 use Illuminate\Support\Contracts\RenderableInterface;
+use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class Response extends \Symfony\Component\HttpFoundation\Response {
+class Response extends SymfonyResponse
+{
 
 	use ResponseTrait;
 
-	/**
+    /**
+     * Create a new HTTP response.
+     *
+     * @param  mixed  $content
+     * @param  int  $status
+     * @param  array  $headers
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    public function __construct($content = '', int $status = 200, array $headers = [])
+    {
+        $this->headers = new ResponseHeaderBag($headers);
+        $this->setContent($content);
+        $this->setStatusCode($status);
+        $this->setProtocolVersion('1.0');
+    }
+
+
+    /**
 	 * The original content of the response.
 	 *
 	 * @var mixed
