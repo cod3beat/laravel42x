@@ -2,7 +2,7 @@
 
 use Illuminate\Container\Container;
 
-class ContainerContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testClosureResolution()
 	{
