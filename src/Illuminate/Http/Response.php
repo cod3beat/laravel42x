@@ -1,9 +1,11 @@
 <?php namespace Illuminate\Http;
 
 use ArrayObject;
+use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
 use Illuminate\Support\Contracts\RenderableInterface;
 use InvalidArgumentException;
+use JsonSerializable;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -56,6 +58,10 @@ class Response extends SymfonyResponse
 			$this->headers->set('Content-Type', 'application/json');
 
 			$content = $this->morphToJson($content);
+
+            if ($content === false) {
+                throw new InvalidArgumentException(json_last_error_msg());
+            }
 		}
 
 		// If this content implements the "RenderableInterface", then we will call the
@@ -77,9 +83,15 @@ class Response extends SymfonyResponse
 	 */
 	protected function morphToJson($content)
 	{
-		if ($content instanceof JsonableInterface) return $content->toJson();
+        if ($content instanceof JsonableInterface) {
+            return $content->toJson();
+        }
 
-		return json_encode($content);
+        if ($content instanceof ArrayableInterface) {
+            return json_encode($content->toArray());
+        }
+
+        return json_encode($content);
 	}
 
 	/**
@@ -90,9 +102,11 @@ class Response extends SymfonyResponse
 	 */
 	protected function shouldBeJson($content)
 	{
-		return $content instanceof JsonableInterface ||
-			   $content instanceof ArrayObject ||
-			   is_array($content);
+        return $content instanceof ArrayableInterface ||
+            $content instanceof JsonableInterface ||
+            $content instanceof ArrayObject ||
+            $content instanceof JsonSerializable ||
+            is_array($content);
 	}
 
 	/**
