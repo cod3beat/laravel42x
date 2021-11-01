@@ -35,14 +35,14 @@ class Composer {
 	/**
 	 * Regenerate the Composer autoloader files.
 	 *
-	 * @param  string  $extra
+	 * @param string $extra
 	 * @return void
 	 */
-	public function dumpAutoloads($extra = '')
-	{
-		$process = $this->getProcess();
+	public function dumpAutoloads(string $extra = ''): void
+    {
+        $command = trim($this->findComposer().' dump-autoload '.$extra);
 
-		$process->setCommandLine(trim($this->findComposer().' dump-autoload '.$extra));
+		$process = $this->getProcess(explode(' ', $command));
 
 		$process->run();
 	}
@@ -52,8 +52,8 @@ class Composer {
 	 *
 	 * @return void
 	 */
-	public function dumpOptimized()
-	{
+	public function dumpOptimized(): void
+    {
 		$this->dumpAutoloads('--optimize');
 	}
 
@@ -74,12 +74,12 @@ class Composer {
 
 	/**
 	 * Get a new Symfony process instance.
-	 *
+	 * @param string[] $commands
 	 * @return \Symfony\Component\Process\Process
 	 */
-	protected function getProcess()
-	{
-		return (new Process([], $this->workingPath))->setTimeout(null);
+	protected function getProcess(array $commands = []): Process
+    {
+		return (new Process($commands, $this->workingPath))->setTimeout(null);
 	}
 
 	/**
