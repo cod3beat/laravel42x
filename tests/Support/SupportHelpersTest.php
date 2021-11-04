@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Str;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class SupportHelpersTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportHelpersTest extends BackwardCompatibleTestCase {
 
 	public function testArrayBuild()
 	{

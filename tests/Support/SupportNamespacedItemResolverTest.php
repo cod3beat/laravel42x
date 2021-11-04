@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\NamespacedItemResolver;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class SupportNamespacedItemResolverTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportNamespacedItemResolverTest extends BackwardCompatibleTestCase {
 
 	public function testResolution()
 	{

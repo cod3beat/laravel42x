@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Fluent;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class SupportFluentTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testAttributesAreSetByConstructor()
 	{

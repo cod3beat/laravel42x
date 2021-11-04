@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Validation\PresenceVerifierInterface;
 use Illuminate\Validation\Validator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -113,7 +115,7 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 		$trans = $this->getRealTranslator();
 		$trans->addResource('array', ['validation.foo' => 'foo!'], 'en', 'messages');
 		$v = new Validator($trans, [], ['name' => 'required']);
-		$v->setContainer($container = m::mock(\Illuminate\Container\Container::class));
+		$v->setContainer($container = m::mock(Container::class));
 		$v->addReplacer('required', 'Foo@bar');
 		$container->shouldReceive('make')->once()->with('Foo')->andReturn($foo = m::mock('StdClass'));
 		$foo->shouldReceive('bar')->once()->andReturn('replaced!');
@@ -860,25 +862,25 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	{
 		$trans = $this->getRealTranslator();
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users']);
-		$mock = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock = m::mock(PresenceVerifierInterface::class);
 		$mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(0);
 		$v->setPresenceVerifier($mock);
 		$this->assertTrue($v->passes());
 
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,1']);
-		$mock2 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock2 = m::mock(PresenceVerifierInterface::class);
 		$mock2->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', '1', 'id', [])->andReturn(1);
 		$v->setPresenceVerifier($mock2);
 		$this->assertFalse($v->passes());
 
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,1,id_col']);
-		$mock3 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock3 = m::mock(PresenceVerifierInterface::class);
 		$mock3->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', '1', 'id_col', [])->andReturn(2);
 		$v->setPresenceVerifier($mock3);
 		$this->assertFalse($v->passes());
 
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,NULL,id_col,foo,bar']);
-		$mock3 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock3 = m::mock(PresenceVerifierInterface::class);
 		$mock3->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', null, 'id_col', ['foo' => 'bar'])->andReturn(2);
 		$v->setPresenceVerifier($mock3);
 		$this->assertFalse($v->passes());
@@ -889,27 +891,27 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	{
 		$trans = $this->getRealTranslator();
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users']);
-		$mock = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock = m::mock(PresenceVerifierInterface::class);
 		$mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(true);
 		$v->setPresenceVerifier($mock);
 		$this->assertTrue($v->passes());
 
 		$trans = $this->getRealTranslator();
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users,email,account_id,1,name,taylor']);
-		$mock4 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock4 = m::mock(PresenceVerifierInterface::class);
 		$mock4->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, ['account_id' => 1, 'name' => 'taylor']
         )->andReturn(true);
 		$v->setPresenceVerifier($mock4);
 		$this->assertTrue($v->passes());
 
 		$v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users,email_addr']);
-		$mock2 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock2 = m::mock(PresenceVerifierInterface::class);
 		$mock2->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', null, null, [])->andReturn(false);
 		$v->setPresenceVerifier($mock2);
 		$this->assertFalse($v->passes());
 
 		$v = new Validator($trans, ['email' => ['foo']], ['email' => 'Exists:users,email_addr']);
-		$mock3 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock3 = m::mock(PresenceVerifierInterface::class);
 		$mock3->shouldReceive('getMultiCount')->once()->with('users', 'email_addr', ['foo'], [])->andReturn(false);
 		$v->setPresenceVerifier($mock3);
 		$this->assertFalse($v->passes());
@@ -919,14 +921,14 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 	{
 		$trans = $this->getRealTranslator();
 		$v = new Validator($trans, ['id' => 'foo'], ['id' => 'Integer|Exists:users,id']);
-		$mock2 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock2 = m::mock(PresenceVerifierInterface::class);
 		$mock2->shouldReceive('getCount')->never();
 		$v->setPresenceVerifier($mock2);
 		$this->assertFalse($v->passes());
 
 		$trans = $this->getRealTranslator();
 		$v = new Validator($trans, ['id' => '1'], ['id' => 'Integer|Exists:users,id']);
-		$mock2 = m::mock(\Illuminate\Validation\PresenceVerifierInterface::class);
+		$mock2 = m::mock(PresenceVerifierInterface::class);
 		$mock2->shouldReceive('getCount')->once()->with('users', 'id', '1', null, null, [])->andReturn(true);
 		$v->setPresenceVerifier($mock2);
 		$this->assertTrue($v->passes());
@@ -1347,7 +1349,7 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 		$trans = $this->getRealTranslator();
 		$trans->addResource('array', ['validation.foo' => 'foo!'], 'en', 'messages');
 		$v = new Validator($trans, ['name' => 'taylor'], ['name' => 'foo']);
-		$v->setContainer($container = m::mock(\Illuminate\Container\Container::class));
+		$v->setContainer($container = m::mock(Container::class));
 		$v->addExtension('foo', 'Foo@bar');
 		$container->shouldReceive('make')->once()->with('Foo')->andReturn($foo = m::mock('StdClass'));
 		$foo->shouldReceive('bar')->once()->andReturn(false);

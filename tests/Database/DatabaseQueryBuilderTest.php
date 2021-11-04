@@ -1,7 +1,11 @@
 <?php
 
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression as Raw;
+use Illuminate\Database\Query\Grammars\Grammar;
+use Illuminate\Database\Query\Processors\Processor;
+use Illuminate\Pagination\Factory;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -781,11 +785,11 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 
 	public function testPaginateCorrectlyCreatesPaginatorInstance()
 	{
-		$connection = m::mock(\Illuminate\Database\ConnectionInterface::class);
-		$grammar = m::mock(\Illuminate\Database\Query\Grammars\Grammar::class);
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
+		$connection = m::mock(ConnectionInterface::class);
+		$grammar = m::mock(Grammar::class);
+		$processor = m::mock(Processor::class);
 		$builder = $this->getMock(Builder::class, array('getPaginationCount', 'forPage', 'get'), array($connection, $grammar, $processor));
-		$paginator = m::mock(\Illuminate\Pagination\Factory::class);
+		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
 		$builder->expects($this->once())->method('forPage')->with($this->equalTo(1), $this->equalTo(15))->will($this->returnValue($builder));
@@ -799,11 +803,11 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 
 	public function testPaginateCorrectlyCreatesPaginatorInstanceForGroupedQuery()
 	{
-		$connection = m::mock(\Illuminate\Database\ConnectionInterface::class);
-		$grammar = m::mock(\Illuminate\Database\Query\Grammars\Grammar::class);
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
+		$connection = m::mock(ConnectionInterface::class);
+		$grammar = m::mock(Grammar::class);
+		$processor = m::mock(Processor::class);
 		$builder = $this->getMock(Builder::class, array('get'), array($connection, $grammar, $processor));
-		$paginator = m::mock(\Illuminate\Pagination\Factory::class);
+		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(2);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
 		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->will($this->returnValue(array('foo', 'bar', 'baz')));
@@ -835,11 +839,11 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 
 	public function testQuickPaginateCorrectlyCreatesPaginatorInstance()
 	{
-		$connection = m::mock(\Illuminate\Database\ConnectionInterface::class);
-		$grammar = m::mock(\Illuminate\Database\Query\Grammars\Grammar::class);
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
+		$connection = m::mock(ConnectionInterface::class);
+		$grammar = m::mock(Grammar::class);
+		$processor = m::mock(Processor::class);
 		$builder = $this->getMock(Builder::class, array('skip', 'take', 'get'), array($connection, $grammar, $processor));
-		$paginator = m::mock(\Illuminate\Pagination\Factory::class);
+		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
 		$builder->expects($this->once())->method('skip')->with($this->equalTo(0))->will($this->returnValue($builder));
@@ -1190,12 +1194,12 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 
 	public function setupCacheTestQuery($cache, $driver)
 	{
-		$connection = m::mock(\Illuminate\Database\ConnectionInterface::class);
+		$connection = m::mock(ConnectionInterface::class);
 		$connection->shouldReceive('getName')->andReturn('connection_name');
 		$connection->shouldReceive('getCacheManager')->once()->andReturn($cache);
 		$cache->shouldReceive('driver')->once()->andReturn($driver);
 		$grammar = new Illuminate\Database\Query\Grammars\Grammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
+		$processor = m::mock(Processor::class);
 
 		$builder = $this->getMock(Builder::class, array('getFresh'), array($connection, $grammar, $processor));
 		$builder->expects($this->once())->method('getFresh')->with($this->equalTo(array('*')))->will($this->returnValue(array('results')));
@@ -1307,40 +1311,40 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 	protected function getBuilder()
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\Grammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		$processor = m::mock(Processor::class);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 
 	protected function getPostgresBuilder()
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\PostgresGrammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		$processor = m::mock(Processor::class);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 
 	protected function getMySqlBuilder()
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\MySqlGrammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		$processor = m::mock(Processor::class);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 
 	protected function getSQLiteBuilder()
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\SQLiteGrammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		$processor = m::mock(Processor::class);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 
 	protected function getSqlServerBuilder()
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\SqlServerGrammar;
-		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		$processor = m::mock(Processor::class);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 
@@ -1348,7 +1352,7 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 	{
 		$grammar = new Illuminate\Database\Query\Grammars\MySqlGrammar;
 		$processor = new Illuminate\Database\Query\Processors\MySqlProcessor;
-		return new Builder(m::mock(\Illuminate\Database\ConnectionInterface::class), $grammar, $processor);
+		return new Builder(m::mock(ConnectionInterface::class), $grammar, $processor);
 	}
 
 }

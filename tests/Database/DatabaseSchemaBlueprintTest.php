@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,10 +17,10 @@ class DatabaseSchemaBlueprintTest extends BackwardCompatibleTestCase
 
     public function testToSqlRunsCommandsFromBlueprint()
     {
-        $conn = m::mock(\Illuminate\Database\Connection::class);
+        $conn = m::mock(Connection::class);
         $conn->shouldReceive('statement')->once()->with('foo');
         $conn->shouldReceive('statement')->once()->with('bar');
-		$grammar = m::mock(\Illuminate\Database\Schema\Grammars\MySqlGrammar::class);
+		$grammar = m::mock(MySqlGrammar::class);
 		$blueprint = $this->getMock(Blueprint::class, array('toSql'), array('users'));
 		$blueprint->expects($this->once())->method('toSql')->with($this->equalTo($conn), $this->equalTo($grammar))->will($this->returnValue(array('foo', 'bar')));
 

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Cache\ArrayStore;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class CacheArrayStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheArrayStoreTest extends BackwardCompatibleTestCase {
 
 	public function testItemsCanBeSetAndRetrieved()
 	{

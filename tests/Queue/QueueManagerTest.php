@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Queue\QueueManager;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -20,7 +21,7 @@ class QueueManagerTest extends BackwardCompatibleTestCase
                 'queue.default' => 'sync',
 				'queue.connections.sync' => array('driver' => 'sync'),
 			),
-			'encrypter' => $encrypter = m::mock(\Illuminate\Encryption\Encrypter::class),
+			'encrypter' => $encrypter = m::mock(Encrypter::class),
 		);
 
 		$manager = new QueueManager($app);
@@ -42,7 +43,7 @@ class QueueManagerTest extends BackwardCompatibleTestCase
 				'queue.default' => 'sync',
 				'queue.connections.foo' => array('driver' => 'bar'),
 			),
-			'encrypter' => $encrypter = m::mock(\Illuminate\Encryption\Encrypter::class),
+			'encrypter' => $encrypter = m::mock(Encrypter::class),
 		);
 
 		$manager = new QueueManager($app);

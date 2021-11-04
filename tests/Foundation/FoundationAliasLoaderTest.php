@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Foundation\AliasLoader;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class FoundationAliasLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationAliasLoaderTest extends BackwardCompatibleTestCase {
 
 	public function testLoaderCanBeCreatedAndRegisteredOnce()
 	{

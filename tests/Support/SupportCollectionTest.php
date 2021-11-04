@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Contracts\ArrayableInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -50,9 +51,9 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 
 	public function testToArrayCallsToArrayOnEachItemInCollection()
 	{
-		$item1 = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
+		$item1 = m::mock(ArrayableInterface::class);
 		$item1->shouldReceive('toArray')->once()->andReturn('foo.array');
-		$item2 = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
+		$item2 = m::mock(ArrayableInterface::class);
 		$item2->shouldReceive('toArray')->once()->andReturn('bar.array');
 		$c = new Collection(array($item1, $item2));
 		$results = $c->toArray();

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -430,7 +431,7 @@ class DatabaseSqlServerSchemaGrammarTest extends BackwardCompatibleTestCase
 
 	protected function getConnection()
 	{
-		return m::mock(\Illuminate\Database\Connection::class);
+		return m::mock(Connection::class);
 	}
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\EnvironmentDetector;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -14,7 +15,7 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 
     public function testEnvironmentDetection()
     {
-        $env = m::mock(\Illuminate\Foundation\EnvironmentDetector::class)->makePartial();
+        $env = m::mock(EnvironmentDetector::class)->makePartial();
         $env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(false);
         $result = $env->detect(
             array(
@@ -23,7 +24,7 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 		$this->assertEquals('production', $result);
 
 
-		$env = m::mock(\Illuminate\Foundation\EnvironmentDetector::class)->makePartial();
+		$env = m::mock(EnvironmentDetector::class)->makePartial();
 		$env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(true);
 		$result = $env->detect(array(
 			'local'   => array('localhost')

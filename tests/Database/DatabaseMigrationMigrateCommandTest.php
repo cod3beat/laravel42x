@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Console\Migrations\MigrateCommand;
+use Illuminate\Database\Migrations\Migrator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -16,7 +17,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
     public function testBasicMigrationsCallMigratorWithProperArguments()
     {
         $command = new MigrateCommand(
-            $migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class),
+            $migrator = m::mock(Migrator::class),
             __DIR__ . '/vendor'
         );
         $app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
@@ -32,7 +33,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
 
 	public function testMigrationRepositoryCreatedWhenNecessary()
 	{
-		$params = array($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class), __DIR__.'/vendor');
+		$params = array($migrator = m::mock(Migrator::class), __DIR__.'/vendor');
 		$command = $this->getMock(MigrateCommand::class, array('call'), $params);
 		$app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
 		$command->setLaravel($app);
@@ -48,7 +49,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
 
 	public function testPackageIsRespectedWhenMigrating()
 	{
-		$command = new MigrateCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class), __DIR__.'/vendor');
+		$command = new MigrateCommand($migrator = m::mock(Migrator::class), __DIR__.'/vendor');
 		$command->setLaravel(new ApplicationDatabaseMigrationStub());
 		$migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('run')->once()->with(__DIR__.'/vendor/bar/src/migrations', false);
@@ -61,7 +62,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
 
 	public function testVendorPackageIsRespectedWhenMigrating()
 	{
-		$command = new MigrateCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class), __DIR__.'/vendor');
+		$command = new MigrateCommand($migrator = m::mock(Migrator::class), __DIR__.'/vendor');
 		$command->setLaravel(new ApplicationDatabaseMigrationStub());
 		$migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('run')->once()->with(__DIR__.'/vendor/foo/bar/src/migrations', false);
@@ -74,7 +75,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
 
 	public function testTheCommandMayBePretended()
 	{
-		$command = new MigrateCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class), __DIR__.'/vendor');
+		$command = new MigrateCommand($migrator = m::mock(Migrator::class), __DIR__.'/vendor');
 		$app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
 		$command->setLaravel($app);
 		$migrator->shouldReceive('setConnection')->once()->with(null);
@@ -88,7 +89,7 @@ class DatabaseMigrationMigrateCommandTest extends BackwardCompatibleTestCase
 
 	public function testTheDatabaseMayBeSet()
 	{
-		$command = new MigrateCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class), __DIR__.'/vendor');
+		$command = new MigrateCommand($migrator = m::mock(Migrator::class), __DIR__.'/vendor');
 		$app = new ApplicationDatabaseMigrationStub(array('path' => __DIR__));
 		$command->setLaravel($app);
 		$migrator->shouldReceive('setConnection')->once()->with('foo');

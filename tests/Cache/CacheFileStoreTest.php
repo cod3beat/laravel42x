@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Cache\FileStore;
+use Illuminate\Filesystem\Filesystem;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class CacheFileStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheFileStoreTest extends BackwardCompatibleTestCase {
 
 	public function testNullIsReturnedIfFileDoesntExist()
 	{
@@ -123,7 +125,7 @@ class CacheFileStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	protected function mockFilesystem()
 	{
-		return $this->getMock(\Illuminate\Filesystem\Filesystem::class);
+		return $this->getMock(Filesystem::class);
 	}
 
 }

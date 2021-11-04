@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -87,15 +89,15 @@ class DatabaseEloquentMorphToManyTest extends BackwardCompatibleTestCase
 
 	public function getRelationArguments()
 	{
-		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$parent = m::mock(Model::class);
 		$parent->shouldReceive('getMorphClass')->andReturn(get_class($parent));
 		$parent->shouldReceive('getKey')->andReturn(1);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
 		$parent->shouldReceive('getMorphClass')->andReturn(get_class($parent));
 
-		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
-		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$builder = m::mock(Builder::class);
+		$related = m::mock(Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
 
 		$related->shouldReceive('getTable')->andReturn('tags');

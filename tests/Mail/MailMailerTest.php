@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Log\Writer;
+use Illuminate\Mail\Mailer;
+use Illuminate\Queue\QueueManager;
+use Illuminate\View\Factory;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +19,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
     public function testMailerSendSendsMessageWithProperViewContent()
     {
         unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMock(\Illuminate\Mail\Mailer::class, array('createMessage'), $this->getMocks());
+        $mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
         $message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
@@ -34,7 +38,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	public function testMailerSendSendsMessageWithProperPlainViewContent()
 	{
 		unset($_SERVER['__mailer.test']);
-		$mailer = $this->getMock(\Illuminate\Mail\Mailer::class, array('createMessage'), $this->getMocks());
+		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
@@ -55,7 +59,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	public function testMailerSendSendsMessageWithProperPlainViewContentWhenExplicit()
 	{
 		unset($_SERVER['__mailer.test']);
-		$mailer = $this->getMock(\Illuminate\Mail\Mailer::class, array('createMessage'), $this->getMocks());
+		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
@@ -77,7 +81,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		list($view, $swift) = $this->getMocks();
 		$mailer = new Illuminate\Mail\Mailer($view, $swift);
-		$mailer->setQueue($queue = m::mock(\Illuminate\Queue\QueueManager::class));
+		$mailer->setQueue($queue = m::mock(QueueManager::class));
 		$queue->shouldReceive('push')->once()->with('mailer@handleQueuedMessage', array('view' => 'foo', 'data' => array(1), 'callback' => 'callable'), null);
 
 		$mailer->queue('foo', array(1), 'callable');
@@ -88,7 +92,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		list($view, $swift) = $this->getMocks();
 		$mailer = new Illuminate\Mail\Mailer($view, $swift);
-		$mailer->setQueue($queue = m::mock(\Illuminate\Queue\QueueManager::class));
+		$mailer->setQueue($queue = m::mock(QueueManager::class));
 		$queue->shouldReceive('push')->once()->with('mailer@handleQueuedMessage', array('view' => 'foo', 'data' => array(1), 'callback' => 'callable'), 'queue');
 
 		$mailer->queueOn('queue', 'foo', array(1), 'callable');
@@ -99,7 +103,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		list($view, $swift) = $this->getMocks();
 		$mailer = new Illuminate\Mail\Mailer($view, $swift);
-		$mailer->setQueue($queue = m::mock(\Illuminate\Queue\QueueManager::class));
+		$mailer->setQueue($queue = m::mock(QueueManager::class));
 		$serialized = serialize(new Illuminate\Support\SerializableClosure($closure = function() {}));
 		$queue->shouldReceive('push')->once()->with('mailer@handleQueuedMessage', array('view' => 'foo', 'data' => array(1), 'callback' => $serialized), null);
 
@@ -111,7 +115,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		list($view, $swift) = $this->getMocks();
 		$mailer = new Illuminate\Mail\Mailer($view, $swift);
-		$mailer->setQueue($queue = m::mock(\Illuminate\Queue\QueueManager::class));
+		$mailer->setQueue($queue = m::mock(QueueManager::class));
 		$queue->shouldReceive('later')->once()->with(10, 'mailer@handleQueuedMessage', array('view' => 'foo', 'data' => array(1), 'callback' => 'callable'), null);
 
 		$mailer->later(10, 'foo', array(1), 'callable');
@@ -122,7 +126,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		list($view, $swift) = $this->getMocks();
 		$mailer = new Illuminate\Mail\Mailer($view, $swift);
-		$mailer->setQueue($queue = m::mock(\Illuminate\Queue\QueueManager::class));
+		$mailer->setQueue($queue = m::mock(QueueManager::class));
 		$queue->shouldReceive('later')->once()->with(10, 'mailer@handleQueuedMessage', array('view' => 'foo', 'data' => array(1), 'callback' => 'callable'), 'queue');
 
 		$mailer->laterOn('queue', 10, 'foo', array(1), 'callable');
@@ -131,7 +135,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 
 	public function testMessagesCanBeLoggedInsteadOfSent()
 	{
-		$mailer = $this->getMock(\Illuminate\Mail\Mailer::class, array('createMessage'), $this->getMocks());
+		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
@@ -143,7 +147,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 		$message->shouldReceive('getTo')->once()->andReturn(array('taylor@userscape.com' => 'Taylor'));
 		$message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
 		$mailer->getSwiftMailer()->shouldReceive('send')->never();
-		$logger = m::mock(\Illuminate\Log\Writer::class);
+		$logger = m::mock(Writer::class);
 		$logger->shouldReceive('info')->once()->with('Pretending to mail message to: taylor@userscape.com');
 		$mailer->setLogger($logger);
 		$mailer->pretend();
@@ -154,7 +158,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 
 	public function testMailerCanResolveMailerClasses()
 	{
-		$mailer = $this->getMock(\Illuminate\Mail\Mailer::class, array('createMessage'), $this->getMocks());
+		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
 		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
 		$view = m::mock('StdClass');
@@ -213,13 +217,13 @@ class MailMailerTest extends BackwardCompatibleTestCase
 
 	protected function getMailer()
 	{
-		return new Illuminate\Mail\Mailer(m::mock(\Illuminate\View\Factory::class), m::mock('Swift_Mailer'));
+		return new Illuminate\Mail\Mailer(m::mock(Factory::class), m::mock('Swift_Mailer'));
 	}
 
 
 	protected function getMocks()
 	{
-		return array(m::mock(\Illuminate\View\Factory::class), m::mock('Swift_Mailer'));
+		return array(m::mock(Factory::class), m::mock('Swift_Mailer'));
 	}
 
 }

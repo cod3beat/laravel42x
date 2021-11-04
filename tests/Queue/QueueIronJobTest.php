@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Queue\IronQueue;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -41,8 +43,8 @@ class QueueIronJobTest extends BackwardCompatibleTestCase
 	public function testDeleteNoopsOnPushedQueues()
 	{
 		$job = new Illuminate\Queue\Jobs\IronJob(
-			m::mock(\Illuminate\Container\Container::class),
-			m::mock(\Illuminate\Queue\IronQueue::class),
+			m::mock(Container::class),
+			m::mock(IronQueue::class),
 			(object) array('id' => 1, 'body' => json_encode(array('job' => 'foo', 'data' => array('data'))), 'timeout' => 60, 'pushed' => true),
 			'default'
 		);
@@ -65,8 +67,8 @@ class QueueIronJobTest extends BackwardCompatibleTestCase
 	protected function getJob()
 	{
 		return new Illuminate\Queue\Jobs\IronJob(
-			m::mock(\Illuminate\Container\Container::class),
-			m::mock(\Illuminate\Queue\IronQueue::class),
+			m::mock(Container::class),
+			m::mock(IronQueue::class),
 			(object) array('id' => 1, 'body' => json_encode(array('job' => 'foo', 'data' => array('data'), 'attempts' => 1, 'queue' => 'default')), 'timeout' => 60)
 		);
 	}

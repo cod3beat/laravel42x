@@ -4,6 +4,8 @@ use Aws\Common\Credentials\Credentials;
 use Aws\Common\Signature\SignatureV4;
 use Aws\Sqs\SqsClient;
 use Guzzle\Common\Collection;
+use Illuminate\Container\Container;
+use Illuminate\Queue\SqsQueue;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -34,7 +36,7 @@ class QueueSqsJobTest extends BackwardCompatibleTestCase
 		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', array('deleteMessage'), array($this->credentials, $this->signature, $this->config));
 
 		// Use Mockery to mock the IoC Container
-		$this->mockedContainer = m::mock(\Illuminate\Container\Container::class);
+		$this->mockedContainer = m::mock(Container::class);
 
 		$this->mockedJob = 'foo';
 		$this->mockedData = array('data');
@@ -70,7 +72,7 @@ class QueueSqsJobTest extends BackwardCompatibleTestCase
 	public function testDeleteRemovesTheJobFromSqs()
 	{
 		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', array('deleteMessage'), array($this->credentials, $this->signature, $this->config));
-		$queue = $this->getMock(\Illuminate\Queue\SqsQueue::class, array('getQueue'), array($this->mockedSqsClient, $this->queueName, $this->account));
+		$queue = $this->getMock(SqsQueue::class, array('getQueue'), array($this->mockedSqsClient, $this->queueName, $this->account));
 		$queue->setContainer($this->mockedContainer);
 		$job = $this->getJob();
 		$job->getSqs()->expects($this->once())->method('deleteMessage')->with(array('QueueUrl' => $this->queueUrl, 'ReceiptHandle' => $this->mockedReceiptHandle));

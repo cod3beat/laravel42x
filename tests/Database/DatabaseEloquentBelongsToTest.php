@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -17,7 +19,7 @@ class DatabaseEloquentBelongsToTest extends BackwardCompatibleTestCase
     public function testUpdateMethodRetrievesModelAndUpdates()
     {
         $relation = $this->getRelation();
-        $mock = m::mock(\Illuminate\Database\Eloquent\Model::class);
+        $mock = m::mock(Model::class);
         $mock->shouldReceive('fill')->once()->with(array('attributes'))->andReturn($mock);
 		$mock->shouldReceive('save')->once()->andReturn(true);
 		$relation->getQuery()->shouldReceive('first')->once()->andReturn($mock);
@@ -38,7 +40,7 @@ class DatabaseEloquentBelongsToTest extends BackwardCompatibleTestCase
 	public function testRelationIsProperlyInitialized()
 	{
 		$relation = $this->getRelation();
-		$model = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$model = m::mock(Model::class);
 		$model->shouldReceive('setRelation')->once()->with('foo', null);
 		$models = $relation->initRelation(array($model), 'foo');
 
@@ -66,10 +68,10 @@ class DatabaseEloquentBelongsToTest extends BackwardCompatibleTestCase
 
 	public function testAssociateMethodSetsForeignKeyOnModel()
 	{
-		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$parent = m::mock(Model::class);
 		$parent->shouldReceive('getAttribute')->once()->with('foreign_key')->andReturn('foreign.value');
 		$relation = $this->getRelation($parent);
-		$associate = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$associate = m::mock(Model::class);
 		$associate->shouldReceive('getAttribute')->once()->with('id')->andReturn(1);
 		$parent->shouldReceive('setAttribute')->once()->with('foreign_key', 1);
 		$parent->shouldReceive('setRelation')->once()->with('relation', $associate);
@@ -80,9 +82,9 @@ class DatabaseEloquentBelongsToTest extends BackwardCompatibleTestCase
 
 	protected function getRelation($parent = null)
 	{
-		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$builder = m::mock(Builder::class);
 		$builder->shouldReceive('where')->with('relation.id', '=', 'foreign.value');
-		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$related = m::mock(Model::class);
 		$related->shouldReceive('getKeyName')->andReturn('id');
 		$related->shouldReceive('getTable')->andReturn('relation');
 		$builder->shouldReceive('getModel')->andReturn($related);

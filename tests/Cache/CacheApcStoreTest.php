@@ -1,10 +1,13 @@
 <?php
 
-class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+use Illuminate\Cache\ApcWrapper;
+use L4\Tests\BackwardCompatibleTestCase;
+
+class CacheApcStoreTest extends BackwardCompatibleTestCase {
 
 	public function testGetReturnsNullWhenNotFound()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('get'));
+		$apc = $this->getMock(ApcWrapper::class, array('get'));
 		$apc->expects($this->once())->method('get')->with($this->equalTo('foobar'))->will($this->returnValue(null));
 		$store = new Illuminate\Cache\ApcStore($apc, 'foo');
 		$this->assertNull($store->get('bar'));
@@ -13,7 +16,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testAPCValueIsReturned()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('get'));
+		$apc = $this->getMock(ApcWrapper::class, array('get'));
 		$apc->expects($this->once())->method('get')->will($this->returnValue('bar'));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$this->assertEquals('bar', $store->get('foo'));
@@ -22,7 +25,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testSetMethodProperlyCallsAPC()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('put'));
+		$apc = $this->getMock(ApcWrapper::class, array('put'));
 		$apc->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(60));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$store->put('foo', 'bar', 1);
@@ -31,7 +34,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testIncrementMethodProperlyCallsAPC()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('increment'));
+		$apc = $this->getMock(ApcWrapper::class, array('increment'));
 		$apc->expects($this->once())->method('increment')->with($this->equalTo('foo'), $this->equalTo(5));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$store->increment('foo', 5);
@@ -40,7 +43,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testDecrementMethodProperlyCallsAPC()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('decrement'));
+		$apc = $this->getMock(ApcWrapper::class, array('decrement'));
 		$apc->expects($this->once())->method('decrement')->with($this->equalTo('foo'), $this->equalTo(5));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$store->decrement('foo', 5);
@@ -49,7 +52,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testStoreItemForeverProperlyCallsAPC()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('put'));
+		$apc = $this->getMock(ApcWrapper::class, array('put'));
 		$apc->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(0));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$store->forever('foo', 'bar');
@@ -58,7 +61,7 @@ class CacheApcStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testForgetMethodProperlyCallsAPC()
 	{
-		$apc = $this->getMock(\Illuminate\Cache\ApcWrapper::class, array('delete'));
+		$apc = $this->getMock(ApcWrapper::class, array('delete'));
 		$apc->expects($this->once())->method('delete')->with($this->equalTo('foo'));
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$store->forget('foo');

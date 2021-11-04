@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Cache\DatabaseStore;
+use Illuminate\Database\Connection;
+use Illuminate\Encryption\Encrypter;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -115,15 +117,15 @@ class CacheDatabaseStoreTest extends BackwardCompatibleTestCase
 
 	protected function getStore()
 	{
-		return new DatabaseStore(m::mock(\Illuminate\Database\Connection::class), m::mock(
-            \Illuminate\Encryption\Encrypter::class
+		return new DatabaseStore(m::mock(Connection::class), m::mock(
+            Encrypter::class
         ), 'table', 'prefix');
 	}
 
 
 	protected function getMocks()
 	{
-		return array(m::mock(\Illuminate\Database\Connection::class), m::mock(\Illuminate\Encryption\Encrypter::class), 'table', 'prefix');
+		return array(m::mock(Connection::class), m::mock(Encrypter::class), 'table', 'prefix');
 	}
 
 }

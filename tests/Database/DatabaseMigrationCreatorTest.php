@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Migrations\MigrationCreator;
+use Illuminate\Filesystem\Filesystem;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -57,9 +59,9 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 
 	protected function getCreator()
 	{
-		$files = m::mock(\Illuminate\Filesystem\Filesystem::class);
+		$files = m::mock(Filesystem::class);
 
-		return $this->getMock(\Illuminate\Database\Migrations\MigrationCreator::class, array('getDatePrefix'), array($files));
+		return $this->getMock(MigrationCreator::class, array('getDatePrefix'), array($files));
 	}
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Queue\SyncQueue;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -14,7 +15,7 @@ class QueueSyncQueueTest extends BackwardCompatibleTestCase
 
     public function testPushShouldFireJobInstantly()
     {
-        $sync = $this->getMock(\Illuminate\Queue\SyncQueue::class, array('resolveJob'));
+        $sync = $this->getMock(SyncQueue::class, array('resolveJob'));
         $job = m::mock('StdClass');
         $sync->expects($this->once())->method('resolveJob')->with(
             $this->equalTo('Foo'),

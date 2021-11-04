@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Filesystem\Filesystem;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class FilesystemTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FilesystemTest extends BackwardCompatibleTestCase {
 
 	public function testGetRetrievesFiles()
 	{

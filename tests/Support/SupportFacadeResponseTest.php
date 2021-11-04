@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Facades\Response;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -15,7 +16,7 @@ class SupportFacadeResponseTest extends BackwardCompatibleTestCase
 
     public function testArrayableSendAsJson()
     {
-        $data = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
+        $data = m::mock(ArrayableInterface::class);
         $data->shouldReceive('toArray')->andReturn(array('foo' => 'bar'));
 
 		$response = Response::json($data);

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Filesystem\Filesystem;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -92,7 +93,7 @@ class ConfigFileLoaderTest extends BackwardCompatibleTestCase
 
 	protected function getLoader()
 	{
-		return new Illuminate\Config\FileLoader(m::mock(\Illuminate\Filesystem\Filesystem::class), __DIR__);
+		return new Illuminate\Config\FileLoader(m::mock(Filesystem::class), __DIR__);
 	}
 
 }

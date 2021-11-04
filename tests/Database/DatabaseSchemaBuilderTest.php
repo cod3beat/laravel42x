@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Builder;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -15,7 +16,7 @@ class DatabaseSchemaBuilderTest extends BackwardCompatibleTestCase
 
     public function testHasTableCorrectlyCallsGrammar()
     {
-        $connection = m::mock(\Illuminate\Database\Connection::class);
+        $connection = m::mock(Connection::class);
         $grammar = m::mock('StdClass');
         $connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
 		$builder = new Builder($connection);

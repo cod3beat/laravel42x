@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\Generators\ControllerGenerator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +16,7 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
     public function testGeneratorIsCalledWithProperOptions()
     {
         $command = new Illuminate\Routing\Console\MakeControllerCommand(
-            $gen = m::mock(\Illuminate\Routing\Generators\ControllerGenerator::class), __DIR__
+            $gen = m::mock(ControllerGenerator::class), __DIR__
         );
         $gen->shouldReceive('make')->once()->with(
             'FooController',
@@ -29,7 +30,7 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
 	public function testGeneratorIsCalledWithProperOptionsForExceptAndOnly()
 	{
 		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock(
-            \Illuminate\Routing\Generators\ControllerGenerator::class
+            ControllerGenerator::class
         ), __DIR__);
 		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', array('only' => array('foo', 'bar'), 'except' => array('baz', 'boom')));
 		$command->setLaravel(array('path.base' => __DIR__.'/foo'));

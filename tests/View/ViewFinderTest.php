@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Filesystem\Filesystem;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -148,7 +149,7 @@ class ViewFinderTest extends BackwardCompatibleTestCase
 
 	protected function getFinder()
 	{
-		return new Illuminate\View\FileViewFinder(m::mock(\Illuminate\Filesystem\Filesystem::class), array(__DIR__));
+		return new Illuminate\View\FileViewFinder(m::mock(Filesystem::class), array(__DIR__));
 	}
 
 }

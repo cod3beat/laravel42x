@@ -1,6 +1,8 @@
 <?php
 
-class BcryptHasherTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class BcryptHasherTest extends BackwardCompatibleTestCase {
 
 	public function testBasicHashing()
 	{

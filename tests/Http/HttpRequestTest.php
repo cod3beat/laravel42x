@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class HttpRequestTest extends BackwardCompatibleTestCase
@@ -227,7 +229,7 @@ class HttpRequestTest extends BackwardCompatibleTestCase
 			),
 		);
 		$request = Request::create('/', 'GET', array(), array(), $files);
-		$this->assertInstanceOf(\Symfony\Component\HttpFoundation\File\UploadedFile::class, $request->file('foo'));
+		$this->assertInstanceOf(UploadedFile::class, $request->file('foo'));
 	}
 
 
@@ -318,7 +320,7 @@ class HttpRequestTest extends BackwardCompatibleTestCase
 
 	public function testAllInputReturnsInputAndFiles()
 	{
-		$file = $this->getMock(\Symfony\Component\HttpFoundation\File\UploadedFile::class, null, array(__FILE__, 'photo.jpg'));
+		$file = $this->getMock(UploadedFile::class, null, array(__FILE__, 'photo.jpg'));
 		$request = Request::create('/?boom=breeze', 'GET', array('foo' => 'bar'), array(), array('baz' => $file));
 		$this->assertEquals(array('foo' => 'bar', 'baz' => $file, 'boom' => 'breeze'), $request->all());
 	}
@@ -326,7 +328,7 @@ class HttpRequestTest extends BackwardCompatibleTestCase
 
 	public function testAllInputReturnsNestedInputAndFiles()
 	{
-		$file = $this->getMock(\Symfony\Component\HttpFoundation\File\UploadedFile::class, null, array(__FILE__, 'photo.jpg'));
+		$file = $this->getMock(UploadedFile::class, null, array(__FILE__, 'photo.jpg'));
 		$request = Request::create('/?boom=breeze', 'GET', array('foo' => array('bar' => 'baz')), array(), array('foo' => array('photo' => $file)));
 		$this->assertEquals(array('foo' => array('bar' => 'baz', 'photo' => $file), 'boom' => 'breeze'), $request->all());
 	}
@@ -355,7 +357,7 @@ class HttpRequestTest extends BackwardCompatibleTestCase
 	public function testOldMethodCallsSession()
 	{
 		$request = Request::create('/', 'GET');
-		$session = m::mock(\Illuminate\Session\Store::class);
+		$session = m::mock(Store::class);
 		$session->shouldReceive('getOldInput')->once()->with('foo', 'bar')->andReturn('boom');
 		$request->setSession($session);
 		$this->assertEquals('boom', $request->old('foo', 'bar'));
@@ -365,7 +367,7 @@ class HttpRequestTest extends BackwardCompatibleTestCase
 	public function testFlushMethodCallsSession()
 	{
 		$request = Request::create('/', 'GET');
-		$session = m::mock(\Illuminate\Session\Store::class);
+		$session = m::mock(Store::class);
 		$session->shouldReceive('flashInput')->once();
 		$request->setSession($session);
 		$request->flush();

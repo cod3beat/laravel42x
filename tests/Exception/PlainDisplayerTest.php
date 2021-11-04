@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Exception\PlainDisplayer;
+use L4\Tests\BackwardCompatibleTestCase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class PlainDisplayerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PlainDisplayerTest extends BackwardCompatibleTestCase {
 
 	public function testStatusAndHeadersAreSetInResponse()
 	{

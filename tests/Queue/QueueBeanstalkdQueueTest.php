@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Pheanstalk\Job;
@@ -54,7 +56,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 	public function testPopProperlyPopsJobOffOfBeanstalkd()
     {
         $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
-        $queue->setContainer(m::mock(\Illuminate\Container\Container::class));
+        $queue->setContainer(m::mock(Container::class));
         $pheanstalk = $queue->getPheanstalk();
         $pheanstalk->shouldReceive('watchOnly')->once()->with('default')->andReturn($pheanstalk);
         $job = m::mock(Job::class);
@@ -62,7 +64,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 
         $result = $queue->pop();
 
-        $this->assertInstanceOf(\Illuminate\Queue\Jobs\BeanstalkdJob::class, $result);
+        $this->assertInstanceOf(BeanstalkdJob::class, $result);
     }
 
 

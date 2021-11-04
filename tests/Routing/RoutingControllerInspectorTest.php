@@ -1,6 +1,8 @@
 <?php
 
-class RoutingControllerInspectorTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class RoutingControllerInspectorTest extends BackwardCompatibleTestCase {
 
 	public function testMethodsAreCorrectlyDetermined()
 	{

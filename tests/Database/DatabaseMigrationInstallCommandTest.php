@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Migrations\MigrationRepositoryInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +16,7 @@ class DatabaseMigrationInstallCommandTest extends BackwardCompatibleTestCase
     public function testFireCallsRepositoryToInstall()
     {
         $command = new Illuminate\Database\Console\Migrations\InstallCommand(
-            $repo = m::mock(\Illuminate\Database\Migrations\MigrationRepositoryInterface::class)
+            $repo = m::mock(MigrationRepositoryInterface::class)
         );
         $repo->shouldReceive('setSource')->once()->with('foo');
         $repo->shouldReceive('createRepository')->once();

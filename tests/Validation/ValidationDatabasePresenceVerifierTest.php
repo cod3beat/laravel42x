@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\ConnectionResolverInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +16,7 @@ class ValidationDatabasePresenceVerifierTest extends BackwardCompatibleTestCase
     public function testBasicCount()
     {
         $verifier = new Illuminate\Validation\DatabasePresenceVerifier(
-            $db = m::mock(\Illuminate\Database\ConnectionResolverInterface::class)
+            $db = m::mock(ConnectionResolverInterface::class)
         );
         $verifier->setConnection('connection');
         $db->shouldReceive('connection')->once()->with('connection')->andReturn($conn = m::mock('StdClass'));

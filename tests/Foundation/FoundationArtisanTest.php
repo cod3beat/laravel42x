@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Foundation\Artisan;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 
 class FoundationArtisanTest extends BackwardCompatibleTestCase
 {
@@ -15,7 +18,7 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
     public function testArtisanIsCalledWithProperArguments()
     {
         $artisan = $this->getMock(
-            \Illuminate\Foundation\Artisan::class,
+            Artisan::class,
             array('getArtisan'),
             array($app = new Illuminate\Foundation\Application)
         );
@@ -23,8 +26,8 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
             $this->returnValue($console = m::mock('Illuminate\Console\Application[find]'))
         );
         $console->shouldReceive('find')->once()->with('foo')->andReturn($command = m::mock('StdClass'));
-		$command->shouldReceive('run')->once()->with(m::type(\Symfony\Component\Console\Input\ArrayInput::class), m::type(
-            \Symfony\Component\Console\Output\NullOutput::class
+		$command->shouldReceive('run')->once()->with(m::type(ArrayInput::class), m::type(
+            NullOutput::class
         ))->andReturnUsing(function($input, $output)
 		{
 			return $input;

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Queue\RedisQueue;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -44,8 +46,8 @@ class QueueRedisJobTest extends BackwardCompatibleTestCase
 	protected function getJob()
 	{
 		return new Illuminate\Queue\Jobs\RedisJob(
-			m::mock(\Illuminate\Container\Container::class),
-			m::mock(\Illuminate\Queue\RedisQueue::class),
+			m::mock(Container::class),
+			m::mock(RedisQueue::class),
 			json_encode(array('job' => 'foo', 'data' => array('data'), 'attempts' => 1)),
 			'default'
 		);

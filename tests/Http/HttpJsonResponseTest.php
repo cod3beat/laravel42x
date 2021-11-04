@@ -1,6 +1,8 @@
 <?php
 
-class HttpJsonResponseTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class HttpJsonResponseTest extends BackwardCompatibleTestCase {
 
 	public function testSetAndRetrieveData()
 	{

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Cache\NullStore;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class CacheNullStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheNullStoreTest extends BackwardCompatibleTestCase {
 
 	public function testItemsCanNotBeCached()
 	{

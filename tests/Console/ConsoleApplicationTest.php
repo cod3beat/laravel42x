@@ -2,6 +2,7 @@
 
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\Console\Command\Command;
 
 class ConsoleApplicationTest extends BackwardCompatibleTestCase
 {
@@ -29,7 +30,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 	{
 		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
 		$app->setLaravel('foo');
-		$command = m::mock(\Symfony\Component\Console\Command\Command::class);
+		$command = m::mock(Command::class);
 		$command->shouldReceive('setLaravel')->never();
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->add($command);
@@ -41,7 +42,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 	public function testResolveAddsCommandViaApplicationResolution()
 	{
 		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
-		$command = m::mock(\Symfony\Component\Console\Command\Command::class);
+		$command = m::mock(Command::class);
 		$app->setLaravel(array('foo' => $command));
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->resolve('foo');

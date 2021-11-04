@@ -1,5 +1,11 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Database\Connectors\ConnectionFactory;
+use Illuminate\Database\Connectors\MySqlConnector;
+use Illuminate\Database\Connectors\PostgresConnector;
+use Illuminate\Database\Connectors\SQLiteConnector;
+use Illuminate\Database\Connectors\SqlServerConnector;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -19,9 +25,9 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
     public function testMakeCallsCreateConnection()
     {
         $factory = $this->getMock(
-            \Illuminate\Database\Connectors\ConnectionFactory::class,
+            ConnectionFactory::class,
             array('createConnector', 'createConnection'),
-            array($container = m::mock(\Illuminate\Container\Container::class))
+            array($container = m::mock(Container::class))
         );
         $container->shouldReceive('bound')->andReturn(false);
         $connector = m::mock('stdClass');
@@ -40,8 +46,8 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 
 	public function testMakeCallsCreateConnectionForReadWrite()
 	{
-		$factory = $this->getMock(\Illuminate\Database\Connectors\ConnectionFactory::class, array('createConnector', 'createConnection'), array($container = m::mock(
-            \Illuminate\Container\Container::class
+		$factory = $this->getMock(ConnectionFactory::class, array('createConnector', 'createConnection'), array($container = m::mock(
+            Container::class
         )));
 		$container->shouldReceive('bound')->andReturn(false);
 		$connector = m::mock('stdClass');
@@ -69,8 +75,8 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 
 	public function testMakeCanCallTheContainer()
 	{
-		$factory = $this->getMock(\Illuminate\Database\Connectors\ConnectionFactory::class, array('createConnector'), array($container = m::mock(
-            \Illuminate\Container\Container::class
+		$factory = $this->getMock(ConnectionFactory::class, array('createConnector'), array($container = m::mock(
+            Container::class
         )));
 		$container->shouldReceive('bound')->andReturn(true);
 		$connector = m::mock('stdClass');
@@ -89,13 +95,13 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 	public function testProperInstancesAreReturnedForProperDrivers()
 	{
 		$factory = new Illuminate\Database\Connectors\ConnectionFactory($container = m::mock(
-            \Illuminate\Container\Container::class
+            Container::class
         ));
 		$container->shouldReceive('bound')->andReturn(false);
-		$this->assertInstanceOf(\Illuminate\Database\Connectors\MySqlConnector::class, $factory->createConnector(array('driver' => 'mysql')));
-		$this->assertInstanceOf(\Illuminate\Database\Connectors\PostgresConnector::class, $factory->createConnector(array('driver' => 'pgsql')));
-		$this->assertInstanceOf(\Illuminate\Database\Connectors\SQLiteConnector::class, $factory->createConnector(array('driver' => 'sqlite')));
-		$this->assertInstanceOf(\Illuminate\Database\Connectors\SqlServerConnector::class, $factory->createConnector(array('driver' => 'sqlsrv')));
+		$this->assertInstanceOf(MySqlConnector::class, $factory->createConnector(array('driver' => 'mysql')));
+		$this->assertInstanceOf(PostgresConnector::class, $factory->createConnector(array('driver' => 'pgsql')));
+		$this->assertInstanceOf(SQLiteConnector::class, $factory->createConnector(array('driver' => 'sqlite')));
+		$this->assertInstanceOf(SqlServerConnector::class, $factory->createConnector(array('driver' => 'sqlsrv')));
 	}
 
 
@@ -103,7 +109,7 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $factory = new Illuminate\Database\Connectors\ConnectionFactory(
-            $container = m::mock(\Illuminate\Container\Container::class)
+            $container = m::mock(Container::class)
         );
         $factory->createConnector(array('foo'));
     }
@@ -113,7 +119,7 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $factory = new Illuminate\Database\Connectors\ConnectionFactory(
-            $container = m::mock(\Illuminate\Container\Container::class)
+            $container = m::mock(Container::class)
         );
         $container->shouldReceive('bound')->once()->andReturn(false);
         $factory->createConnector(array('driver' => 'foo'));
@@ -123,7 +129,7 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 	public function testCustomConnectorsCanBeResolvedViaContainer()
 	{
 		$factory = new Illuminate\Database\Connectors\ConnectionFactory($container = m::mock(
-            \Illuminate\Container\Container::class
+            Container::class
         ));
 		$container->shouldReceive('bound')->once()->with('db.connector.foo')->andReturn(true);
 		$container->shouldReceive('make')->once()->with('db.connector.foo')->andReturn('connector');

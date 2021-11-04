@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Console\Migrations\ResetCommand;
+use Illuminate\Database\Migrations\Migrator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +16,7 @@ class DatabaseMigrationResetCommandTest extends BackwardCompatibleTestCase
 
     public function testResetCommandCallsMigratorWithProperArguments()
     {
-        $command = new ResetCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class));
+        $command = new ResetCommand($migrator = m::mock(Migrator::class));
         $command->setLaravel(new AppDatabaseMigrationStub());
         $migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('rollback')->twice()->with(false)->andReturn(true, false);
@@ -27,7 +28,7 @@ class DatabaseMigrationResetCommandTest extends BackwardCompatibleTestCase
 
 	public function testResetCommandCanBePretended()
 	{
-		$command = new ResetCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class));
+		$command = new ResetCommand($migrator = m::mock(Migrator::class));
 		$command->setLaravel(new AppDatabaseMigrationStub());
 		$migrator->shouldReceive('setConnection')->once()->with('foo');
 		$migrator->shouldReceive('rollback')->twice()->with(true)->andReturn(true, false);

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\SerializableClosure as S;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class SupportSerializableClosureTest extends \L4\Tests\BackwardCompatibleTestCase {
+class SupportSerializableClosureTest extends BackwardCompatibleTestCase {
 
 	public function testClosureCanBeSerializedAndRebuilt()
 	{

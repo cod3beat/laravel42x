@@ -6,6 +6,7 @@ use Illuminate\Session\Store;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 
 class SessionStoreTest extends BackwardCompatibleTestCase
 {
@@ -30,7 +31,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$this->assertTrue($session->has('foo'));
 		$this->assertFalse($session->has('bar'));
 		$this->assertEquals('taylor', $session->getBag('bagged')->get('name'));
-		$this->assertInstanceOf(\Symfony\Component\HttpFoundation\Session\Storage\MetadataBag::class, $session->getMetadataBag());
+		$this->assertInstanceOf(MetadataBag::class, $session->getMetadataBag());
 		$this->assertTrue($session->isStarted());
 
 		$session->put('baz', 'boom');

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -61,10 +63,10 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 		$relation->addEagerConstraints(array($one, $two, $three));
 
 		$relation->shouldReceive('createModelByType')->once()->with('morph_type_1')->andReturn($firstQuery = m::mock(
-            \Illuminate\Database\Eloquent\Builder::class
+            Builder::class
         ));
 		$relation->shouldReceive('createModelByType')->once()->with('morph_type_2')->andReturn($secondQuery = m::mock(
-            \Illuminate\Database\Eloquent\Builder::class
+            Builder::class
         ));
 		$firstQuery->shouldReceive('getKeyName')->andReturn('id');
 		$secondQuery->shouldReceive('getKeyName')->andReturn('id');
@@ -89,7 +91,7 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 
 	public function testModelsWithSoftDeleteAreProperlyPulled()
 	{
-		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$builder = m::mock(Builder::class);
 
 		$relation = $this->getRelation(null, $builder);
 
@@ -101,12 +103,12 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 
 	public function testAssociateMethodSetsForeignKeyAndTypeOnModel()
 	{
-		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$parent = m::mock(Model::class);
 		$parent->shouldReceive('getAttribute')->once()->with('foreign_key')->andReturn('foreign.value');
 
 		$relation = $this->getRelationAssociate($parent);
 
-		$associate = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$associate = m::mock(Model::class);
 		$associate->shouldReceive('getKey')->once()->andReturn(1);
 		$associate->shouldReceive('getMorphClass')->once()->andReturn('Model');
 
@@ -120,9 +122,9 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 
 	protected function getRelationAssociate($parent)
 	{
-		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$builder = m::mock(Builder::class);
 		$builder->shouldReceive('where')->with('relation.id', '=', 'foreign.value');
-		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$related = m::mock(Model::class);
 		$related->shouldReceive('getKey')->andReturn(1);
 		$related->shouldReceive('getTable')->andReturn('relation');
 		$builder->shouldReceive('getModel')->andReturn($related);
@@ -132,9 +134,9 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 
 	public function getRelation($parent = null, $builder = null)
 	{
-		$builder = $builder ?: m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$builder = $builder ?: m::mock(Builder::class);
 		$builder->shouldReceive('where')->with('relation.id', '=', 'foreign.value');
-		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$related = m::mock(Model::class);
 		$related->shouldReceive('getKeyName')->andReturn('id');
 		$related->shouldReceive('getTable')->andReturn('relation');
 		$builder->shouldReceive('getModel')->andReturn($related);

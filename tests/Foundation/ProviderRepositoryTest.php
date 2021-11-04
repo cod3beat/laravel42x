@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\ServiceProvider;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -29,7 +30,7 @@ class ProviderRepositoryTest extends BackwardCompatibleTestCase
         );
         $repo->shouldReceive('shouldRecompile')->once()->andReturn(false);
 		$app = m::mock(\Illuminate\Foundation\Application::class)->makePartial();
-		$provider = m::mock(\Illuminate\Support\ServiceProvider::class);
+		$provider = m::mock(ServiceProvider::class);
 		$repo->shouldReceive('createProvider')->once()->with($app, 'foo')->andReturn($provider);
 		$app->shouldReceive('register')->once()->with($provider);
 		$app->shouldReceive('runningInConsole')->andReturn(false);
@@ -47,7 +48,7 @@ class ProviderRepositoryTest extends BackwardCompatibleTestCase
 		$repo->shouldReceive('loadManifest')->once()->andReturn(array('when' => array(), 'eager' => array('foo'), 'deferred' => array('deferred'), 'providers' => array('providers')));
 		$repo->shouldReceive('shouldRecompile')->once()->andReturn(false);
 		$app = m::mock(\Illuminate\Foundation\Application::class)->makePartial();
-		$provider = m::mock(\Illuminate\Support\ServiceProvider::class);
+		$provider = m::mock(ServiceProvider::class);
 		$repo->shouldReceive('createProvider')->once()->with($app, 'providers')->andReturn($provider);
 		$app->shouldReceive('register')->once()->with($provider);
 		$app->shouldReceive('runningInConsole')->andReturn(true);
@@ -75,7 +76,7 @@ class ProviderRepositoryTest extends BackwardCompatibleTestCase
 
 		// bar mock is added to eagers since it's not reserved
 		$repo->shouldReceive('createProvider')->once()->with($app, 'bar')->andReturn($barMock = m::mock(
-            \Illuminate\Support\ServiceProvider::class
+            ServiceProvider::class
         ));
 		$barMock->shouldReceive('isDeferred')->once()->andReturn(false);
 		$barMock->shouldReceive('when')->never();

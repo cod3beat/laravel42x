@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\AssetPublisher;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,7 +16,7 @@ class FoundationAssetPublishCommandTest extends BackwardCompatibleTestCase
     public function testCommandCallsPublisherWithProperPackageName()
     {
         $command = new Illuminate\Foundation\Console\AssetPublishCommand(
-            $pub = m::mock(\Illuminate\Foundation\AssetPublisher::class)
+            $pub = m::mock(AssetPublisher::class)
         );
         $pub->shouldReceive('publishPackage')->once()->with('foo');
         $command->run(

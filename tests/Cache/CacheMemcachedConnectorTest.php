@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\MemcachedConnector;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -14,7 +15,7 @@ class CacheMemcachedConnectorTest extends BackwardCompatibleTestCase
 
     public function testServersAreAddedCorrectly()
     {
-        $connector = $this->getMock(\Illuminate\Cache\MemcachedConnector::class, array('getMemcached'));
+        $connector = $this->getMock(MemcachedConnector::class, array('getMemcached'));
         $memcached = m::mock('stdClass');
         $memcached->shouldReceive('addServer')->once()->with('localhost', 11211, 100);
 		$memcached->shouldReceive('getVersion')->once()->andReturn(true);
@@ -28,7 +29,7 @@ class CacheMemcachedConnectorTest extends BackwardCompatibleTestCase
     public function testExceptionThrownOnBadConnection()
     {
         $this->expectException(RuntimeException::class);
-        $connector = $this->getMock(\Illuminate\Cache\MemcachedConnector::class, array('getMemcached'));
+        $connector = $this->getMock(MemcachedConnector::class, array('getMemcached'));
         $memcached = m::mock('stdClass');
         $memcached->shouldReceive('addServer')->once()->with('localhost', 11211, 100);
         $memcached->shouldReceive('getVersion')->once()->andReturn(false);

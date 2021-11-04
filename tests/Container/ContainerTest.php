@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Container\BindingResolutionException;
 use Illuminate\Container\Container;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class ContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ContainerTest extends BackwardCompatibleTestCase {
 
 	public function testClosureResolution()
 	{
@@ -323,7 +325,7 @@ class ContainerTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testInternalClassWithDefaultParameters()
 	{
-		$this->expectException(\Illuminate\Container\BindingResolutionException::class, 'Unresolvable dependency resolving [Parameter #0 [ <required> $first ]] in class ContainerMixedPrimitiveStub');
+		$this->expectException(BindingResolutionException::class, 'Unresolvable dependency resolving [Parameter #0 [ <required> $first ]] in class ContainerMixedPrimitiveStub');
 		$container = new Container;
 		$parameters = array();
 		$container->make('ContainerMixedPrimitiveStub', $parameters);

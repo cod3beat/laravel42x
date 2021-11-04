@@ -1,6 +1,8 @@
 <?php
 
-class CacheMemcachedStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class CacheMemcachedStoreTest extends BackwardCompatibleTestCase {
 
 	public function testGetReturnsNullWhenNotFound()
 	{

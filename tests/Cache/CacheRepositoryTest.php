@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\StoreInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -62,7 +63,7 @@ class CacheRepositoryTest extends BackwardCompatibleTestCase
 		// $repo = $this->getRepository();
 		// $repo->getStore()->shouldReceive('get')->andReturn(null);
 		// $repo->getStore()->shouldReceive('put')->once()->with('foo', 'bar', 9);
-		// $result = $repo->remember('foo', Carbon\Carbon::now()->addMinutes(10), function() { return 'bar'; });
+		// $result = $repo->remember('foo', Carbon::now()->addMinutes(10), function() { return 'bar'; });
 		// $this->assertEquals('bar', $result);
 	}
 
@@ -87,7 +88,7 @@ class CacheRepositoryTest extends BackwardCompatibleTestCase
 
 	protected function getRepository()
 	{
-		return new Illuminate\Cache\Repository(m::mock(\Illuminate\Cache\StoreInterface::class));
+		return new Illuminate\Cache\Repository(m::mock(StoreInterface::class));
 	}
 
 }

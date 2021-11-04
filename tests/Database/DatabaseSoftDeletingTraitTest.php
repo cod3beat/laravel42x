@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -21,7 +22,7 @@ class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
 		$query->shouldReceive('update')->once()->with(['deleted_at' => 'date-time']);
 		$model->delete();
 
-		$this->assertInstanceOf(\Carbon\Carbon::class, $model->deleted_at);
+		$this->assertInstanceOf(Carbon::class, $model->deleted_at);
 	}
 
 
@@ -81,7 +82,7 @@ class DatabaseSoftDeletingTraitStub {
 	}
 	public function freshTimestamp()
 	{
-		return Carbon\Carbon::now();
+		return Carbon::now();
 	}
 	public function fromDateTime()
 	{

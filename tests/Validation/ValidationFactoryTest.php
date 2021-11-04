@@ -1,8 +1,9 @@
 <?php /** @noinspection PhpParamsInspection */
 
 use Illuminate\Validation\Factory;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class ValidationFactoryTest extends \L4\Tests\BackwardCompatibleTestCase {
+class ValidationFactoryTest extends BackwardCompatibleTestCase {
 
 	public function testMakeMethodCreatesValidValidator()
 	{

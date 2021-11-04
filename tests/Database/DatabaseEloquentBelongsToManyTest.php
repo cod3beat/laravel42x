@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -114,7 +117,7 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 	{
 		$relation = $this->getRelation();
 		$relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(function($array = array()) { return new Collection($array); });
-		$model = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$model = m::mock(Model::class);
 		$model->shouldReceive('setRelation')->once()->with('foo', m::type(Collection::class));
 		$models = $relation->initRelation(array($model), 'foo');
 
@@ -428,20 +431,20 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 
 	public function getRelationArguments()
 	{
-		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$parent = m::mock(Model::class);
 		$parent->shouldReceive('getKey')->andReturn(1);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
 
-		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
-		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$builder = m::mock(Builder::class);
+		$related = m::mock(Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
 
 		$related->shouldReceive('getTable')->andReturn('roles');
 		$related->shouldReceive('getKeyName')->andReturn('id');
 		$related->shouldReceive('newPivot')->andReturnUsing(function()
 		{
-			$reflector = new ReflectionClass(\Illuminate\Database\Eloquent\Relations\Pivot::class);
+			$reflector = new ReflectionClass(Pivot::class);
 			return $reflector->newInstanceArgs(func_get_args());
 		});
 

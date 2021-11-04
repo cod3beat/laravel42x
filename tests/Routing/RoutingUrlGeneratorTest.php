@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Routing\UrlGenerator;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class RoutingUrlGeneratorTest extends \L4\Tests\BackwardCompatibleTestCase {
+class RoutingUrlGeneratorTest extends BackwardCompatibleTestCase {
 
 	public function testBasicGeneration()
 	{

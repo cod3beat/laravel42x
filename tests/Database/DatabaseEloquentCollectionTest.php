@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -37,11 +38,11 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testContainsIndicatesIfModelInArray()
 	{
-		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel = m::mock(Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
-		$mockModel2 = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel2 = m::mock(Model::class);
 		$mockModel2->shouldReceive('getKey')->andReturn(2);
-		$mockModel3 = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel3 = m::mock(Model::class);
 		$mockModel3->shouldReceive('getKey')->andReturn(3);
 		$c = new Collection(array($mockModel, $mockModel2));
 
@@ -53,10 +54,10 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testContainsIndicatesIfKeyedModelInArray()
 	{
-		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel = m::mock(Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
 		$c = new Collection(array($mockModel));
-		$mockModel2 = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel2 = m::mock(Model::class);
 		$mockModel2->shouldReceive('getKey')->andReturn(2);
 		$c->add($mockModel2);
 
@@ -68,7 +69,7 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testFindMethodFindsModelById()
 	{
-		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$mockModel = m::mock(Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
 		$c = new Collection(array($mockModel));
 
@@ -93,13 +94,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionDictionaryReturnsModelKeys()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));
@@ -110,13 +111,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionMergesWithGivenCollection()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -128,13 +129,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionDiffsWithGivenCollection()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -146,13 +147,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionIntersectsWithGivenCollection()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -164,10 +165,10 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionReturnsUniqueItems()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
 		$c = new Collection(array($one, $two, $two));
@@ -186,13 +187,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testOnlyReturnsCollectionWithGivenModelKeys()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));
@@ -204,13 +205,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testExceptReturnsCollectionWithoutGivenModelKeys()
 	{
-		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$one = m::mock(Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$two = m::mock(Model::class);
 		$two->shouldReceive('getKey')->andReturn('2');
 
-		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
+		$three = m::mock(Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));

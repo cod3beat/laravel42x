@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
+use Illuminate\Database\Migrations\MigrationCreator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -16,7 +17,7 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
     public function testBasicCreateGivesCreatorProperArguments()
     {
         $command = new DatabaseMigrationMakeCommandTestStub(
-            $creator = m::mock(\Illuminate\Database\Migrations\MigrationCreator::class), __DIR__ . '/vendor'
+            $creator = m::mock(MigrationCreator::class), __DIR__ . '/vendor'
         );
         $app = array('path' => __DIR__);
         $command->setLaravel($app);
@@ -29,7 +30,7 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 	public function testBasicCreateGivesCreatorProperArgumentsWhenTableIsSet()
 	{
 		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
-            \Illuminate\Database\Migrations\MigrationCreator::class
+            MigrationCreator::class
         ), __DIR__.'/vendor');
 		$app = array('path' => __DIR__);
 		$command->setLaravel($app);
@@ -42,7 +43,7 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 	public function testPackagePathsMayBeUsed()
 	{
 		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
-            \Illuminate\Database\Migrations\MigrationCreator::class
+            MigrationCreator::class
         ), __DIR__.'/vendor');
 		$app = array('path' => __DIR__);
 		$command->setLaravel($app);
@@ -55,7 +56,7 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 	public function testPackageFallsBackToVendorDirWhenNotExplicit()
 	{
 		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
-            \Illuminate\Database\Migrations\MigrationCreator::class
+            MigrationCreator::class
         ), __DIR__.'/vendor');
 		$creator->shouldReceive('create')->once()->with('create_foo', __DIR__.'/vendor/foo/bar/src/migrations', null, false);
 
