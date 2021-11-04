@@ -50,19 +50,19 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 
 	public function testPopProperlyPopsJobOffOfSqs()
 	{
-		$queue = $this->getMock('Illuminate\Queue\SqsQueue', array('getQueue'), array($this->sqs, $this->queueName, $this->account));
-		$queue->setContainer(m::mock('Illuminate\Container\Container'));
+		$queue = $this->getMock(\Illuminate\Queue\SqsQueue::class, array('getQueue'), array($this->sqs, $this->queueName, $this->account));
+		$queue->setContainer(m::mock(\Illuminate\Container\Container::class));
 		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
 		$this->sqs->shouldReceive('receiveMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'AttributeNames' => array('ApproximateReceiveCount')))->andReturn($this->mockedReceiveMessageResponseModel);
 		$result = $queue->pop($this->queueName);
-		$this->assertInstanceOf('Illuminate\Queue\Jobs\SqsJob', $result);
+		$this->assertInstanceOf(\Illuminate\Queue\Jobs\SqsJob::class, $result);
 	}
 
 
 	public function testDelayedPushWithDateTimeProperlyPushesJobOntoSqs()
 	{
 		$now = Carbon\Carbon::now();
-		$queue = $this->getMock('Illuminate\Queue\SqsQueue', array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
+		$queue = $this->getMock(\Illuminate\Queue\SqsQueue::class, array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
 		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
 		$queue->expects($this->once())->method('getSeconds')->with($now)->will($this->returnValue(5));
 		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
@@ -74,7 +74,7 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 
 	public function testDelayedPushProperlyPushesJobOntoSqs()
 	{
-		$queue = $this->getMock('Illuminate\Queue\SqsQueue', array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
+		$queue = $this->getMock(\Illuminate\Queue\SqsQueue::class, array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
 		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
 		$queue->expects($this->once())->method('getSeconds')->with($this->mockedDelay)->will($this->returnValue($this->mockedDelay));
 		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
@@ -86,7 +86,7 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 
 	public function testPushProperlyPushesJobOntoSqs()
 	{
-		$queue = $this->getMock('Illuminate\Queue\SqsQueue', array('createPayload', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
+		$queue = $this->getMock(\Illuminate\Queue\SqsQueue::class, array('createPayload', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
 		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
 		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
 		$this->sqs->shouldReceive('sendMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'MessageBody' => $this->mockedPayload))->andReturn($this->mockedSendMessageResponseModel);

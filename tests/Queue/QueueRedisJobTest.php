@@ -44,8 +44,8 @@ class QueueRedisJobTest extends BackwardCompatibleTestCase
 	protected function getJob()
 	{
 		return new Illuminate\Queue\Jobs\RedisJob(
-			m::mock('Illuminate\Container\Container'),
-			m::mock('Illuminate\Queue\RedisQueue'),
+			m::mock(\Illuminate\Container\Container::class),
+			m::mock(\Illuminate\Queue\RedisQueue::class),
 			json_encode(array('job' => 'foo', 'data' => array('data'), 'attempts' => 1)),
 			'default'
 		);

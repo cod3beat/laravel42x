@@ -15,7 +15,7 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
     public function testGeneratorIsCalledWithProperOptions()
     {
         $command = new Illuminate\Routing\Console\MakeControllerCommand(
-            $gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__
+            $gen = m::mock(\Illuminate\Routing\Generators\ControllerGenerator::class), __DIR__
         );
         $gen->shouldReceive('make')->once()->with(
             'FooController',
@@ -28,7 +28,9 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
 
 	public function testGeneratorIsCalledWithProperOptionsForExceptAndOnly()
 	{
-		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__);
+		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock(
+            \Illuminate\Routing\Generators\ControllerGenerator::class
+        ), __DIR__);
 		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', array('only' => array('foo', 'bar'), 'except' => array('baz', 'boom')));
 		$command->setLaravel(array('path.base' => __DIR__.'/foo'));
 		$this->runCommand($command, array('name' => 'FooController', '--only' => 'foo,bar', '--except' => 'baz,boom', '--path' => 'bar'));

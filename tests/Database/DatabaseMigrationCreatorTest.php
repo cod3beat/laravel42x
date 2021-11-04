@@ -57,9 +57,9 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 
 	protected function getCreator()
 	{
-		$files = m::mock('Illuminate\Filesystem\Filesystem');
+		$files = m::mock(\Illuminate\Filesystem\Filesystem::class);
 
-		return $this->getMock('Illuminate\Database\Migrations\MigrationCreator', array('getDatePrefix'), array($files));
+		return $this->getMock(\Illuminate\Database\Migrations\MigrationCreator::class, array('getDatePrefix'), array($files));
 	}
 
 }

@@ -21,7 +21,7 @@ class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
 		$query->shouldReceive('update')->once()->with(['deleted_at' => 'date-time']);
 		$model->delete();
 
-		$this->assertInstanceOf('Carbon\Carbon', $model->deleted_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->deleted_at);
 	}
 
 

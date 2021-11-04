@@ -62,7 +62,7 @@ class DatabaseEloquentMorphTest extends BackwardCompatibleTestCase
 	{
 		// Doesn't matter which relation type we use since they share the code...
 		$relation = $this->getOneRelation();
-		$created = m::mock('Illuminate\Database\Eloquent\Model');
+		$created = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$created->shouldReceive('setAttribute')->once()->with('morph_id', 1);
 		$created->shouldReceive('setAttribute')->once()->with('morph_type', get_class($relation->getParent()));
 		$relation->getRelated()->shouldReceive('newInstance')->once()->with(array('name' => 'taylor'))->andReturn($created);
@@ -74,11 +74,11 @@ class DatabaseEloquentMorphTest extends BackwardCompatibleTestCase
 
 	protected function getOneRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$builder->shouldReceive('where')->once()->with('table.morph_id', '=', 1);
-		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$parent->shouldReceive('getMorphClass')->andReturn(get_class($parent));
 		$builder->shouldReceive('where')->once()->with('table.morph_type', get_class($parent));
@@ -88,11 +88,11 @@ class DatabaseEloquentMorphTest extends BackwardCompatibleTestCase
 
 	protected function getManyRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$builder->shouldReceive('where')->once()->with('table.morph_id', '=', 1);
-		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$parent->shouldReceive('getMorphClass')->andReturn(get_class($parent));
 		$builder->shouldReceive('where')->once()->with('table.morph_type', get_class($parent));

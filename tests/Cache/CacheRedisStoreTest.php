@@ -95,7 +95,7 @@ class CacheRedisStoreTest extends BackwardCompatibleTestCase
 
 	protected function getRedis()
 	{
-		return new Illuminate\Cache\RedisStore(m::mock('Illuminate\Redis\Database'), 'prefix');
+		return new Illuminate\Cache\RedisStore(m::mock(\Illuminate\Redis\Database::class), 'prefix');
 	}
 
 }

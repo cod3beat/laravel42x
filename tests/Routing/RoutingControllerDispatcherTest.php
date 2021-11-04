@@ -34,7 +34,7 @@ class RoutingControllerDispatcherTest extends BackwardCompatibleTestCase
         )
         );
 		$route->bind($request);
-		$dispatcher = new ControllerDispatcher(m::mock('Illuminate\Routing\RouteFiltererInterface'), new Container);
+		$dispatcher = new ControllerDispatcher(m::mock(\Illuminate\Routing\RouteFiltererInterface::class), new Container);
 
 		$this->assertNull($_SERVER['ControllerDispatcherTestControllerStub']);
 

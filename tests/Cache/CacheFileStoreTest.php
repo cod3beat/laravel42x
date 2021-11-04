@@ -32,7 +32,7 @@ class CacheFileStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$files->expects($this->once())->method('exists')->will($this->returnValue(true));
 		$contents = '0000000000';
 		$files->expects($this->once())->method('get')->will($this->returnValue($contents));
-		$store = $this->getMock('Illuminate\Cache\FileStore', array('forget'), array($files, __DIR__));
+		$store = $this->getMock(FileStore::class, array('forget'), array($files, __DIR__));
 		$store->expects($this->once())->method('forget');
 		$value = $store->get('foo');
 		$this->assertNull($value);
@@ -53,7 +53,7 @@ class CacheFileStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 	public function testStoreItemProperlyStoresValues()
 	{
 		$files = $this->mockFilesystem();
-		$store = $this->getMock('Illuminate\Cache\FileStore', array('expiration'), array($files, __DIR__));
+		$store = $this->getMock(FileStore::class, array('expiration'), array($files, __DIR__));
 		$store->expects($this->once())->method('expiration')->with($this->equalTo(10))->will($this->returnValue(1111111111));
 		$contents = '1111111111'.serialize('Hello World');
 		$md5 = md5('foo');
@@ -123,7 +123,7 @@ class CacheFileStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	protected function mockFilesystem()
 	{
-		return $this->getMock('Illuminate\Filesystem\Filesystem');
+		return $this->getMock(\Illuminate\Filesystem\Filesystem::class);
 	}
 
 }

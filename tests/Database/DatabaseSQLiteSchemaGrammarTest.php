@@ -406,7 +406,7 @@ class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
 
 	protected function getConnection()
 	{
-		return m::mock('Illuminate\Database\Connection');
+		return m::mock(\Illuminate\Database\Connection::class);
 	}
 
 

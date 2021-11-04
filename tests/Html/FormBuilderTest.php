@@ -78,7 +78,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testPasswordsNotFilled()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 
 		$session->shouldReceive('getOldInput')->never();
 
@@ -90,7 +90,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testFilesNotFilled()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 
 		$session->shouldReceive('getOldInput')->never();
 
@@ -116,7 +116,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testFormTextRepopulation()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 		$this->setModel($model = array('relation' => array('key' => 'attribute'), 'other' => 'val'));
 
 		$session->shouldReceive('getOldInput')->twice()->with('name_with_dots')->andReturn('some value');
@@ -239,7 +239,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 	public function testFormSelectRepopulation()
 	{
 		$list = array('L' => 'Large', 'M' => 'Medium', 'S' => 'Small');
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 		$this->setModel($model = array('size' => array('key' => 'S'), 'other' => 'val'));
 
 		$session->shouldReceive('getOldInput')->twice()->with('size')->andReturn('M');
@@ -306,7 +306,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testFormCheckbox()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 
 		$session->shouldReceive('getOldInput')->withNoArgs()->andReturn(array());
 		$session->shouldReceive('getOldInput')->with('foo')->andReturn(null);
@@ -325,7 +325,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testFormCheckboxRepopulation()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 		$session->shouldReceive('getOldInput')->withNoArgs()->andReturn(array(1));
 
 		$session->shouldReceive('getOldInput')->once()->with('check')->andReturn(null);
@@ -373,7 +373,7 @@ class FormBuilderTest extends BackwardCompatibleTestCase
 
 	public function testFormRadioRepopulation()
 	{
-		$this->formBuilder->setSessionStore($session = m::mock('Illuminate\Session\Store'));
+		$this->formBuilder->setSessionStore($session = m::mock(\Illuminate\Session\Store::class));
 
 		$session->shouldReceive('getOldInput')->with('radio')->andReturn(1);
 

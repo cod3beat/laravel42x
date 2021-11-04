@@ -19,7 +19,7 @@ class RoutingControllerInspectorTest extends \L4\Tests\BackwardCompatibleTestCas
 	public function testMethodsAreCorrectWhenControllerIsNamespaced()
 	{
 		$inspector = new Illuminate\Routing\ControllerInspector;
-		$data = $inspector->getRoutable('\\RoutingControllerInspectorStub', 'prefix');
+		$data = $inspector->getRoutable(\RoutingControllerInspectorStub::class, 'prefix');
 
 		$this->assertEquals(4, count($data));
 		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix', 'uri' => 'prefix'), $data['getIndex'][1]);

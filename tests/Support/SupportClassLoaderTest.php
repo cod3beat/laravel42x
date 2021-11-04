@@ -37,7 +37,7 @@ class SupportClassLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testClassLoadingWorks()
 	{
-		$php53Class = 'Foo\Bar\Php53';
+		$php53Class = \Foo\Bar\Php53::class;
 		$php52Class = 'Foo_Bar_Php52';
 
 		ClassLoader::addDirectories($directory = __DIR__.'/stubs/psr');

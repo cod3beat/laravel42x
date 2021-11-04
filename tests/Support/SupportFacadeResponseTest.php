@@ -15,7 +15,7 @@ class SupportFacadeResponseTest extends BackwardCompatibleTestCase
 
     public function testArrayableSendAsJson()
     {
-        $data = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
+        $data = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
         $data->shouldReceive('toArray')->andReturn(array('foo' => 'bar'));
 
 		$response = Response::json($data);

@@ -17,7 +17,7 @@ class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
     public function testSaveMethodSetsForeignKeyOnModel()
     {
         $relation = $this->getRelation();
-        $mockModel = $this->getMock('Illuminate\Database\Eloquent\Model', array('save'));
+        $mockModel = $this->getMock(\Illuminate\Database\Eloquent\Model::class, array('save'));
         $mockModel->expects($this->once())->method('save')->will($this->returnValue(true));
 		$result = $relation->save($mockModel);
 
@@ -29,7 +29,7 @@ class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
 	public function testCreateMethodProperlyCreatesNewModel()
 	{
 		$relation = $this->getRelation();
-		$created = $this->getMock('Illuminate\Database\Eloquent\Model', array('save', 'getKey', 'setAttribute'));
+		$created = $this->getMock(\Illuminate\Database\Eloquent\Model::class, array('save', 'getKey', 'setAttribute'));
 		$created->expects($this->once())->method('save')->will($this->returnValue(true));
 		$relation->getRelated()->shouldReceive('newInstance')->once()->with(array('name' => 'taylor'))->andReturn($created);
 		$created->expects($this->once())->method('setAttribute')->with('foreign_key', 1);
@@ -53,7 +53,7 @@ class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
 	public function testRelationIsProperlyInitialized()
 	{
 		$relation = $this->getRelation();
-		$model = m::mock('Illuminate\Database\Eloquent\Model');
+		$model = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$model->shouldReceive('setRelation')->once()->with('foo', null);
 		$models = $relation->initRelation(array($model), 'foo');
 
@@ -100,10 +100,12 @@ class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
 	public function testRelationCountQueryCanBeBuilt()
 	{
 		$relation = $this->getRelation();
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
-		$query->shouldReceive('select')->once()->with(m::type('Illuminate\Database\Query\Expression'));
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$query->shouldReceive('select')->once()->with(m::type(\Illuminate\Database\Query\Expression::class));
 		$relation->getParent()->shouldReceive('getTable')->andReturn('table');
-		$query->shouldReceive('where')->once()->with('table.foreign_key', '=', m::type('Illuminate\Database\Query\Expression'));
+		$query->shouldReceive('where')->once()->with('table.foreign_key', '=', m::type(
+            \Illuminate\Database\Query\Expression::class
+        ));
 		$relation->getQuery()->shouldReceive('getQuery')->andReturn($parentQuery = m::mock('StdClass'));
 		$parentQuery->shouldReceive('getGrammar')->once()->andReturn($grammar = m::mock('StdClass'));
 		$grammar->shouldReceive('wrap')->once()->with('table.id');
@@ -114,11 +116,11 @@ class DatabaseEloquentHasOneTest extends BackwardCompatibleTestCase
 
 	protected function getRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$builder->shouldReceive('where')->with('table.foreign_key', '=', 1);
-		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');

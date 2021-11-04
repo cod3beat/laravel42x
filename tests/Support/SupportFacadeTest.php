@@ -32,7 +32,7 @@ class SupportFacadeTest extends BackwardCompatibleTestCase
 		$app->setAttributes(array('foo' => new stdClass));
 		FacadeStub::setFacadeApplication($app);
 
-		$this->assertInstanceOf('Mockery\MockInterface', $mock = FacadeStub::shouldReceive('foo')->once()->with('bar')->andReturn('baz')->getMock());
+		$this->assertInstanceOf(\Mockery\MockInterface::class, $mock = FacadeStub::shouldReceive('foo')->once()->with('bar')->andReturn('baz')->getMock());
 		$this->assertEquals('baz', $app['foo']->foo('bar'));
 	}
 
@@ -42,8 +42,8 @@ class SupportFacadeTest extends BackwardCompatibleTestCase
 		$app->setAttributes(array('foo' => new stdClass));
 		FacadeStub::setFacadeApplication($app);
 
-		$this->assertInstanceOf('Mockery\MockInterface', $mock = FacadeStub::shouldReceive('foo')->once()->with('bar')->andReturn('baz')->getMock());
-		$this->assertInstanceOf('Mockery\MockInterface', $mock = FacadeStub::shouldReceive('foo2')->once()->with('bar2')->andReturn('baz2')->getMock());
+		$this->assertInstanceOf(\Mockery\MockInterface::class, $mock = FacadeStub::shouldReceive('foo')->once()->with('bar')->andReturn('baz')->getMock());
+		$this->assertInstanceOf(\Mockery\MockInterface::class, $mock = FacadeStub::shouldReceive('foo2')->once()->with('bar2')->andReturn('baz2')->getMock());
 		$this->assertEquals('baz', $app['foo']->foo('bar'));
 		$this->assertEquals('baz2', $app['foo']->foo2('bar2'));
 	}

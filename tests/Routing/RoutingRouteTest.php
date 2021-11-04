@@ -854,11 +854,11 @@ class RoutingRouteTest extends BackwardCompatibleTestCase
 
 		$router->dispatchToRoute($request);
 
-		$this->assertInstanceOf('Illuminate\Http\Request', $_SERVER['__router.request']);
+		$this->assertInstanceOf(Request::class, $_SERVER['__router.request']);
 		$this->assertEquals($_SERVER['__router.request'], $request);
 		unset($_SERVER['__router.request']);
 
-		$this->assertInstanceOf('Illuminate\Routing\Route', $_SERVER['__router.route']);
+		$this->assertInstanceOf(Route::class, $_SERVER['__router.route']);
 		$this->assertEquals($_SERVER['__router.route']->getUri(), $route->getUri());
 		unset($_SERVER['__router.route']);
 	}

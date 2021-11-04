@@ -120,7 +120,9 @@ class ConfigRepositoryTest extends BackwardCompatibleTestCase
 
 	public function testPackageRegistersNamespaceAndSetsUpAfterLoadCallback()
 	{
-		$config = $this->getMock('Illuminate\Config\Repository', array('addNamespace'), array(m::mock('Illuminate\Config\LoaderInterface'), 'production'));
+		$config = $this->getMock(\Illuminate\Config\Repository::class, array('addNamespace'), array(m::mock(
+            \Illuminate\Config\LoaderInterface::class
+        ), 'production'));
 		$config->expects($this->once())->method('addNamespace')->with($this->equalTo('rees'), $this->equalTo(__DIR__));
 		$config->getLoader()->shouldReceive('cascadePackage')->once()->with('production', 'dayle/rees', 'group', array('foo'))->andReturn(array('bar'));
 		$config->package('dayle/rees', __DIR__);
@@ -133,7 +135,7 @@ class ConfigRepositoryTest extends BackwardCompatibleTestCase
 
 	protected function getRepository()
 	{
-		return new Illuminate\Config\Repository(m::mock('Illuminate\Config\LoaderInterface'), 'production');
+		return new Illuminate\Config\Repository(m::mock(\Illuminate\Config\LoaderInterface::class), 'production');
 	}
 
 

@@ -17,8 +17,8 @@ class ViewTest extends BackwardCompatibleTestCase
     public function testDataCanBeSetOnView()
     {
         $view = new View(
-            m::mock('Illuminate\View\Factory'),
-            m::mock('Illuminate\View\Engines\EngineInterface'),
+            m::mock(\Illuminate\View\Factory::class),
+            m::mock(\Illuminate\View\Engines\EngineInterface::class),
             'view',
             'path',
             array()
@@ -28,7 +28,9 @@ class ViewTest extends BackwardCompatibleTestCase
 		$this->assertEquals(array('foo' => 'bar', 'baz' => 'boom'), $view->getData());
 
 
-		$view = new View(m::mock('Illuminate\View\Factory'), m::mock('Illuminate\View\Engines\EngineInterface'), 'view', 'path', array());
+		$view = new View(m::mock(\Illuminate\View\Factory::class), m::mock(
+            \Illuminate\View\Engines\EngineInterface::class
+        ), 'view', 'path', array());
 		$view->withFoo('bar')->withBaz('boom');
 		$this->assertEquals(array('foo' => 'bar', 'baz' => 'boom'), $view->getData());
 	}
@@ -58,8 +60,8 @@ class ViewTest extends BackwardCompatibleTestCase
 	public function testRenderSectionsReturnsEnvironmentSections()
 	{
 		$view = m::mock('Illuminate\View\View[render]', array(
-			m::mock('Illuminate\View\Factory'),
-			m::mock('Illuminate\View\Engines\EngineInterface'),
+			m::mock(\Illuminate\View\Factory::class),
+			m::mock(\Illuminate\View\Engines\EngineInterface::class),
 			'view',
 			'path',
 			array(),
@@ -92,18 +94,18 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view->getFactory()->shouldReceive('make')->once()->with('foo', array('data'));
 		$result = $view->nest('key', 'foo', array('data'));
 
-		$this->assertInstanceOf('Illuminate\View\View', $result);
+		$this->assertInstanceOf(View::class, $result);
 	}
 
 
 	public function testViewAcceptsArrayableImplementations()
 	{
-		$arrayable = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
+		$arrayable = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
 		$arrayable->shouldReceive('toArray')->once()->andReturn(array('foo' => 'bar', 'baz' => array('qux', 'corge')));
 
 		$view = new View(
-			m::mock('Illuminate\View\Factory'),
-			m::mock('Illuminate\View\Engines\EngineInterface'),
+			m::mock(\Illuminate\View\Factory::class),
+			m::mock(\Illuminate\View\Engines\EngineInterface::class),
 			'view',
 			'path',
 			$arrayable
@@ -171,7 +173,7 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view->getFactory()->shouldReceive('decrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('flushSectionsIfDoneRendering')->once();
 
-		$view->renderable = m::mock('Illuminate\Support\Contracts\RenderableInterface');
+		$view->renderable = m::mock(\Illuminate\Support\Contracts\RenderableInterface::class);
 		$view->renderable->shouldReceive('render')->once()->andReturn('text');
 		$this->assertEquals('contents', $view->render());
 	}
@@ -199,7 +201,7 @@ class ViewTest extends BackwardCompatibleTestCase
         $view = $this->getView();
         $errors = array('foo' => 'bar', 'qu' => 'ux');
         $this->assertSame($view, $view->withErrors($errors));
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $view->errors);
+        $this->assertInstanceOf(MessageBag::class, $view->errors);
         $foo = $view->errors->get('foo');
         $this->assertEquals($foo[0], 'bar');
         $qu = $view->errors->get('qu');
@@ -214,8 +216,8 @@ class ViewTest extends BackwardCompatibleTestCase
 	protected function getView()
 	{
 		return new View(
-			m::mock('Illuminate\View\Factory'),
-			m::mock('Illuminate\View\Engines\EngineInterface'),
+			m::mock(\Illuminate\View\Factory::class),
+			m::mock(\Illuminate\View\Engines\EngineInterface::class),
 			'view',
 			'path',
 			array('foo' => 'bar')

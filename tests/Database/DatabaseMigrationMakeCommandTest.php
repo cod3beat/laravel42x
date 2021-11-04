@@ -16,7 +16,7 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
     public function testBasicCreateGivesCreatorProperArguments()
     {
         $command = new DatabaseMigrationMakeCommandTestStub(
-            $creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__ . '/vendor'
+            $creator = m::mock(\Illuminate\Database\Migrations\MigrationCreator::class), __DIR__ . '/vendor'
         );
         $app = array('path' => __DIR__);
         $command->setLaravel($app);
@@ -28,7 +28,9 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 
 	public function testBasicCreateGivesCreatorProperArgumentsWhenTableIsSet()
 	{
-		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__.'/vendor');
+		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
+            \Illuminate\Database\Migrations\MigrationCreator::class
+        ), __DIR__.'/vendor');
 		$app = array('path' => __DIR__);
 		$command->setLaravel($app);
 		$creator->shouldReceive('create')->once()->with('create_foo', __DIR__.'/database/migrations', 'users', true);
@@ -39,7 +41,9 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 
 	public function testPackagePathsMayBeUsed()
 	{
-		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__.'/vendor');
+		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
+            \Illuminate\Database\Migrations\MigrationCreator::class
+        ), __DIR__.'/vendor');
 		$app = array('path' => __DIR__);
 		$command->setLaravel($app);
 		$creator->shouldReceive('create')->once()->with('create_foo', __DIR__.'/vendor/bar/src/migrations', null, false);
@@ -50,7 +54,9 @@ class DatabaseMigrationMakeCommandTest extends BackwardCompatibleTestCase
 
 	public function testPackageFallsBackToVendorDirWhenNotExplicit()
 	{
-		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock('Illuminate\Database\Migrations\MigrationCreator'), __DIR__.'/vendor');
+		$command = new DatabaseMigrationMakeCommandTestStub($creator = m::mock(
+            \Illuminate\Database\Migrations\MigrationCreator::class
+        ), __DIR__.'/vendor');
 		$creator->shouldReceive('create')->once()->with('create_foo', __DIR__.'/vendor/foo/bar/src/migrations', null, false);
 
 		$this->runCommand($command, array('name' => 'create_foo', '--package' => 'foo/bar'));

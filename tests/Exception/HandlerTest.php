@@ -8,9 +8,9 @@ class HandlerTest extends BackwardCompatibleTestCase
 {
     protected function setUp(): void
     {
-        $this->responsePreparer = m::mock('Illuminate\Support\Contracts\ResponsePreparerInterface');
-        $this->plainDisplayer = m::mock('Illuminate\Exception\ExceptionDisplayerInterface');
-        $this->debugDisplayer = m::mock('Illuminate\Exception\ExceptionDisplayerInterface');
+        $this->responsePreparer = m::mock(\Illuminate\Support\Contracts\ResponsePreparerInterface::class);
+        $this->plainDisplayer = m::mock(\Illuminate\Exception\ExceptionDisplayerInterface::class);
+        $this->debugDisplayer = m::mock(\Illuminate\Exception\ExceptionDisplayerInterface::class);
         $this->handler = new Handler($this->responsePreparer, $this->plainDisplayer, $this->debugDisplayer);
     }
 

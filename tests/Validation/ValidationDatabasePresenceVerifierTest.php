@@ -15,7 +15,7 @@ class ValidationDatabasePresenceVerifierTest extends BackwardCompatibleTestCase
     public function testBasicCount()
     {
         $verifier = new Illuminate\Validation\DatabasePresenceVerifier(
-            $db = m::mock('Illuminate\Database\ConnectionResolverInterface')
+            $db = m::mock(\Illuminate\Database\ConnectionResolverInterface::class)
         );
         $verifier->setConnection('connection');
         $db->shouldReceive('connection')->once()->with('connection')->andReturn($conn = m::mock('StdClass'));

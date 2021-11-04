@@ -27,8 +27,8 @@ class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
 
 	public function testTouchMethodUpdatesRelatedTimestamps()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$builder->shouldReceive('getModel')->andReturn($related = m::mock('StdClass'));
 		$builder->shouldReceive('where');
@@ -50,10 +50,10 @@ class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
 	public function testDonNotRunParentModelGlobalScopes()
 	{
 		/** @var Mockery\MockInterface $parent */
-		$eloquentBuilder = m::mock('Illuminate\Database\Eloquent\Builder');
-		$queryBuilder = m::mock('Illuminate\Database\Query\Builder');
+		$eloquentBuilder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$queryBuilder = m::mock(\Illuminate\Database\Query\Builder::class);
 		$parent = m::mock('EloquentRelationResetModelStub')->makePartial();
-		$grammar = m::mock('\Illuminate\Database\Grammar');
+		$grammar = m::mock(\Illuminate\Database\Grammar::class);
 
 		$eloquentBuilder->shouldReceive('getModel')->andReturn($related = m::mock('StdClass'));
 		$eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);

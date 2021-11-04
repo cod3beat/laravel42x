@@ -15,7 +15,7 @@ class FoundationViewPublishCommandTest extends BackwardCompatibleTestCase
     public function testCommandCallsPublisherWithProperPackageName()
     {
         $command = new Illuminate\Foundation\Console\ViewPublishCommand(
-            $pub = m::mock('Illuminate\Foundation\ViewPublisher')
+            $pub = m::mock(\Illuminate\Foundation\ViewPublisher::class)
         );
         $pub->shouldReceive('publishPackage')->once()->with('foo');
         $command->run(

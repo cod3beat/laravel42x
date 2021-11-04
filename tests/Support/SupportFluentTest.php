@@ -68,7 +68,7 @@ class SupportFluentTest extends \L4\Tests\BackwardCompatibleTestCase {
 		$this->assertEquals('Taylor', $fluent->name);
 		$this->assertTrue($fluent->developer);
 		$this->assertEquals(25, $fluent->age);
-		$this->assertInstanceOf('Illuminate\Support\Fluent', $fluent->programmer());
+		$this->assertInstanceOf(Fluent::class, $fluent->programmer());
 	}
 
 
@@ -96,7 +96,7 @@ class SupportFluentTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testToJsonEncodesTheToArrayResult()
 	{
-		$fluent = $this->getMock('Illuminate\Support\Fluent', array('toArray'));
+		$fluent = $this->getMock(Fluent::class, array('toArray'));
 		$fluent->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
 		$results = $fluent->toJson();
 

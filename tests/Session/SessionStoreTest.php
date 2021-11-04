@@ -30,7 +30,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$this->assertTrue($session->has('foo'));
 		$this->assertFalse($session->has('bar'));
 		$this->assertEquals('taylor', $session->getBag('bagged')->get('name'));
-		$this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\MetadataBag', $session->getMetadataBag());
+		$this->assertInstanceOf(\Symfony\Component\HttpFoundation\Session\Storage\MetadataBag::class, $session->getMetadataBag());
 		$this->assertTrue($session->isStarted());
 
 		$session->put('baz', 'boom');
@@ -292,7 +292,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 
 	public function getSession()
 	{
-		$reflection = new ReflectionClass('Illuminate\Session\Store');
+		$reflection = new ReflectionClass(Store::class);
 		return $reflection->newInstanceArgs($this->getMocks());
 	}
 

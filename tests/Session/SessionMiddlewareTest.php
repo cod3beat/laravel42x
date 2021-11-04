@@ -18,8 +18,8 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
         $response = new Symfony\Component\HttpFoundation\Response;
 
 		$middle = new Illuminate\Session\Middleware(
-			$app = m::mock('Symfony\Component\HttpKernel\HttpKernelInterface'),
-			$manager = m::mock('Illuminate\Session\SessionManager')
+			$app = m::mock(\Symfony\Component\HttpKernel\HttpKernelInterface::class),
+			$manager = m::mock(\Illuminate\Session\SessionManager::class)
 		);
 
 		$manager->shouldReceive('getSessionConfig')->andReturn(array(
@@ -31,7 +31,7 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
 			'expire_on_close' => false,
 		));
 
-		$manager->shouldReceive('driver')->andReturn($driver = m::mock('Illuminate\Session\Store')->makePartial());
+		$manager->shouldReceive('driver')->andReturn($driver = m::mock(\Illuminate\Session\Store::class)->makePartial());
 		$driver->shouldReceive('setRequestOnHandler')->once()->with($request);
 		$driver->shouldReceive('start')->once();
 		$app->shouldReceive('handle')->once()->with($request, Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST, true)->andReturn($response);
@@ -53,8 +53,8 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
 		$request = Symfony\Component\HttpFoundation\Request::create('/', 'GET');
 		$response = new Symfony\Component\HttpFoundation\Response;
 		$middle = new Illuminate\Session\Middleware(
-			$app = m::mock('Symfony\Component\HttpKernel\HttpKernelInterface'),
-			$manager = m::mock('Illuminate\Session\SessionManager')
+			$app = m::mock(\Symfony\Component\HttpKernel\HttpKernelInterface::class),
+			$manager = m::mock(\Illuminate\Session\SessionManager::class)
 		);
 		$manager->shouldReceive('getSessionConfig')->andReturn(array(
 			'driver' => null,
@@ -69,8 +69,8 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
 	public function testCheckingForRequestUsingArraySessions()
 	{
 		$middleware = new Illuminate\Session\Middleware(
-			m::mock('Symfony\Component\HttpKernel\HttpKernelInterface'),
-			$manager = m::mock('Illuminate\Session\SessionManager'),
+			m::mock(\Symfony\Component\HttpKernel\HttpKernelInterface::class),
+			$manager = m::mock(\Illuminate\Session\SessionManager::class),
 			function() { return true; }
 		);
 

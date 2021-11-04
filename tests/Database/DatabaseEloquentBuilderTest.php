@@ -45,7 +45,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 	public function testFindOrNewMethodModelNotFound()
 	{
 		$model = $this->getMockModel();
-		$model->shouldReceive('findOrNew')->once()->andReturn(m::mock('Illuminate\Database\Eloquent\Model'));
+		$model->shouldReceive('findOrNew')->once()->andReturn(m::mock(\Illuminate\Database\Eloquent\Model::class));
 
 		$builder = m::mock('Illuminate\Database\Eloquent\Builder[first]', array($this->getMockQueryBuilder()));
 		$builder->setModel($model);
@@ -55,7 +55,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 		$result = $model->findOrNew('bar', array('column'));
 		$findResult = $builder->find('bar', array('column'));
 		$this->assertNull($findResult);
-		$this->assertInstanceOf('Illuminate\Database\Eloquent\Model', $result);
+		$this->assertInstanceOf(\Illuminate\Database\Eloquent\Model::class, $result);
 	}
 
     public function testFindOrFailMethodThrowsModelNotFoundException()
@@ -196,9 +196,9 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 	{
 		unset($_SERVER['__test.builder']);
 		$builder = new Illuminate\Database\Eloquent\Builder(new Illuminate\Database\Query\Builder(
-			m::mock('Illuminate\Database\ConnectionInterface'),
-			m::mock('Illuminate\Database\Query\Grammars\Grammar'),
-			m::mock('Illuminate\Database\Query\Processors\Processor')
+			m::mock(\Illuminate\Database\ConnectionInterface::class),
+			m::mock(\Illuminate\Database\Query\Grammars\Grammar::class),
+			m::mock(\Illuminate\Database\Query\Processors\Processor::class)
 		));
 		$builder->macro('fooBar', function($builder)
 		{
@@ -235,13 +235,13 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 
 	public function testPaginateMethodWithGroupedQuery()
 	{
-		$query = $this->getMock('Illuminate\Database\Query\Builder', array('from', 'getConnection'), array(
-			m::mock('Illuminate\Database\ConnectionInterface'),
-			m::mock('Illuminate\Database\Query\Grammars\Grammar'),
-			m::mock('Illuminate\Database\Query\Processors\Processor'),
+		$query = $this->getMock(\Illuminate\Database\Query\Builder::class, array('from', 'getConnection'), array(
+			m::mock(\Illuminate\Database\ConnectionInterface::class),
+			m::mock(\Illuminate\Database\Query\Grammars\Grammar::class),
+			m::mock(\Illuminate\Database\Query\Processors\Processor::class),
 		));
 		$query->expects($this->once())->method('from')->will($this->returnValue('foo_table'));
-		$builder = $this->getMock('Illuminate\Database\Eloquent\Builder', array('get'), array($query));
+		$builder = $this->getMock(Builder::class, array('get'), array($query));
 		$builder->setModel($this->getMockModel());
 		$builder->getModel()->shouldReceive('getPerPage')->once()->andReturn(2);
 		$conn = m::mock('stdClass');
@@ -258,13 +258,13 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 
 	public function testQuickPaginateMethod()
 	{
-		$query = $this->getMock('Illuminate\Database\Query\Builder', array('from', 'getConnection', 'skip', 'take'), array(
-			m::mock('Illuminate\Database\ConnectionInterface'),
-			m::mock('Illuminate\Database\Query\Grammars\Grammar'),
-			m::mock('Illuminate\Database\Query\Processors\Processor'),
+		$query = $this->getMock(\Illuminate\Database\Query\Builder::class, array('from', 'getConnection', 'skip', 'take'), array(
+			m::mock(\Illuminate\Database\ConnectionInterface::class),
+			m::mock(\Illuminate\Database\Query\Grammars\Grammar::class),
+			m::mock(\Illuminate\Database\Query\Processors\Processor::class),
 		));
 		$query->expects($this->once())->method('from')->will($this->returnValue('foo_table'));
-		$builder = $this->getMock('Illuminate\Database\Eloquent\Builder', array('get'), array($query));
+		$builder = $this->getMock(Builder::class, array('get'), array($query));
 		$builder->setModel($this->getMockModel());
 		$builder->getModel()->shouldReceive('getPerPage')->once()->andReturn(15);
 		$conn = m::mock('stdClass');
@@ -416,7 +416,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 		$builder = $this->getBuilder();
 		$builder->getQuery()->shouldReceive('foobar')->once()->andReturn('foo');
 
-		$this->assertInstanceOf('Illuminate\Database\Eloquent\Builder', $builder->foobar());
+		$this->assertInstanceOf(Builder::class, $builder->foobar());
 
 		$builder = $this->getBuilder();
 		$builder->getQuery()->shouldReceive('insert')->once()->with(array('bar'))->andReturn('foo');
@@ -439,7 +439,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 
 	public function testNestedWhere()
 	{
-		$nestedQuery = m::mock('Illuminate\Database\Eloquent\Builder');
+		$nestedQuery = m::mock(Builder::class);
 		$nestedRawQuery = $this->getMockQueryBuilder();
 		$nestedQuery->shouldReceive('getQuery')->once()->andReturn($nestedRawQuery);
 		$model = $this->getMockModel()->makePartial();
@@ -523,8 +523,8 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 		$processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
 		$grammar = new $grammarClass;
 		$processor = new $processorClass;
-		$connection = m::mock('Illuminate\Database\ConnectionInterface', array('getQueryGrammar' => $grammar, 'getPostProcessor' => $processor));
-		$resolver = m::mock('Illuminate\Database\ConnectionResolverInterface', array('connection' => $connection));
+		$connection = m::mock(\Illuminate\Database\ConnectionInterface::class, array('getQueryGrammar' => $grammar, 'getPostProcessor' => $processor));
+		$resolver = m::mock(\Illuminate\Database\ConnectionResolverInterface::class, array('connection' => $connection));
 		$class = get_class($model);
 		$class::setConnectionResolver($resolver);
 	}
@@ -538,7 +538,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 
 	protected function getMockModel()
 	{
-		$model = m::mock('Illuminate\Database\Eloquent\Model');
+		$model = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$model->shouldReceive('getKeyName')->andReturn('foo');
 		$model->shouldReceive('getTable')->andReturn('foo_table');
 		$model->shouldReceive('getQualifiedKeyName')->andReturn('foo_table.foo');
@@ -548,7 +548,7 @@ class DatabaseEloquentBuilderTest extends BackwardCompatibleTestCase
 
 	protected function getMockQueryBuilder()
 	{
-		$query = m::mock('Illuminate\Database\Query\Builder');
+		$query = m::mock(\Illuminate\Database\Query\Builder::class);
 		$query->shouldReceive('from')->with('foo_table');
 		return $query;
 	}

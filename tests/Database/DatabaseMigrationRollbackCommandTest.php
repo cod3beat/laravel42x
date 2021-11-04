@@ -15,7 +15,7 @@ class DatabaseMigrationRollbackCommandTest extends BackwardCompatibleTestCase
 
     public function testRollbackCommandCallsMigratorWithProperArguments()
     {
-        $command = new RollbackCommand($migrator = m::mock('Illuminate\Database\Migrations\Migrator'));
+        $command = new RollbackCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class));
         $command->setLaravel(new AppDatabaseMigrationRollbackStub());
         $migrator->shouldReceive('setConnection')->once()->with(null);
 		$migrator->shouldReceive('rollback')->once()->with(false);
@@ -27,7 +27,7 @@ class DatabaseMigrationRollbackCommandTest extends BackwardCompatibleTestCase
 
 	public function testRollbackCommandCanBePretended()
 	{
-		$command = new RollbackCommand($migrator = m::mock('Illuminate\Database\Migrations\Migrator'));
+		$command = new RollbackCommand($migrator = m::mock(\Illuminate\Database\Migrations\Migrator::class));
 		$command->setLaravel(new AppDatabaseMigrationRollbackStub());
 		$migrator->shouldReceive('setConnection')->once()->with('foo');
 		$migrator->shouldReceive('rollback')->once()->with(true);

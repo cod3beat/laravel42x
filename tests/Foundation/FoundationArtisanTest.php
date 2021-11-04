@@ -15,7 +15,7 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
     public function testArtisanIsCalledWithProperArguments()
     {
         $artisan = $this->getMock(
-            'Illuminate\Foundation\Artisan',
+            \Illuminate\Foundation\Artisan::class,
             array('getArtisan'),
             array($app = new Illuminate\Foundation\Application)
         );
@@ -23,7 +23,9 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
             $this->returnValue($console = m::mock('Illuminate\Console\Application[find]'))
         );
         $console->shouldReceive('find')->once()->with('foo')->andReturn($command = m::mock('StdClass'));
-		$command->shouldReceive('run')->once()->with(m::type('Symfony\Component\Console\Input\ArrayInput'), m::type('Symfony\Component\Console\Output\NullOutput'))->andReturnUsing(function($input, $output)
+		$command->shouldReceive('run')->once()->with(m::type(\Symfony\Component\Console\Input\ArrayInput::class), m::type(
+            \Symfony\Component\Console\Output\NullOutput::class
+        ))->andReturnUsing(function($input, $output)
 		{
 			return $input;
 		});

@@ -43,7 +43,7 @@ class ViewCompilerEngineTest extends BackwardCompatibleTestCase
 
 	protected function getEngine()
 	{
-		return new CompilerEngine(m::mock('Illuminate\View\Compilers\CompilerInterface'));
+		return new CompilerEngine(m::mock(\Illuminate\View\Compilers\CompilerInterface::class));
 	}
 
 }

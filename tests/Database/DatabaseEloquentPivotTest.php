@@ -77,7 +77,7 @@ class DatabaseEloquentPivotTest extends BackwardCompatibleTestCase
 		$parent = m::mock('Illuminate\Database\Eloquent\Model[getConnectionName]');
 		$parent->guard(array());
 		$parent->shouldReceive('getConnectionName')->once()->andReturn('connection');
-		$pivot = $this->getMock('Illuminate\Database\Eloquent\Relations\Pivot', array('newQuery'), array($parent, array('foo' => 'bar'), 'table'));
+		$pivot = $this->getMock(Pivot::class, array('newQuery'), array($parent, array('foo' => 'bar'), 'table'));
 		$pivot->setPivotKeys('foreign', 'other');
 		$pivot->foreign = 'foreign.value';
 		$pivot->other = 'other.value';

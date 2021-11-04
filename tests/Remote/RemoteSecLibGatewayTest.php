@@ -34,8 +34,8 @@ class RemoteSecLibGatewayTest extends BackwardCompatibleTestCase
 
 	public function testKeyTextCanBeSetManually()
 	{
-		$files = m::mock('Illuminate\Filesystem\Filesystem');
-		$gateway = m::mock('Illuminate\Remote\SecLibGateway', array('127.0.0.1:22', array('username' => 'taylor', 'keytext' => 'keystuff'), $files))->makePartial();
+		$files = m::mock(\Illuminate\Filesystem\Filesystem::class);
+		$gateway = m::mock(\Illuminate\Remote\SecLibGateway::class, array('127.0.0.1:22', array('username' => 'taylor', 'keytext' => 'keystuff'), $files))->makePartial();
 		$gateway->shouldReceive('getConnection')->andReturn(m::mock('StdClass'));
 		$gateway->shouldReceive('getNewKey')->andReturn($key = m::mock('StdClass'));
 		$key->shouldReceive('setPassword')->once()->with(null);
@@ -48,9 +48,9 @@ class RemoteSecLibGatewayTest extends BackwardCompatibleTestCase
 
 	public function getGateway()
 	{
-		$files = m::mock('Illuminate\Filesystem\Filesystem');
+		$files = m::mock(\Illuminate\Filesystem\Filesystem::class);
 		$files->shouldReceive('get')->with('keypath')->andReturn('keystuff');
-		$gateway = m::mock('Illuminate\Remote\SecLibGateway', array('127.0.0.1:22', array('username' => 'taylor', 'key' => 'keypath', 'keyphrase' => 'keyphrase'), $files))->makePartial();
+		$gateway = m::mock(\Illuminate\Remote\SecLibGateway::class, array('127.0.0.1:22', array('username' => 'taylor', 'key' => 'keypath', 'keyphrase' => 'keyphrase'), $files))->makePartial();
 		$gateway->shouldReceive('getConnection')->andReturn(m::mock('StdClass'));
 		return $gateway;
 	}

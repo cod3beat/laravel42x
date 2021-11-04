@@ -14,7 +14,7 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 
     public function testEnvironmentDetection()
     {
-        $env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
+        $env = m::mock(\Illuminate\Foundation\EnvironmentDetector::class)->makePartial();
         $env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(false);
         $result = $env->detect(
             array(
@@ -23,7 +23,7 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 		$this->assertEquals('production', $result);
 
 
-		$env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
+		$env = m::mock(\Illuminate\Foundation\EnvironmentDetector::class)->makePartial();
 		$env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(true);
 		$result = $env->detect(array(
 			'local'   => array('localhost')

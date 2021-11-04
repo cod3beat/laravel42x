@@ -14,7 +14,7 @@ class PaginationCustomPresenterTest extends BackwardCompatibleTestCase
 
     public function testGetPageLinkWrapper()
     {
-        $customPresenter = m::mock('Illuminate\Pagination\Presenter');
+        $customPresenter = m::mock(\Illuminate\Pagination\Presenter::class);
         $customPresenter->shouldReceive('getPageLinkWrapper')
             ->once()
 			->andReturnUsing(function($url, $page) {
@@ -27,7 +27,7 @@ class PaginationCustomPresenterTest extends BackwardCompatibleTestCase
 
 	public function testGetDisabledTextWrapper()
 	{
-		$customPresenter = m::mock('Illuminate\Pagination\Presenter');
+		$customPresenter = m::mock(\Illuminate\Pagination\Presenter::class);
 		$customPresenter->shouldReceive('getDisabledTextWrapper')
 			->once()
 			->andReturnUsing(function($text) {
@@ -39,7 +39,7 @@ class PaginationCustomPresenterTest extends BackwardCompatibleTestCase
 
 	public function testGetActiveTextWrapper()
 	{
-		$customPresenter = m::mock('Illuminate\Pagination\Presenter');
+		$customPresenter = m::mock(\Illuminate\Pagination\Presenter::class);
 		$customPresenter->shouldReceive('getActiveTextWrapper')
 			->once()
 			->andReturnUsing(function($text) {

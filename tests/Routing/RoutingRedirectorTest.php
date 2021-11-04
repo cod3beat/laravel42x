@@ -15,12 +15,12 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
 
     protected function setUp(): void
     {
-        $this->headers = m::mock('Symfony\Component\HttpFoundation\HeaderBag');
+        $this->headers = m::mock(\Symfony\Component\HttpFoundation\HeaderBag::class);
 
-        $this->request = m::mock('Illuminate\Http\Request');
+        $this->request = m::mock(\Illuminate\Http\Request::class);
         $this->request->headers = $this->headers;
 
-        $this->url = m::mock('Illuminate\Routing\UrlGenerator');
+        $this->url = m::mock(\Illuminate\Routing\UrlGenerator::class);
         $this->url->shouldReceive('getRequest')->andReturn($this->request);
         $this->url->shouldReceive('to')->with('bar', array(), null)->andReturn('http://foo.com/bar');
         $this->url->shouldReceive('to')->with('bar', array(), true)->andReturn('https://foo.com/bar');
@@ -28,7 +28,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
         $this->url->shouldReceive('to')->with('http://foo.com/bar', array(), null)->andReturn('http://foo.com/bar');
         $this->url->shouldReceive('to')->with('/', array(), null)->andReturn('http://foo.com/');
 
-        $this->session = m::mock('Illuminate\Session\Store');
+        $this->session = m::mock(\Illuminate\Session\Store::class);
 
         $this->redirect = new Redirector($this->url);
         $this->redirect->setSession($this->session);
@@ -45,7 +45,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
     {
         $response = $this->redirect->to('bar');
 
-        $this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
 		$this->assertEquals('http://foo.com/bar', $response->getTargetUrl());
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($this->session, $response->getSession());

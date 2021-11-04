@@ -50,9 +50,9 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 
 	public function testToArrayCallsToArrayOnEachItemInCollection()
 	{
-		$item1 = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
+		$item1 = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
 		$item1->shouldReceive('toArray')->once()->andReturn('foo.array');
-		$item2 = m::mock('Illuminate\Support\Contracts\ArrayableInterface');
+		$item2 = m::mock(\Illuminate\Support\Contracts\ArrayableInterface::class);
 		$item2->shouldReceive('toArray')->once()->andReturn('bar.array');
 		$c = new Collection(array($item1, $item2));
 		$results = $c->toArray();
@@ -63,7 +63,7 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 
 	public function testToJsonEncodesTheToArrayResult()
 	{
-		$c = $this->getMock('Illuminate\Support\Collection', array('toArray'));
+		$c = $this->getMock(Collection::class, array('toArray'));
 		$c->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
 		$results = $c->toJson();
 
@@ -73,7 +73,7 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCastingToStringJsonEncodesTheToArrayResult()
 	{
-		$c = $this->getMock('Illuminate\Database\Eloquent\Collection', array('toArray'));
+		$c = $this->getMock(\Illuminate\Database\Eloquent\Collection::class, array('toArray'));
 		$c->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
 
 		$this->assertEquals(json_encode('foo'), (string) $c);
@@ -252,8 +252,8 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 		$data = new Collection(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 		$data = $data->chunk(3);
 
-		$this->assertInstanceOf('Illuminate\Support\Collection', $data);
-		$this->assertInstanceOf('Illuminate\Support\Collection', $data[0]);
+		$this->assertInstanceOf(Collection::class, $data);
+		$this->assertInstanceOf(Collection::class, $data[0]);
 		$this->assertEquals(4, $data->count());
 		$this->assertEquals(array(1, 2, 3), $data[0]->toArray());
 		$this->assertEquals(array(10), $data[3]->toArray());

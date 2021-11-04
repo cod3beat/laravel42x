@@ -92,7 +92,7 @@ class ConfigFileLoaderTest extends BackwardCompatibleTestCase
 
 	protected function getLoader()
 	{
-		return new Illuminate\Config\FileLoader(m::mock('Illuminate\Filesystem\Filesystem'), __DIR__);
+		return new Illuminate\Config\FileLoader(m::mock(\Illuminate\Filesystem\Filesystem::class), __DIR__);
 	}
 
 }

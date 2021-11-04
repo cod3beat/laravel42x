@@ -59,11 +59,11 @@ class CookieTest extends BackwardCompatibleTestCase
 		$cookie->queue($cookie->make('foo','bar'));
 		$this->assertArrayHasKey('foo', $cookie->getQueuedCookies());
 		$this->assertTrue($cookie->hasQueued('foo'));
-		$this->assertInstanceOf('Symfony\Component\HttpFoundation\Cookie', $cookie->queued('foo'));
+		$this->assertInstanceOf(\Symfony\Component\HttpFoundation\Cookie::class, $cookie->queued('foo'));
 		$cookie->queue('qu','ux');
 		$this->assertArrayHasKey('qu', $cookie->getQueuedCookies());
 		$this->assertTrue($cookie->hasQueued('qu'));
-		$this->assertInstanceOf('Symfony\Component\HttpFoundation\Cookie', $cookie->queued('qu'));
+		$this->assertInstanceOf(\Symfony\Component\HttpFoundation\Cookie::class, $cookie->queued('qu'));
 	}
 
 

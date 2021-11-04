@@ -22,7 +22,7 @@ class SupportCapsuleManagerTraitTest extends BackwardCompatibleTestCase
 
         $this->assertNull($this->setupContainer($app));
 		$this->assertEquals($app, $this->getContainer());
-		$this->assertInstanceOf('\Illuminate\Support\Fluent', $app['config']);
+		$this->assertInstanceOf(\Illuminate\Support\Fluent::class, $app['config']);
 	}
 
 
@@ -30,10 +30,10 @@ class SupportCapsuleManagerTraitTest extends BackwardCompatibleTestCase
 	{
 		$this->container = null;
 		$app = new Container;
-		$app['config'] = m::mock('\Illuminate\Config\Repository');
+		$app['config'] = m::mock(\Illuminate\Config\Repository::class);
 
 		$this->assertNull($this->setupContainer($app));
 		$this->assertEquals($app, $this->getContainer());
-		$this->assertInstanceOf('\Illuminate\Config\Repository', $app['config']);
+		$this->assertInstanceOf(\Illuminate\Config\Repository::class, $app['config']);
 	}
 }

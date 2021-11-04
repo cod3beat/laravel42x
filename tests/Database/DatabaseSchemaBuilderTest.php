@@ -15,7 +15,7 @@ class DatabaseSchemaBuilderTest extends BackwardCompatibleTestCase
 
     public function testHasTableCorrectlyCallsGrammar()
     {
-        $connection = m::mock('Illuminate\Database\Connection');
+        $connection = m::mock(\Illuminate\Database\Connection::class);
         $grammar = m::mock('StdClass');
         $connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
 		$builder = new Builder($connection);

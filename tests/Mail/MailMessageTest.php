@@ -15,7 +15,7 @@ class MailMessageTest extends BackwardCompatibleTestCase
     public function testBasicAttachment()
     {
         $swift = m::mock('StdClass');
-        $message = $this->getMock('Illuminate\Mail\Message', array('createAttachmentFromPath'), array($swift));
+        $message = $this->getMock(\Illuminate\Mail\Message::class, array('createAttachmentFromPath'), array($swift));
         $attachment = m::mock('StdClass');
 		$message->expects($this->once())->method('createAttachmentFromPath')->with($this->equalTo('foo.jpg'))->will($this->returnValue($attachment));
 		$swift->shouldReceive('attach')->once()->with($attachment);
@@ -28,7 +28,7 @@ class MailMessageTest extends BackwardCompatibleTestCase
 	public function testDataAttachment()
 	{
 		$swift = m::mock('StdClass');
-		$message = $this->getMock('Illuminate\Mail\Message', array('createAttachmentFromData'), array($swift));
+		$message = $this->getMock(\Illuminate\Mail\Message::class, array('createAttachmentFromData'), array($swift));
 		$attachment = m::mock('StdClass');
 		$message->expects($this->once())->method('createAttachmentFromData')->with($this->equalTo('foo'), $this->equalTo('name'))->will($this->returnValue($attachment));
 		$swift->shouldReceive('attach')->once()->with($attachment);

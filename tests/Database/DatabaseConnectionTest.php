@@ -128,7 +128,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
 		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
-		$connection->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$connection->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.beganTransaction', $connection);
 		$connection->beginTransaction();
 	}
@@ -139,7 +139,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
 		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
-		$connection->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$connection->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.committed', $connection);
 		$connection->commit();
 	}
@@ -150,7 +150,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
 		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
-		$connection->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$connection->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.rollingBack', $connection);
 		$connection->rollBack();
 	}
@@ -207,10 +207,10 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testFromCreatesNewQueryBuilder()
 	{
 		$conn = $this->getMockConnection();
-		$conn->setQueryGrammar(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$conn->setPostProcessor(m::mock('Illuminate\Database\Query\Processors\Processor'));
+		$conn->setQueryGrammar(m::mock(\Illuminate\Database\Query\Grammars\Grammar::class));
+		$conn->setPostProcessor(m::mock(\Illuminate\Database\Query\Processors\Processor::class));
 		$builder = $conn->table('users');
-		$this->assertInstanceOf('Illuminate\Database\Query\Builder', $builder);
+		$this->assertInstanceOf(\Illuminate\Database\Query\Builder::class, $builder);
 		$this->assertEquals('users', $builder->from);
 	}
 
@@ -221,7 +221,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$date->shouldReceive('format')->once()->with('foo')->andReturn('bar');
 		$bindings = array('test' => $date);
 		$conn = $this->getMockConnection();
-		$grammar = m::mock('Illuminate\Database\Query\Grammars\Grammar');
+		$grammar = m::mock(\Illuminate\Database\Query\Grammars\Grammar::class);
 		$grammar->shouldReceive('getDateFormat')->once()->andReturn('foo');
 		$conn->setQueryGrammar($grammar);
 		$result = $conn->prepareBindings($bindings);
@@ -233,7 +233,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$connection = $this->getMockConnection();
 		$connection->logQuery('foo', array(), time());
-		$connection->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$connection->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('illuminate.query', array('foo', array(), null, null));
 		$connection->logQuery('foo', array(), null);
 	}
@@ -255,7 +255,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$connection = $this->getMockConnection();
 		$schema = $connection->getSchemaBuilder();
-		$this->assertInstanceOf('Illuminate\Database\Schema\Builder', $schema);
+		$this->assertInstanceOf(\Illuminate\Database\Schema\Builder::class, $schema);
 		$this->assertSame($connection, $schema->getConnection());
 	}
 
@@ -263,7 +263,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testResolvingPaginatorThroughClosure()
 	{
 		$connection = $this->getMockConnection();
-		$paginator  = m::mock('Illuminate\Pagination\Factory');
+		$paginator  = m::mock(\Illuminate\Pagination\Factory::class);
 		$connection->setPaginator(function() use ($paginator)
 		{
 			return $paginator;
@@ -275,7 +275,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testResolvingCacheThroughClosure()
 	{
 		$connection = $this->getMockConnection();
-		$cache  = m::mock('Illuminate\Cache\CacheManager');
+		$cache  = m::mock(\Illuminate\Cache\CacheManager::class);
 		$connection->setCacheManager(function() use ($cache)
 		{
 			return $cache;
@@ -288,7 +288,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $pdo ?: new DatabaseConnectionTestMockPDO;
 		$defaults = array('getDefaultQueryGrammar', 'getDefaultPostProcessor', 'getDefaultSchemaGrammar');
-		return $this->getMock('Illuminate\Database\Connection', array_merge($defaults, $methods), array($pdo));
+		return $this->getMock(\Illuminate\Database\Connection::class, array_merge($defaults, $methods), array($pdo));
 	}
 
 }

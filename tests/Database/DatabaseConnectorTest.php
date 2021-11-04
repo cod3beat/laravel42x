@@ -28,7 +28,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	 */
 	public function testMySqlConnectCallsCreateConnectionWithProperArguments($dsn, $config)
 	{
-		$connector = $this->getMock('Illuminate\Database\Connectors\MySqlConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\MySqlConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));
@@ -56,7 +56,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	{
 		$dsn = 'pgsql:host=foo;dbname=bar;port=111';
 		$config = array('host' => 'foo', 'database' => 'bar', 'port' => 111, 'charset' => 'utf8');
-		$connector = $this->getMock('Illuminate\Database\Connectors\PostgresConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\PostgresConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));
@@ -72,7 +72,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	{
 		$dsn = 'pgsql:host=foo;dbname=bar';
 		$config = array('host' => 'foo', 'database' => 'bar', 'schema' => 'public', 'charset' => 'utf8');
-		$connector = $this->getMock('Illuminate\Database\Connectors\PostgresConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\PostgresConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));
@@ -89,7 +89,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	{
 		$dsn = 'sqlite::memory:';
 		$config = array('database' => ':memory:');
-		$connector = $this->getMock('Illuminate\Database\Connectors\SQLiteConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\SQLiteConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));
@@ -103,7 +103,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	{
 		$dsn = 'sqlite:'.__DIR__;
 		$config = array('database' => __DIR__);
-		$connector = $this->getMock('Illuminate\Database\Connectors\SQLiteConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\SQLiteConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));
@@ -117,7 +117,7 @@ class DatabaseConnectorTest extends BackwardCompatibleTestCase
 	{
 		$config = array('host' => 'foo', 'database' => 'bar', 'port' => 111);
 		$dsn = $this->getDsn($config);
-		$connector = $this->getMock('Illuminate\Database\Connectors\SqlServerConnector', array('createConnection', 'getOptions'));
+		$connector = $this->getMock(\Illuminate\Database\Connectors\SqlServerConnector::class, array('createConnection', 'getOptions'));
 		$connection = m::mock('stdClass');
 		$connector->expects($this->once())->method('getOptions')->with($this->equalTo($config))->will($this->returnValue(array('options')));
 		$connector->expects($this->once())->method('createConnection')->with($this->equalTo($dsn), $this->equalTo($config), $this->equalTo(array('options')))->will($this->returnValue($connection));

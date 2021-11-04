@@ -76,7 +76,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$data = array(array('name' => 'Taylor'), array('name' => 'Otwell'));
 		$collection = EloquentModelStub::hydrate($data);
 
-		$this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $collection);
+		$this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $collection);
 		$this->assertEquals(2, count($collection));
 		$this->assertInstanceOf('EloquentModelStub', $collection[0]);
 		$this->assertInstanceOf('EloquentModelStub', $collection[1]);
@@ -151,12 +151,12 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testUpdateProcess()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('name' => 'taylor'));
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
 		$model->expects($this->once())->method('updateTimestamps');
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.updating: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('fire')->once()->with('eloquent.updated: '.get_class($model), $model)->andReturn(true);
@@ -175,11 +175,11 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testUpdateProcessDoesntOverrideTimestamps()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('created_at' => 'foo', 'updated_at' => 'bar'));
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until');
 		$events->shouldReceive('fire');
 
@@ -195,9 +195,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testSaveIsCancelledIfSavingEventReturnsFalse()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(false);
 		$model->exists = true;
 
@@ -208,9 +208,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testUpdateIsCancelledIfUpdatingEventReturnsFalse()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.updating: '.get_class($model), $model)->andReturn(false);
 		$model->exists = true;
@@ -224,7 +224,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps', 'fireModelEvent'));
 		$model->timestamps = false;
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('name' => 'taylor'));
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
@@ -242,12 +242,12 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testUpdateUsesOldPrimaryKey()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('id' => 2, 'foo' => 'bar'));
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
 		$model->expects($this->once())->method('updateTimestamps');
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.updating: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('fire')->once()->with('eloquent.updated: '.get_class($model), $model)->andReturn(true);
@@ -272,8 +272,8 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 			'updated_at'	=> '2012-12-05',
 		));
 
-		$this->assertInstanceOf('Carbon\Carbon', $model->created_at);
-		$this->assertInstanceOf('Carbon\Carbon', $model->updated_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->updated_at);
 	}
 
 
@@ -286,8 +286,8 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 			'updated_at'	=> time(),
 		));
 
-		$this->assertInstanceOf('Carbon\Carbon', $model->created_at);
-		$this->assertInstanceOf('Carbon\Carbon', $model->updated_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->updated_at);
 	}
 
 
@@ -298,13 +298,15 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 			'updated_at' => Carbon\Carbon::now()
 		);
 		$model = new EloquentDateModelStub;
-		Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+		Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver = m::mock(
+            \Illuminate\Database\ConnectionResolverInterface::class
+        ));
 		$resolver->shouldReceive('connection')->andReturn($mockConnection = m::mock('StdClass'));
 		$mockConnection->shouldReceive('getQueryGrammar')->andReturn($mockConnection);
 		$mockConnection->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$instance = $model->newInstance($timestamps);
-		$this->assertInstanceOf('Carbon\Carbon', $instance->updated_at);
-		$this->assertInstanceOf('Carbon\Carbon', $instance->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $instance->updated_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $instance->created_at);
 	}
 
 
@@ -315,7 +317,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 			'updated_at' => Carbon\Carbon::now()
 		);
 		$model = new EloquentDateModelStub;
-		Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+		Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver = m::mock(
+            \Illuminate\Database\ConnectionResolverInterface::class
+        ));
 		$resolver->shouldReceive('connection')->andReturn($mockConnection = m::mock('StdClass'));
 		$mockConnection->shouldReceive('getQueryGrammar')->andReturn($mockConnection);
 		$mockConnection->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
@@ -330,27 +334,27 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	{
 		$model = new EloquentDateModelStub;
 		$model->created_at = '2013-05-22 00:00:00';
-		$this->assertInstanceOf('Carbon\Carbon', $model->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->created_at);
 
 		$model = new EloquentDateModelStub;
 		$model->created_at = time();
-		$this->assertInstanceOf('Carbon\Carbon', $model->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->created_at);
 
 		$model = new EloquentDateModelStub;
 		$model->created_at = '2012-01-01';
-		$this->assertInstanceOf('Carbon\Carbon', $model->created_at);
+		$this->assertInstanceOf(\Carbon\Carbon::class, $model->created_at);
 	}
 
 
 	public function testInsertProcess()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('insertGetId')->once()->with(array('name' => 'taylor'), 'id')->andReturn(1);
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
 		$model->expects($this->once())->method('updateTimestamps');
 
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.creating: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('fire')->once()->with('eloquent.created: '.get_class($model), $model);
@@ -363,13 +367,13 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$this->assertTrue($model->exists);
 
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('insert')->once()->with(array('name' => 'taylor'));
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
 		$model->expects($this->once())->method('updateTimestamps');
 		$model->setIncrementing(false);
 
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.creating: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('fire')->once()->with('eloquent.created: '.get_class($model), $model);
@@ -386,9 +390,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testInsertIsCancelledIfCreatingEventReturnsFalse()
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
-		$model->setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		$model->setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.creating: '.get_class($model), $model)->andReturn(false);
 
@@ -399,7 +403,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testDeleteProperlyDeletesModel()
 	{
-		$model = $this->getMock('Illuminate\Database\Eloquent\Model', array('newQueryWithoutScopes', 'updateTimestamps', 'touchOwners'));
+		$model = $this->getMock(\Illuminate\Database\Eloquent\Model::class, array('newQueryWithoutScopes', 'updateTimestamps', 'touchOwners'));
 		$query = m::mock('stdClass');
 		$query->shouldReceive('where')->once()->with('id', 1)->andReturn($query);
 		$query->shouldReceive('delete')->once();
@@ -413,16 +417,18 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testNewQueryReturnsEloquentQueryBuilder()
 	{
-		$conn = m::mock('Illuminate\Database\Connection');
-		$grammar = m::mock('Illuminate\Database\Query\Grammars\Grammar');
-		$processor = m::mock('Illuminate\Database\Query\Processors\Processor');
+		$conn = m::mock(\Illuminate\Database\Connection::class);
+		$grammar = m::mock(\Illuminate\Database\Query\Grammars\Grammar::class);
+		$processor = m::mock(\Illuminate\Database\Query\Processors\Processor::class);
 		$conn->shouldReceive('getQueryGrammar')->once()->andReturn($grammar);
 		$conn->shouldReceive('getPostProcessor')->once()->andReturn($processor);
-		EloquentModelStub::setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+		EloquentModelStub::setConnectionResolver($resolver = m::mock(
+            \Illuminate\Database\ConnectionResolverInterface::class
+        ));
 		$resolver->shouldReceive('connection')->andReturn($conn);
 		$model = new EloquentModelStub;
 		$builder = $model->newQuery();
-		$this->assertInstanceOf('Illuminate\Database\Eloquent\Builder', $builder);
+		$this->assertInstanceOf(\Illuminate\Database\Eloquent\Builder::class, $builder);
 	}
 
 
@@ -446,7 +452,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testConnectionManagement()
 	{
-		EloquentModelStub::setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+		EloquentModelStub::setConnectionResolver($resolver = m::mock(
+            \Illuminate\Database\ConnectionResolverInterface::class
+        ));
 		$model = new EloquentModelStub;
 		$model->setConnection('foo');
 		$resolver->shouldReceive('connection')->once()->with('foo')->andReturn('bar');
@@ -787,7 +795,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testModelObserversCanBeAttachedToModels()
 	{
-		EloquentModelStub::setEventDispatcher($events = m::mock('Illuminate\Events\Dispatcher'));
+		EloquentModelStub::setEventDispatcher($events = m::mock(\Illuminate\Events\Dispatcher::class));
 		$events->shouldReceive('listen')->once()->with('eloquent.creating: EloquentModelStub', 'EloquentTestObserverStub@creating');
 		$events->shouldReceive('listen')->once()->with('eloquent.saved: EloquentModelStub', 'EloquentTestObserverStub@saved');
 		$events->shouldReceive('forget');
@@ -921,7 +929,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testRelationshipTouchOwnersIsPropagated()
 	{
-		$relation = $this->getMockBuilder('Illuminate\Database\Eloquent\Relations\BelongsTo')->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
+		$relation = $this->getMockBuilder(\Illuminate\Database\Eloquent\Relations\BelongsTo::class)->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
 		$relation->expects($this->once())->method('touch');
 
 		$model = m::mock('EloquentModelStub[partner]');
@@ -939,7 +947,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testRelationshipTouchOwnersIsNotPropagatedIfNoRelationshipResult()
 	{
-		$relation = $this->getMockBuilder('Illuminate\Database\Eloquent\Relations\BelongsTo')->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
+		$relation = $this->getMockBuilder(\Illuminate\Database\Eloquent\Relations\BelongsTo::class)->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
 		$relation->expects($this->once())->method('touch');
 
 		$model = m::mock('EloquentModelStub[partner]');
@@ -956,7 +964,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testTimestampsAreNotUpdatedWithTimestampsFalseSaveOption()
 	{
 		$model = m::mock('EloquentModelStub[newQueryWithoutScopes]');
-		$query = m::mock('Illuminate\Database\Eloquent\Builder');
+		$query = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('name' => 'taylor'));
 		$model->shouldReceive('newQueryWithoutScopes')->once()->andReturn($query);
@@ -972,10 +980,14 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	protected function addMockConnection($model)
 	{
-		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
-		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
+		$model->setConnectionResolver($resolver = m::mock(\Illuminate\Database\ConnectionResolverInterface::class));
+		$resolver->shouldReceive('connection')->andReturn(m::mock(\Illuminate\Database\Connection::class));
+		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock(
+            \Illuminate\Database\Query\Grammars\Grammar::class
+        ));
+		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock(
+            \Illuminate\Database\Query\Processors\Processor::class
+        ));
 	}
 
 }
@@ -1059,7 +1071,7 @@ class EloquentModelSaveStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelFindStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('find')->once()->with(1, array('*'))->andReturn('foo');
 		return $mock;
 	}
@@ -1068,7 +1080,7 @@ class EloquentModelFindStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelFindWithWritePdoStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('useWritePdo')->once()->andReturnSelf();
 		$mock->shouldReceive('find')->once()->with(1)->andReturn('foo');
 
@@ -1079,7 +1091,7 @@ class EloquentModelFindWithWritePdoStub extends Illuminate\Database\Eloquent\Mod
 class EloquentModelFindNotFoundStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('find')->once()->with(1, array('*'))->andReturn(null);
 		return $mock;
 	}
@@ -1088,7 +1100,7 @@ class EloquentModelFindNotFoundStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelDestroyStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('whereIn')->once()->with('id', array(1, 2, 3))->andReturn($mock);
 		$mock->shouldReceive('get')->once()->andReturn(array($model = m::mock('StdClass')));
 		$model->shouldReceive('delete')->once();
@@ -1100,7 +1112,7 @@ class EloquentModelHydrateRawStub extends Illuminate\Database\Eloquent\Model {
 	public static function hydrate(array $items, $connection = null) { return 'hydrated'; }
 	public function getConnection()
 	{
-		$mock = m::mock('Illuminate\Database\Connection');
+		$mock = m::mock(\Illuminate\Database\Connection::class);
 		$mock->shouldReceive('select')->once()->with('SELECT ?', array('foo'))->andReturn(array());
 		return $mock;
 	}
@@ -1109,7 +1121,7 @@ class EloquentModelHydrateRawStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelFindManyStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('find')->once()->with(array(1, 2), array('*'))->andReturn('foo');
 		return $mock;
 	}
@@ -1118,7 +1130,7 @@ class EloquentModelFindManyStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelWithStub extends Illuminate\Database\Eloquent\Model {
 	public function newQuery()
 	{
-		$mock = m::mock('Illuminate\Database\Eloquent\Builder');
+		$mock = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$mock->shouldReceive('with')->once()->with(array('foo', 'bar'))->andReturn('foo');
 		return $mock;
 	}
@@ -1129,11 +1141,11 @@ class EloquentModelWithoutTableStub extends Illuminate\Database\Eloquent\Model {
 class EloquentModelBootingTestStub extends Illuminate\Database\Eloquent\Model {
 	public static function unboot()
 	{
-		unset(static::$booted[get_called_class()]);
+		unset(static::$booted[static::class]);
 	}
 	public static function isBooted()
 	{
-		return array_key_exists(get_called_class(), static::$booted);
+		return array_key_exists(static::class, static::$booted);
 	}
 }
 

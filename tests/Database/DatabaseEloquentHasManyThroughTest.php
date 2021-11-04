@@ -17,13 +17,13 @@ class DatabaseEloquentHasManyThroughTest extends BackwardCompatibleTestCase
     public function testRelationIsProperlyInitialized()
     {
         $relation = $this->getRelation();
-        $model = m::mock('Illuminate\Database\Eloquent\Model');
+        $model = m::mock(\Illuminate\Database\Eloquent\Model::class);
         $relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(
             function ($array = array()) {
                 return new Collection($array);
             }
         );
-		$model->shouldReceive('setRelation')->once()->with('foo', m::type('Illuminate\Database\Eloquent\Collection'));
+		$model->shouldReceive('setRelation')->once()->with('foo', m::type(Collection::class));
 		$models = $relation->initRelation(array($model), 'foo');
 
 		$this->assertEquals(array($model), $models);
@@ -74,17 +74,17 @@ class DatabaseEloquentHasManyThroughTest extends BackwardCompatibleTestCase
 
 	protected function getRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$builder->shouldReceive('join')->once()->with('users', 'users.id', '=', 'posts.user_id');
 		$builder->shouldReceive('where')->with('users.country_id', '=', 1);
 
-		$country = m::mock('Illuminate\Database\Eloquent\Model');
+		$country = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$country->shouldReceive('getKey')->andReturn(1);
 		$country->shouldReceive('getForeignKey')->andReturn('country_id');
-		$user = m::mock('Illuminate\Database\Eloquent\Model');
+		$user = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$user->shouldReceive('getTable')->andReturn('users');
 		$user->shouldReceive('getQualifiedKeyName')->andReturn('users.id');
-		$post = m::mock('Illuminate\Database\Eloquent\Model');
+		$post = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$post->shouldReceive('getTable')->andReturn('posts');
 
 		$builder->shouldReceive('getModel')->andReturn($post);

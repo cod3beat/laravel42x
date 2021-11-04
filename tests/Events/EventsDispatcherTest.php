@@ -30,7 +30,7 @@ class EventsDispatcherTest extends BackwardCompatibleTestCase
 
 	public function testContainerResolutionOfEventHandlers()
 	{
-		$d = new Dispatcher($container = m::mock('Illuminate\Container\Container'));
+		$d = new Dispatcher($container = m::mock(\Illuminate\Container\Container::class));
 		$container->shouldReceive('make')->once()->with('FooHandler')->andReturn($handler = m::mock('StdClass'));
 		$handler->shouldReceive('onFooEvent')->once()->with('foo', 'bar');
 		$d->listen('foo', 'FooHandler@onFooEvent');
@@ -40,7 +40,7 @@ class EventsDispatcherTest extends BackwardCompatibleTestCase
 
 	public function testContainerResolutionOfEventHandlersWithDefaultMethods()
 	{
-		$d = new Dispatcher($container = m::mock('Illuminate\Container\Container'));
+		$d = new Dispatcher($container = m::mock(\Illuminate\Container\Container::class));
 		$container->shouldReceive('make')->once()->with('FooHandler')->andReturn($handler = m::mock('StdClass'));
 		$handler->shouldReceive('handle')->once()->with('foo', 'bar');
 		$d->listen('foo', 'FooHandler');

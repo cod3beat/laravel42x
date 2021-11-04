@@ -14,7 +14,7 @@ class QueueSyncQueueTest extends BackwardCompatibleTestCase
 
     public function testPushShouldFireJobInstantly()
     {
-        $sync = $this->getMock('Illuminate\Queue\SyncQueue', array('resolveJob'));
+        $sync = $this->getMock(\Illuminate\Queue\SyncQueue::class, array('resolveJob'));
         $job = m::mock('StdClass');
         $sync->expects($this->once())->method('resolveJob')->with(
             $this->equalTo('Foo'),

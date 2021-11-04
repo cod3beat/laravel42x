@@ -17,7 +17,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
     {
         $repo = $this->getRepository();
         $query = m::mock('stdClass');
-        $connectionMock = m::mock('Illuminate\Database\Connection');
+        $connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('lists')->once()->with('migration')->andReturn('bar');
@@ -28,12 +28,12 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 
 	public function testGetLastMigrationsGetsAllMigrationsWithTheLatestBatchNumber()
 	{
-		$repo = $this->getMock('Illuminate\Database\Migrations\DatabaseMigrationRepository', array('getLastBatchNumber'), array(
-			$resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'), 'migrations'
+		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
+			$resolver = m::mock(\Illuminate\Database\ConnectionResolverInterface::class), 'migrations'
 		));
 		$repo->expects($this->once())->method('getLastBatchNumber')->will($this->returnValue(1));
 		$query = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+		$connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('where')->once()->with('batch', 1)->andReturn($query);
@@ -48,7 +48,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 	{
 		$repo = $this->getRepository();
 		$query = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+		$connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('insert')->once()->with(array('migration' => 'bar', 'batch' => 1));
@@ -61,7 +61,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 	{
 		$repo = $this->getRepository();
 		$query = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+		$connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('where')->once()->with('migration', 'foo')->andReturn($query);
@@ -74,8 +74,8 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 
 	public function testGetNextBatchNumberReturnsLastBatchNumberPlusOne()
 	{
-		$repo = $this->getMock('Illuminate\Database\Migrations\DatabaseMigrationRepository', array('getLastBatchNumber'), array(
-			m::mock('Illuminate\Database\ConnectionResolverInterface'), 'migrations'
+		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
+			m::mock(\Illuminate\Database\ConnectionResolverInterface::class), 'migrations'
 		));
 		$repo->expects($this->once())->method('getLastBatchNumber')->will($this->returnValue(1));
 
@@ -87,7 +87,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 	{
 		$repo = $this->getRepository();
 		$query = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+		$connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('max')->once()->andReturn(1);
@@ -100,7 +100,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 	{
 		$repo = $this->getRepository();
 		$schema = m::mock('stdClass');
-		$connectionMock = m::mock('Illuminate\Database\Connection');
+		$connectionMock = m::mock(\Illuminate\Database\Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('getSchemaBuilder')->once()->andReturn($schema);
 		$schema->shouldReceive('create')->once()->with('migrations', m::type('Closure'));
@@ -111,7 +111,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 
 	protected function getRepository()
 	{
-		return new DatabaseMigrationRepository(m::mock('Illuminate\Database\ConnectionResolverInterface'), 'migrations');
+		return new DatabaseMigrationRepository(m::mock(\Illuminate\Database\ConnectionResolverInterface::class), 'migrations');
 	}
 
 }

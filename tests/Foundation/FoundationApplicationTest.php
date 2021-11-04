@@ -29,7 +29,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 
 	public function testServiceProvidersAreCorrectlyRegistered()
 	{
-		$provider = m::mock('Illuminate\Support\ServiceProvider');
+		$provider = m::mock(\Illuminate\Support\ServiceProvider::class);
 		$class = get_class($provider);
 		$provider->shouldReceive('register')->once();
 		$app = new Application;
@@ -42,8 +42,8 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testForgetMiddleware()
 	{
 		$app = new ApplicationGetMiddlewaresStub;
-		$app->middleware('Illuminate\Http\FrameGuard');
-		$app->forgetMiddleware('Illuminate\Http\FrameGuard');
+		$app->middleware(\Illuminate\Http\FrameGuard::class);
+		$app->forgetMiddleware(\Illuminate\Http\FrameGuard::class);
 		$this->assertEquals(0, count($app->getMiddlewares()));
 	}
 
@@ -146,7 +146,7 @@ class ApplicationCustomExceptionHandlerStub extends Illuminate\Foundation\Applic
 
 	public function prepareResponse($value)
 	{
-		$response = m::mock('Symfony\Component\HttpFoundation\Response');
+		$response = m::mock(\Symfony\Component\HttpFoundation\Response::class);
 		$response->shouldReceive('send')->once();
 		return $response;
 	}

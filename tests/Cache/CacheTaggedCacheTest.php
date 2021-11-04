@@ -76,8 +76,8 @@ class CacheTaggedCacheTest extends BackwardCompatibleTestCase
 
 	public function testRedisCacheTagsPushForeverKeysCorrectly()
 	{
-		$store = m::mock('Illuminate\Cache\StoreInterface');
-		$tagSet = m::mock('Illuminate\Cache\TagSet', array($store, array('foo', 'bar')));
+		$store = m::mock(\Illuminate\Cache\StoreInterface::class);
+		$tagSet = m::mock(\Illuminate\Cache\TagSet::class, array($store, array('foo', 'bar')));
 		$tagSet->shouldReceive('getNamespace')->andReturn('foo|bar');
 		$redis = new Illuminate\Cache\RedisTaggedCache($store, $tagSet);
 		$store->shouldReceive('getPrefix')->andReturn('prefix:');
@@ -92,8 +92,8 @@ class CacheTaggedCacheTest extends BackwardCompatibleTestCase
 
 	public function testRedisCacheForeverTagsCanBeFlushed()
 	{
-		$store = m::mock('Illuminate\Cache\StoreInterface');
-		$tagSet = m::mock('Illuminate\Cache\TagSet', array($store, array('foo', 'bar')));
+		$store = m::mock(\Illuminate\Cache\StoreInterface::class);
+		$tagSet = m::mock(\Illuminate\Cache\TagSet::class, array($store, array('foo', 'bar')));
 		$tagSet->shouldReceive('getNamespace')->andReturn('foo|bar');
 		$redis = new Illuminate\Cache\RedisTaggedCache($store, $tagSet);
 		$store->shouldReceive('getPrefix')->andReturn('prefix:');

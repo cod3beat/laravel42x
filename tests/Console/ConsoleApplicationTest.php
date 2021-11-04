@@ -14,9 +14,9 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
     public function testAddSetsLaravelInstance()
     {
-        $app = $this->getMock('Illuminate\Console\Application', array('addToParent'));
+        $app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
         $app->setLaravel('foo');
-        $command = m::mock('Illuminate\Console\Command');
+        $command = m::mock(\Illuminate\Console\Command::class);
 		$command->shouldReceive('setLaravel')->once()->with('foo');
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->add($command);
@@ -27,9 +27,9 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
 	public function testLaravelNotSetOnSymfonyCommands()
 	{
-		$app = $this->getMock('Illuminate\Console\Application', array('addToParent'));
+		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
 		$app->setLaravel('foo');
-		$command = m::mock('Symfony\Component\Console\Command\Command');
+		$command = m::mock(\Symfony\Component\Console\Command\Command::class);
 		$command->shouldReceive('setLaravel')->never();
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->add($command);
@@ -40,8 +40,8 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
 	public function testResolveAddsCommandViaApplicationResolution()
 	{
-		$app = $this->getMock('Illuminate\Console\Application', array('addToParent'));
-		$command = m::mock('Symfony\Component\Console\Command\Command');
+		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
+		$command = m::mock(\Symfony\Component\Console\Command\Command::class);
 		$app->setLaravel(array('foo' => $command));
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
 		$result = $app->resolve('foo');

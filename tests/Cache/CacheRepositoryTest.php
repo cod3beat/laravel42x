@@ -87,7 +87,7 @@ class CacheRepositoryTest extends BackwardCompatibleTestCase
 
 	protected function getRepository()
 	{
-		return new Illuminate\Cache\Repository(m::mock('Illuminate\Cache\StoreInterface'));
+		return new Illuminate\Cache\Repository(m::mock(\Illuminate\Cache\StoreInterface::class));
 	}
 
 }

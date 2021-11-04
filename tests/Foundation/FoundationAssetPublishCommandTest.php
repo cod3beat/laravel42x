@@ -15,7 +15,7 @@ class FoundationAssetPublishCommandTest extends BackwardCompatibleTestCase
     public function testCommandCallsPublisherWithProperPackageName()
     {
         $command = new Illuminate\Foundation\Console\AssetPublishCommand(
-            $pub = m::mock('Illuminate\Foundation\AssetPublisher')
+            $pub = m::mock(\Illuminate\Foundation\AssetPublisher::class)
         );
         $pub->shouldReceive('publishPackage')->once()->with('foo');
         $command->run(

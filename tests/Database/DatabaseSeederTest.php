@@ -16,10 +16,10 @@ class DatabaseSeederTest extends BackwardCompatibleTestCase
     public function testCallResolveTheClassAndCallsRun()
     {
         $seeder = new Seeder;
-        $seeder->setContainer($container = m::mock('Illuminate\Container\Container'));
-        $output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+        $seeder->setContainer($container = m::mock(\Illuminate\Container\Container::class));
+        $output = m::mock(\Symfony\Component\Console\Output\OutputInterface::class);
 		$output->shouldReceive('writeln')->once()->andReturn('foo');
-		$command = m::mock('Illuminate\Console\Command');
+		$command = m::mock(\Illuminate\Console\Command::class);
 		$command->shouldReceive('getOutput')->once()->andReturn($output);
 		$seeder->setCommand($command);
 		$container->shouldReceive('make')->once()->with('ClassName')->andReturn($child = m::mock('StdClass'));
@@ -34,7 +34,7 @@ class DatabaseSeederTest extends BackwardCompatibleTestCase
 	public function testSetContainer()
 	{
 		$seeder = new Seeder;
-		$container = m::mock('Illuminate\Container\Container');
+		$container = m::mock(\Illuminate\Container\Container::class);
 		$this->assertEquals($seeder->setContainer($container), $seeder);
 	}
 
@@ -42,7 +42,7 @@ class DatabaseSeederTest extends BackwardCompatibleTestCase
 	public function testSetCommand()
 	{
 		$seeder = new Seeder;
-		$command = m::mock('Illuminate\Console\Command');
+		$command = m::mock(\Illuminate\Console\Command::class);
 		$this->assertEquals($seeder->setCommand($command), $seeder);
 	}
 

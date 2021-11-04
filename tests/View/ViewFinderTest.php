@@ -148,7 +148,7 @@ class ViewFinderTest extends BackwardCompatibleTestCase
 
 	protected function getFinder()
 	{
-		return new Illuminate\View\FileViewFinder(m::mock('Illuminate\Filesystem\Filesystem'), array(__DIR__));
+		return new Illuminate\View\FileViewFinder(m::mock(\Illuminate\Filesystem\Filesystem::class), array(__DIR__));
 	}
 
 }

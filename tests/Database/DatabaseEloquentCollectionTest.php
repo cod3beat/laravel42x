@@ -37,11 +37,11 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testContainsIndicatesIfModelInArray()
 	{
-		$mockModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
-		$mockModel2 = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel2 = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel2->shouldReceive('getKey')->andReturn(2);
-		$mockModel3 = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel3 = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel3->shouldReceive('getKey')->andReturn(3);
 		$c = new Collection(array($mockModel, $mockModel2));
 
@@ -53,10 +53,10 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testContainsIndicatesIfKeyedModelInArray()
 	{
-		$mockModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
 		$c = new Collection(array($mockModel));
-		$mockModel2 = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel2 = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel2->shouldReceive('getKey')->andReturn(2);
 		$c->add($mockModel2);
 
@@ -68,7 +68,7 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testFindMethodFindsModelById()
 	{
-		$mockModel = m::mock('Illuminate\Database\Eloquent\Model');
+		$mockModel = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$mockModel->shouldReceive('getKey')->andReturn(1);
 		$c = new Collection(array($mockModel));
 
@@ -79,7 +79,7 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testLoadMethodEagerLoadsGivenRelationships()
 	{
-		$c = $this->getMock('Illuminate\Database\Eloquent\Collection', array('first'), array(array('foo')));
+		$c = $this->getMock(Collection::class, array('first'), array(array('foo')));
 		$mockItem = m::mock('StdClass');
 		$c->expects($this->once())->method('first')->will($this->returnValue($mockItem));
 		$mockItem->shouldReceive('newQuery')->once()->andReturn($mockItem);
@@ -93,13 +93,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionDictionaryReturnsModelKeys()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));
@@ -110,13 +110,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionMergesWithGivenCollection()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -128,13 +128,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionDiffsWithGivenCollection()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -146,13 +146,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionIntersectsWithGivenCollection()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c1 = new Collection(array($one, $two));
@@ -164,10 +164,10 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testCollectionReturnsUniqueItems()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
 		$c = new Collection(array($one, $two, $two));
@@ -186,13 +186,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testOnlyReturnsCollectionWithGivenModelKeys()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn(2);
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));
@@ -204,13 +204,13 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 
 	public function testExceptReturnsCollectionWithoutGivenModelKeys()
 	{
-		$one = m::mock('Illuminate\Database\Eloquent\Model');
+		$one = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$one->shouldReceive('getKey')->andReturn(1);
 
-		$two = m::mock('Illuminate\Database\Eloquent\Model');
+		$two = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$two->shouldReceive('getKey')->andReturn('2');
 
-		$three = m::mock('Illuminate\Database\Eloquent\Model');
+		$three = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$three->shouldReceive('getKey')->andReturn(3);
 
 		$c = new Collection(array($one, $two, $three));

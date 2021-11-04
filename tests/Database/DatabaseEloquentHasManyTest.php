@@ -17,7 +17,7 @@ class DatabaseEloquentHasManyTest extends BackwardCompatibleTestCase
     public function testCreateMethodProperlyCreatesNewModel()
     {
         $relation = $this->getRelation();
-        $created = $this->getMock('Illuminate\Database\Eloquent\Model', array('save', 'getKey', 'setAttribute'));
+        $created = $this->getMock(\Illuminate\Database\Eloquent\Model::class, array('save', 'getKey', 'setAttribute'));
         $created->expects($this->once())->method('save')->will($this->returnValue(true));
 		$relation->getRelated()->shouldReceive('newInstance')->once()->with(array('name' => 'taylor'))->andReturn($created);
 		$created->expects($this->once())->method('setAttribute')->with('foreign_key', 1);
@@ -41,9 +41,9 @@ class DatabaseEloquentHasManyTest extends BackwardCompatibleTestCase
 	public function testRelationIsProperlyInitialized()
 	{
 		$relation = $this->getRelation();
-		$model = m::mock('Illuminate\Database\Eloquent\Model');
+		$model = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(function($array = array()) { return new Collection($array); });
-		$model->shouldReceive('setRelation')->once()->with('foo', m::type('Illuminate\Database\Eloquent\Collection'));
+		$model->shouldReceive('setRelation')->once()->with('foo', m::type(Collection::class));
 		$models = $relation->initRelation(array($model), 'foo');
 
 		$this->assertEquals(array($model), $models);
@@ -94,11 +94,11 @@ class DatabaseEloquentHasManyTest extends BackwardCompatibleTestCase
 
 	protected function getRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
 		$builder->shouldReceive('where')->with('table.foreign_key', '=', 1);
-		$related = m::mock('Illuminate\Database\Eloquent\Model');
+		$related = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$builder->shouldReceive('getModel')->andReturn($related);
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$parent = m::mock(\Illuminate\Database\Eloquent\Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
 		$parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
