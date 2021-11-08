@@ -34,7 +34,7 @@ class CacheFileStoreTest extends BackwardCompatibleTestCase {
 		$files->expects($this->once())->method('exists')->willReturn(true);
 		$contents = '0000000000';
 		$files->expects($this->once())->method('get')->willReturn($contents);
-		$store = $this->getMock(FileStore::class, array('forget'), array($files, __DIR__));
+		$store = $this->getMock(FileStore::class, ['forget'], [$files, __DIR__]);
 		$store->expects($this->once())->method('forget');
 		$value = $store->get('foo');
 		$this->assertNull($value);
@@ -55,7 +55,7 @@ class CacheFileStoreTest extends BackwardCompatibleTestCase {
 	public function testStoreItemProperlyStoresValues()
 	{
 		$files = $this->mockFilesystem();
-		$store = $this->getMock(FileStore::class, array('expiration'), array($files, __DIR__));
+		$store = $this->getMock(FileStore::class, ['expiration'], [$files, __DIR__]);
 		$store->expects($this->once())->method('expiration')->with($this->equalTo(10))->willReturn(1111111111);
 		$contents = '1111111111'.serialize('Hello World');
 		$md5 = md5('foo');
@@ -109,7 +109,7 @@ class CacheFileStoreTest extends BackwardCompatibleTestCase {
 	{
 		$files = $this->mockFilesystem();
 		$files->expects($this->once())->method('isDirectory')->with($this->equalTo(__DIR__))->willReturn(true);
-		$files->expects($this->once())->method('directories')->with($this->equalTo(__DIR__))->willReturn(array('foo'));
+		$files->expects($this->once())->method('directories')->with($this->equalTo(__DIR__))->willReturn(['foo']);
 		$files->expects($this->once())->method('deleteDirectory')->with($this->equalTo('foo'));
 
 		$store = new FileStore($files, __DIR__);

@@ -22,23 +22,27 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
     {
         $queue = $this->getMock(
             RedisQueue::class,
-            array('getRandomId'),
-            array($redis = m::mock(Database::class), 'default')
+            ['getRandomId'],
+            [$redis = m::mock(Database::class), 'default']
         );
         $queue->expects($this->once())->method('getRandomId')->willReturn('foo');
         $redis->shouldReceive('connection')->once()->andReturn($redis);
-		$redis->shouldReceive('rpush')->once()->with('queues:default', json_encode(array('job' => 'foo', 'data' => array('data'), 'id' => 'foo', 'attempts' => 1)));
+		$redis->shouldReceive('rpush')->once()->with('queues:default', json_encode(
+            ['job' => 'foo', 'data' => ['data'], 'id' => 'foo', 'attempts' => 1]
+        ));
 
-		$id = $queue->push('foo', array('data'));
+		$id = $queue->push('foo', ['data']);
 		$this->assertEquals('foo', $id);
 	}
 
 
 	public function testDelayedPushProperlyPushesJobOntoRedis()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getSeconds', 'getTime', 'getRandomId'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getSeconds', 'getTime', 'getRandomId'], [
+            $redis = m::mock(
             Database::class
-        ), 'default'));
+        ), 'default'
+        ]);
 		$queue->expects($this->once())->method('getRandomId')->willReturn('foo');
 		$queue->expects($this->once())->method('getSeconds')->with(1)->willReturn(1);
 		$queue->expects($this->once())->method('getTime')->willReturn(1);
@@ -47,10 +51,10 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 		$redis->shouldReceive('zadd')->once()->with(
 			'queues:default:delayed',
 			2,
-			json_encode(array('job' => 'foo', 'data' => array('data'), 'id' => 'foo', 'attempts' => 1))
+			json_encode(['job' => 'foo', 'data' => ['data'], 'id' => 'foo', 'attempts' => 1])
 		);
 
-		$id = $queue->later(1, 'foo', array('data'));
+		$id = $queue->later(1, 'foo', ['data']);
 		$this->assertEquals('foo', $id);
 	}
 
@@ -58,9 +62,11 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 	public function testDelayedPushWithDateTimeProperlyPushesJobOntoRedis()
 	{
 		$date = Carbon::now();
-		$queue = $this->getMock(RedisQueue::class, array('getSeconds', 'getTime', 'getRandomId'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getSeconds', 'getTime', 'getRandomId'], [
+            $redis = m::mock(
             Database::class
-        ), 'default'));
+        ), 'default'
+        ]);
 		$queue->expects($this->once())->method('getRandomId')->willReturn('foo');
 		$queue->expects($this->once())->method('getSeconds')->with($date)->willReturn(1);
 		$queue->expects($this->once())->method('getTime')->willReturn(1);
@@ -69,18 +75,20 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 		$redis->shouldReceive('zadd')->once()->with(
 			'queues:default:delayed',
 			2,
-			json_encode(array('job' => 'foo', 'data' => array('data'), 'id' => 'foo', 'attempts' => 1))
+			json_encode(['job' => 'foo', 'data' => ['data'], 'id' => 'foo', 'attempts' => 1])
 		);
 
-		$queue->later($date, 'foo', array('data'));
+		$queue->later($date, 'foo', ['data']);
 	}
 
 
 	public function testPopProperlyPopsJobOffOfRedis()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getTime', 'migrateAllExpiredJobs'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getTime', 'migrateAllExpiredJobs'], [
+            $redis = m::mock(
             Database::class
-        ), 'default'));
+        ), 'default'
+        ]);
 		$queue->setContainer(m::mock(Container::class));
 		$queue->expects($this->once())->method('getTime')->willReturn(1);
 		$queue->expects($this->once())->method('migrateAllExpiredJobs')->with($this->equalTo('queues:default'));
@@ -97,22 +105,26 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 
 	public function testReleaseMethod()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getTime'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getTime'], [
+            $redis = m::mock(
             Database::class
-        ), 'default'));
+        ), 'default'
+        ]);
 		$queue->expects($this->once())->method('getTime')->willReturn(1);
 		$redis->shouldReceive('connection')->once()->andReturn($redis);
-		$redis->shouldReceive('zadd')->once()->with('queues:default:delayed', 2, json_encode(array('attempts' => 2)));
+		$redis->shouldReceive('zadd')->once()->with('queues:default:delayed', 2, json_encode(['attempts' => 2]));
 
-		$queue->release('default', json_encode(array('attempts' => 1)), 1, 2);
+		$queue->release('default', json_encode(['attempts' => 1]), 1, 2);
 	}
 
 
 	public function testMigrateExpiredJobs()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getTime'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getTime'], [
+            $redis = m::mock(
             Database::class
-        ), 'default'));
+        ), 'default'
+        ]);
 		$queue->expects($this->once())->method('getTime')->willReturn(1);
 		$transaction = m::mock('StdClass');
 		$redis->shouldReceive('connection')->once()->andReturn($redis);
@@ -120,7 +132,7 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 		{
 			$callback($transaction);
 		});
-		$transaction->shouldReceive('zrangebyscore')->once()->with('from', '-inf', 1)->andReturn(array('foo', 'bar'));
+		$transaction->shouldReceive('zrangebyscore')->once()->with('from', '-inf', 1)->andReturn(['foo', 'bar']);
 		$transaction->shouldReceive('multi')->once();
 		$transaction->shouldReceive('zremrangebyscore')->once()->with('from', '-inf', 1);
 		$transaction->shouldReceive('rpush')->once()->with('to', 'foo', 'bar');
@@ -131,9 +143,11 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 
 	public function testNotExpireJobsWhenExpireNull()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getTime', 'migrateAllExpiredJobs'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getTime', 'migrateAllExpiredJobs'], [
+            $redis = m::mock(
             Database::class
-        ), 'default', null));
+        ), 'default', null
+        ]);
 		$redis->shouldReceive('connection')->andReturn($predis = m::mock(Client::class));
 		$queue->setContainer(m::mock(Container::class));
 		$queue->setExpire(null);
@@ -148,9 +162,11 @@ class QueueRedisQueueTest extends BackwardCompatibleTestCase
 
 	public function testExpireJobsWhenExpireSet()
 	{
-		$queue = $this->getMock(RedisQueue::class, array('getTime', 'migrateAllExpiredJobs'), array($redis = m::mock(
+		$queue = $this->getMock(RedisQueue::class, ['getTime', 'migrateAllExpiredJobs'], [
+            $redis = m::mock(
             Database::class
-        ), 'default', null));
+        ), 'default', null
+        ]);
 		$redis->shouldReceive('connection')->andReturn($predis = m::mock(Client::class));
 		$queue->setContainer(m::mock(Container::class));
 		$queue->setExpire(30);

@@ -20,27 +20,28 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
     {
         $relation = $this->getRelation();
         $relation->addEagerConstraints(
-            array(
-                $one = (object)array('morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'),
-			$two = (object) array('morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'),
-			$three = (object) array('morph_type' => 'morph_type_2', 'foreign_key' => 'foreign_key_2'),
-		));
+            [
+                $one = (object)['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
+			$two = (object) ['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
+			$three = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => 'foreign_key_2'],
+            ]
+        );
 
 		$dictionary = $relation->getDictionary();
 
-		$this->assertEquals(array(
-			'morph_type_1' => array(
-				'foreign_key_1' => array(
+		$this->assertEquals([
+			'morph_type_1' => [
+				'foreign_key_1' => [
 					$one,
 					$two
-				)
-			),
-			'morph_type_2' => array(
-				'foreign_key_2' => array(
+                ]
+            ],
+			'morph_type_2' => [
+				'foreign_key_2' => [
 					$three
-				)
-			),
-		), $dictionary);
+                ]
+            ],
+        ], $dictionary);
 	}
 
 
@@ -60,7 +61,7 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 		$three->morph_type = 'morph_type_2';
 		$three->foreign_key = 'foreign_key_2';
 
-		$relation->addEagerConstraints(array($one, $two, $three));
+		$relation->addEagerConstraints([$one, $two, $three]);
 
 		$relation->shouldReceive('createModelByType')->once()->with('morph_type_1')->andReturn($firstQuery = m::mock(
             Builder::class
@@ -74,12 +75,12 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 		$firstQuery->shouldReceive('newQuery')->once()->andReturn($firstQuery);
 		$secondQuery->shouldReceive('newQuery')->once()->andReturn($secondQuery);
 
-		$firstQuery->shouldReceive('whereIn')->once()->with('id', array('foreign_key_1'))->andReturn($firstQuery);
-		$firstQuery->shouldReceive('get')->once()->andReturn(Collection::make(array($resultOne = m::mock('StdClass'))));
+		$firstQuery->shouldReceive('whereIn')->once()->with('id', ['foreign_key_1'])->andReturn($firstQuery);
+		$firstQuery->shouldReceive('get')->once()->andReturn(Collection::make([$resultOne = m::mock('StdClass')]));
 		$resultOne->shouldReceive('getKey')->andReturn('foreign_key_1');
 
-		$secondQuery->shouldReceive('whereIn')->once()->with('id', array('foreign_key_2'))->andReturn($secondQuery);
-		$secondQuery->shouldReceive('get')->once()->andReturn(Collection::make(array($resultTwo = m::mock('StdClass'))));
+		$secondQuery->shouldReceive('whereIn')->once()->with('id', ['foreign_key_2'])->andReturn($secondQuery);
+		$secondQuery->shouldReceive('get')->once()->andReturn(Collection::make([$resultTwo = m::mock('StdClass')]));
 		$resultTwo->shouldReceive('getKey')->andReturn('foreign_key_2');
 
 		$one->shouldReceive('setRelation')->once()->with('relation', $resultOne);
@@ -141,7 +142,8 @@ class DatabaseEloquentMorphToTest extends BackwardCompatibleTestCase
 		$related->shouldReceive('getTable')->andReturn('relation');
 		$builder->shouldReceive('getModel')->andReturn($related);
 		$parent = $parent ?: new EloquentMorphToModelStub;
-		$morphTo = m::mock('Illuminate\Database\Eloquent\Relations\MorphTo[createModelByType]', array($builder, $parent, 'foreign_key', 'id', 'morph_type', 'relation'));
+		$morphTo = m::mock('Illuminate\Database\Eloquent\Relations\MorphTo[createModelByType]', [$builder, $parent, 'foreign_key', 'id', 'morph_type', 'relation']
+        );
 		return $morphTo;
 	}
 

@@ -21,9 +21,9 @@ class DatabaseSchemaBlueprintTest extends BackwardCompatibleTestCase
         $conn->shouldReceive('statement')->once()->with('foo');
         $conn->shouldReceive('statement')->once()->with('bar');
 		$grammar = m::mock(MySqlGrammar::class);
-		$blueprint = $this->getMock(Blueprint::class, array('toSql'), array('users'));
+		$blueprint = $this->getMock(Blueprint::class, ['toSql'], ['users']);
 		$blueprint->expects($this->once())->method('toSql')->with($this->equalTo($conn), $this->equalTo($grammar))->willReturn(
-            array('foo', 'bar')
+            ['foo', 'bar']
         );
 
 		$blueprint->build($conn, $grammar);
@@ -33,7 +33,7 @@ class DatabaseSchemaBlueprintTest extends BackwardCompatibleTestCase
 	public function testIndexDefaultNames()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->unique(array('foo', 'bar'));
+		$blueprint->unique(['foo', 'bar']);
 		$commands = $blueprint->getCommands();
 		$this->assertEquals('users_foo_bar_unique', $commands[0]->index);
 
@@ -47,12 +47,12 @@ class DatabaseSchemaBlueprintTest extends BackwardCompatibleTestCase
 	public function testDropIndexDefaultNames()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->dropUnique(array('foo', 'bar'));
+		$blueprint->dropUnique(['foo', 'bar']);
 		$commands = $blueprint->getCommands();
 		$this->assertEquals('users_foo_bar_unique', $commands[0]->index);
 
 		$blueprint = new Blueprint('users');
-		$blueprint->dropIndex(array('foo'));
+		$blueprint->dropIndex(['foo']);
 		$commands = $blueprint->getCommands();
 		$this->assertEquals('users_foo_index', $commands[0]->index);
 	}

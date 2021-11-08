@@ -6,7 +6,7 @@ class HttpJsonResponseTest extends BackwardCompatibleTestCase {
 
 	public function testSetAndRetrieveData()
 	{
-		$response = new Illuminate\Http\JsonResponse(array('foo' => 'bar'));
+		$response = new Illuminate\Http\JsonResponse(['foo' => 'bar']);
 		$data = $response->getData();
 		$this->assertInstanceOf('StdClass', $data);
 		$this->assertEquals('bar', $data->foo);

@@ -20,7 +20,7 @@ class AuthDatabaseUserProviderTest extends BackwardCompatibleTestCase
     {
         $conn = m::mock(Connection::class);
         $conn->shouldReceive('table')->once()->with('foo')->andReturn($conn);
-        $conn->shouldReceive('find')->once()->with(1)->andReturn(array('id' => 1, 'name' => 'Dayle'));
+        $conn->shouldReceive('find')->once()->with(1)->andReturn(['id' => 1, 'name' => 'Dayle']);
 		$hasher = m::mock(HasherInterface::class);
 		$provider = new Illuminate\Auth\DatabaseUserProvider($conn, $hasher, 'foo');
 		$user = $provider->retrieveByID(1);
@@ -49,10 +49,10 @@ class AuthDatabaseUserProviderTest extends BackwardCompatibleTestCase
 		$conn = m::mock(Connection::class);
 		$conn->shouldReceive('table')->once()->with('foo')->andReturn($conn);
 		$conn->shouldReceive('where')->once()->with('username', 'dayle');
-		$conn->shouldReceive('first')->once()->andReturn(array('id' => 1, 'name' => 'taylor'));
+		$conn->shouldReceive('first')->once()->andReturn(['id' => 1, 'name' => 'taylor']);
 		$hasher = m::mock(HasherInterface::class);
 		$provider = new Illuminate\Auth\DatabaseUserProvider($conn, $hasher, 'foo');
-		$user = $provider->retrieveByCredentials(array('username' => 'dayle', 'password' => 'foo'));
+		$user = $provider->retrieveByCredentials(['username' => 'dayle', 'password' => 'foo']);
 
 		$this->assertInstanceOf(GenericUser::class, $user);
 		$this->assertEquals(1, $user->getAuthIdentifier());
@@ -68,7 +68,7 @@ class AuthDatabaseUserProviderTest extends BackwardCompatibleTestCase
 		$conn->shouldReceive('first')->once()->andReturn(null);
 		$hasher = m::mock(HasherInterface::class);
 		$provider = new Illuminate\Auth\DatabaseUserProvider($conn, $hasher, 'foo');
-		$user = $provider->retrieveByCredentials(array('username' => 'dayle'));
+		$user = $provider->retrieveByCredentials(['username' => 'dayle']);
 
 		$this->assertNull($user);
 	}
@@ -82,7 +82,7 @@ class AuthDatabaseUserProviderTest extends BackwardCompatibleTestCase
 		$provider = new Illuminate\Auth\DatabaseUserProvider($conn, $hasher, 'foo');
 		$user = m::mock(UserInterface::class);
 		$user->shouldReceive('getAuthPassword')->once()->andReturn('hash');
-		$result = $provider->validateCredentials($user, array('password' => 'plain'));
+		$result = $provider->validateCredentials($user, ['password' => 'plain']);
 
 		$this->assertTrue($result);
 	}

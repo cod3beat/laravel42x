@@ -40,7 +40,7 @@ class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
 		$related->shouldReceive('getTable')->andReturn('table');
 		$related->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
 		$related->shouldReceive('freshTimestampString')->andReturn(Carbon::now());
-		$builder->shouldReceive('update')->once()->with(array('updated_at' => Carbon::now()));
+		$builder->shouldReceive('update')->once()->with(['updated_at' => Carbon::now()]);
 
 		$relation->touch();
 	}

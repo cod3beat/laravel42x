@@ -29,10 +29,10 @@ class RoutingControllerDispatcherTest extends BackwardCompatibleTestCase
     {
         $request = Request::create('controller');
         $route = new Route(
-            array('GET'), 'controller', array(
+            ['GET'], 'controller', [
             'uses' => function () {
             }
-        )
+            ]
         );
 		$route->bind($request);
 		$dispatcher = new ControllerDispatcher(m::mock(RouteFiltererInterface::class), new Container);

@@ -38,7 +38,7 @@ class RoutingControllerGeneratorTest extends BackwardCompatibleTestCase
 		{
 			$_SERVER['__controller.actual'] = $actual;
 		});
-		$gen->make('FooController', __DIR__, array('only' => array('index', 'show')));
+		$gen->make('FooController', __DIR__, ['only' => ['index', 'show']]);
 
 		$controller = preg_replace('/\s+/', '', $controller);
 		$actual = preg_replace('/\s+/', '', $_SERVER['__controller.actual']);
@@ -54,7 +54,7 @@ class RoutingControllerGeneratorTest extends BackwardCompatibleTestCase
 		{
 			$_SERVER['__controller.actual'] = $actual;
 		});
-		$gen->make('FooController', __DIR__, array('except' => array('index', 'show')));
+		$gen->make('FooController', __DIR__, ['except' => ['index', 'show']]);
 
 		$controller = preg_replace('/\s+/', '', $controller);
 		$actual = preg_replace('/\s+/', '', $_SERVER['__controller.actual']);

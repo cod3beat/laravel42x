@@ -18,7 +18,7 @@ class QueueRedisJobTest extends BackwardCompatibleTestCase
     {
         $job = $this->getJob();
         $job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
-        $handler->shouldReceive('fire')->once()->with($job, array('data'));
+        $handler->shouldReceive('fire')->once()->with($job, ['data']);
 
 		$job->fire();
 	}
@@ -48,7 +48,7 @@ class QueueRedisJobTest extends BackwardCompatibleTestCase
 		return new Illuminate\Queue\Jobs\RedisJob(
 			m::mock(Container::class),
 			m::mock(RedisQueue::class),
-			json_encode(array('job' => 'foo', 'data' => array('data'), 'attempts' => 1)),
+			json_encode(['job' => 'foo', 'data' => ['data'], 'attempts' => 1]),
 			'default'
 		);
 	}

@@ -16,7 +16,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
     public function testPaginationContextIsSetupCorrectly()
     {
-        $p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+        $p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
         $factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
         $p->setupPaginationContext();
 
@@ -27,7 +27,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextIsSetupCorrectlyWithEmptyItems()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array(), 0, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), [], 0, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$p->setupPaginationContext();
 
@@ -62,7 +62,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextIsSetupCorrectlyInCursorMode()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$p->setupPaginationContext();
 
@@ -73,7 +73,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextSetsUpRangeCorrectly()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$p->setupPaginationContext();
 
@@ -84,7 +84,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextHandlesHugeCurrentPage()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(15);
 		$p->setupPaginationContext();
 
@@ -95,7 +95,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextHandlesPageLessThanOne()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(-1);
 		$p->setupPaginationContext();
 
@@ -106,7 +106,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextHandlesPageLessThanOneAsString()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn('-1');
 		$p->setupPaginationContext();
 
@@ -117,7 +117,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextHandlesPageInvalidFormat()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn('abc');
 		$p->setupPaginationContext();
 
@@ -128,7 +128,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginationContextHandlesPageMissing()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getCurrentPage')->once()->andReturn(null);
 		$p->setupPaginationContext();
 
@@ -139,7 +139,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testGetLinksCallsEnvironmentProperly()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$factory->shouldReceive('getPaginationView')->once()->with($p, null)->andReturn('foo');
 
 		$this->assertEquals('foo', $p->links());
@@ -148,7 +148,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testGetUrlProperlyFormatsUrl()
 	{
-		$p = new Paginator($env = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($env = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$env->shouldReceive('getCurrentUrl')->andReturn('http://foo.com');
 		$env->shouldReceive('getPageName')->andReturn('page');
 
@@ -160,14 +160,14 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testEnvironmentAccess()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$this->assertInstanceOf(Factory::class, $p->getFactory());
 	}
 
 
 	public function testPaginatorIsCountable()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 
 		$this->assertCount(3, $p);
 	}
@@ -175,16 +175,16 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testPaginatorIsIterable()
 	{
-		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($factory = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 
 		$this->assertInstanceOf('ArrayIterator', $p->getIterator());
-		$this->assertEquals(array('foo', 'bar', 'baz'), $p->getIterator()->getArrayCopy());
+		$this->assertEquals(['foo', 'bar', 'baz'], $p->getIterator()->getArrayCopy());
 	}
 
 
 	public function testGetUrlAddsFragment()
 	{
-		$p = new Paginator($env = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($env = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$env->shouldReceive('getCurrentUrl')->andReturn('http://foo.com');
 		$env->shouldReceive('getPageName')->andReturn('page');
 
@@ -198,27 +198,27 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 	public function testGetUrlHasPriorityOverAppends()
 	{
-		$p = new Paginator($env = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
+		$p = new Paginator($env = m::mock(Factory::class), ['foo', 'bar', 'baz'], 3, 2);
 		$env->shouldReceive('getCurrentUrl')->andReturn('http://foo.com');
 		$env->shouldReceive('getPageName')->andReturn('page');
 
-		$p->appends(array(
+		$p->appends([
 			'sort' => 'asc',
 			'page' => 2,
-		));
+        ]);
 		$this->assertEquals('http://foo.com?sort=asc&page=1', $p->getUrl(1));
 
-		$p->appends(array(
+		$p->appends([
 			'sort' => 'desc',
 			'page' => '2',
-		));
+        ]);
 		$this->assertEquals('http://foo.com?sort=desc&page=1', $p->getUrl(1));
 	}
 
 
 	public function testPaginatorDecoratesCollection()
 	{
-		$p = new Paginator(m::mock(Factory::class), array('a', 'b', 'c'), 3, 2);
+		$p = new Paginator(m::mock(Factory::class), ['a', 'b', 'c'], 3, 2);
 		$last = $p->last();
 
 		$this->assertEquals('c', $last);

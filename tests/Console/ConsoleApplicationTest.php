@@ -15,7 +15,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
     public function testAddSetsLaravelInstance()
     {
-        $app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
+        $app = $this->getMock(\Illuminate\Console\Application::class, ['addToParent']);
         $app->setLaravel('foo');
         $command = m::mock(\Illuminate\Console\Command::class);
 		$command->shouldReceive('setLaravel')->once()->with('foo');
@@ -28,7 +28,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
 	public function testLaravelNotSetOnSymfonyCommands()
 	{
-		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
+		$app = $this->getMock(\Illuminate\Console\Application::class, ['addToParent']);
 		$app->setLaravel('foo');
 		$command = m::mock(Command::class);
 		$command->shouldReceive('setLaravel')->never();
@@ -41,9 +41,9 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 
 	public function testResolveAddsCommandViaApplicationResolution()
 	{
-		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
+		$app = $this->getMock(\Illuminate\Console\Application::class, ['addToParent']);
 		$command = m::mock(Command::class);
-		$app->setLaravel(array('foo' => $command));
+		$app->setLaravel(['foo' => $command]);
 		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->willReturn($command);
 		$result = $app->resolve('foo');
 
@@ -63,7 +63,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 	{
 		$app = m::mock('Illuminate\Console\Application[resolve]');
 		$app->shouldReceive('resolve')->twice()->with('foo');
-		$app->resolveCommands(array('foo', 'foo'));
+		$app->resolveCommands(['foo', 'foo']);
 	}
 
 }

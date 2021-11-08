@@ -21,7 +21,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
     {
         $session = $this->getSession();
         $session->getHandler()->shouldReceive('read')->once()->with($this->getSessionId())->andReturn(
-            serialize(array('foo' => 'bar', 'bagged' => array('name' => 'taylor')))
+            serialize(['foo' => 'bar', 'bagged' => ['name' => 'taylor']])
         );
         $session->registerBag(new Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag('bagged'));
 		$session->start();
@@ -81,8 +81,8 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$session->setId(null);
 		$this->assertFalse(null == $session->getId());
 
-		$session->setId(array('a'));
-		$this->assertFalse(array('a') == $session->getId());
+		$session->setId(['a']);
+		$this->assertFalse(['a'] == $session->getId());
 
 		$session->setId('wrong');
 		$this->assertFalse('wrong' == $session->getId());
@@ -105,22 +105,22 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 	public function testSessionIsProperlySaved()
 	{
 		$session = $this->getSession();
-		$session->getHandler()->shouldReceive('read')->once()->andReturn(serialize(array()));
+		$session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([]));
 		$session->start();
 		$session->put('foo', 'bar');
 		$session->flash('baz', 'boom');
 		$session->getHandler()->shouldReceive('write')->once()->with(
 			$this->getSessionId(),
-			serialize(array(
+			serialize([
 				'_token' => $session->token(),
 				'foo' => 'bar',
 				'baz' => 'boom',
-				'flash' => array(
-					'new' => array(),
-					'old' => array('baz'),
-				),
+				'flash' => [
+					'new' => [],
+					'old' => ['baz'],
+                ],
 				'_sf2_meta' => $session->getBagData('_sf2_meta'),
-			))
+            ])
 		);
 		$session->save();
 
@@ -132,7 +132,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 	{
 		$session = $this->getSession();
 		$session->put('boom', 'baz');
-		$session->flashInput(array('foo' => 'bar', 'bar' => 0));
+		$session->flashInput(['foo' => 'bar', 'bar' => 0]);
 
 		$this->assertTrue($session->hasOldInput('foo'));
 		$this->assertEquals('bar', $session->getOldInput('foo'));
@@ -176,10 +176,10 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$session = $this->getSession();
 		$session->flash('foo', 'bar');
 		$session->set('fu', 'baz');
-		$session->set('flash.old', array('qu'));
+		$session->set('flash.old', ['qu']);
 		$this->assertNotFalse(array_search('foo', $session->get('flash.new')));
 		$this->assertFalse(array_search('fu', $session->get('flash.new')));
-		$session->keep(array('fu','qu'));
+		$session->keep(['fu','qu']);
 		$this->assertNotFalse(array_search('foo', $session->get('flash.new')));
 		$this->assertNotFalse(array_search('fu', $session->get('flash.new')));
 		$this->assertNotFalse(array_search('qu', $session->get('flash.new')));
@@ -191,7 +191,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 	{
 		$session = $this->getSession();
 		$session->flash('foo', 'bar');
-		$session->set('flash.old', array('foo'));
+		$session->set('flash.old', ['foo']);
 		$session->reflash();
 		$this->assertNotFalse(array_search('foo', $session->get('flash.new')));
 		$this->assertFalse(array_search('foo', $session->get('flash.old')));
@@ -203,7 +203,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$session = $this->getSession();
 		$session->set('foo', 'bar');
 		$session->set('qu', 'ux');
-		$session->replace(array('foo' => 'baz'));
+		$session->replace(['foo' => 'baz']);
 		$this->assertEquals('baz', $session->get('foo'));
 		$this->assertEquals('ux', $session->get('qu'));
 	}
@@ -247,7 +247,7 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 		$session->flash('boom', 'baz');
 		$this->assertFalse($session->hasOldInput());
 
-		$session->flashInput(array('foo' => 'bar'));
+		$session->flashInput(['foo' => 'bar']);
 		$this->assertTrue($session->hasOldInput());
 	}
 
@@ -300,11 +300,11 @@ class SessionStoreTest extends BackwardCompatibleTestCase
 
 	public function getMocks()
 	{
-		return array(
+		return [
 			$this->getSessionName(),
 			m::mock('SessionHandlerInterface'),
 			$this->getSessionId(),
-		);
+        ];
 	}
 
 

@@ -31,10 +31,10 @@ class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(2, $statements);
-		$expected = array(
+		$expected = [
 			'alter table "users" add column "id" integer not null primary key autoincrement',
 			'alter table "users" add column "email" varchar not null',
-		);
+        ];
 		$this->assertEquals($expected, $statements);
 	}
 
@@ -134,7 +134,7 @@ class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
 	public function testAddingIndex()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->index(array('foo', 'bar'), 'baz');
+		$blueprint->index(['foo', 'bar'], 'baz');
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(1, $statements);
@@ -316,7 +316,7 @@ class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
 	public function testAddingEnum()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->enum('foo', array('bar', 'baz'));
+		$blueprint->enum('foo', ['bar', 'baz']);
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(1, $statements);
@@ -375,10 +375,10 @@ class DatabaseSQLiteSchemaGrammarTest extends BackwardCompatibleTestCase
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(2, $statements);
-		$expected = array(
+		$expected = [
 			'alter table "users" add column "created_at" datetime not null',
 			'alter table "users" add column "updated_at" datetime not null',
-		);
+        ];
 		$this->assertEquals($expected, $statements);
 	}
 

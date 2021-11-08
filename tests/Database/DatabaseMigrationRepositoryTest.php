@@ -30,9 +30,9 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 
 	public function testGetLastMigrationsGetsAllMigrationsWithTheLatestBatchNumber()
 	{
-		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
+		$repo = $this->getMock(DatabaseMigrationRepository::class, ['getLastBatchNumber'], [
 			$resolver = m::mock(ConnectionResolverInterface::class), 'migrations'
-		));
+        ]);
 		$repo->expects($this->once())->method('getLastBatchNumber')->willReturn(1);
 		$query = m::mock('stdClass');
 		$connectionMock = m::mock(Connection::class);
@@ -53,7 +53,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 		$connectionMock = m::mock(Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
-		$query->shouldReceive('insert')->once()->with(array('migration' => 'bar', 'batch' => 1));
+		$query->shouldReceive('insert')->once()->with(['migration' => 'bar', 'batch' => 1]);
 
 		$repo->log('bar', 1);
 	}
@@ -68,7 +68,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 		$repo->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 		$query->shouldReceive('where')->once()->with('migration', 'foo')->andReturn($query);
 		$query->shouldReceive('delete')->once();
-		$migration = (object) array('migration' => 'foo');
+		$migration = (object) ['migration' => 'foo'];
 
 		$repo->delete($migration);
 	}
@@ -76,9 +76,9 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 
 	public function testGetNextBatchNumberReturnsLastBatchNumberPlusOne()
 	{
-		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
+		$repo = $this->getMock(DatabaseMigrationRepository::class, ['getLastBatchNumber'], [
 			m::mock(ConnectionResolverInterface::class), 'migrations'
-		));
+        ]);
 		$repo->expects($this->once())->method('getLastBatchNumber')->willReturn(1);
 
 		$this->assertEquals(2, $repo->getNextBatchNumber());

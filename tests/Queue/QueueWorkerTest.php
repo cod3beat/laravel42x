@@ -19,8 +19,8 @@ class QueueWorkerTest extends BackwardCompatibleTestCase
     {
         $worker = $this->getMock(
             \Illuminate\Queue\Worker::class,
-            array('process'),
-            array($manager = m::mock(QueueManager::class))
+            ['process'],
+            [$manager = m::mock(QueueManager::class)]
         );
         $manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
         $manager->shouldReceive('getName')->andReturn('connection');
@@ -34,9 +34,11 @@ class QueueWorkerTest extends BackwardCompatibleTestCase
 
 	public function testJobIsPoppedOffFirstQueueInListAndProcessed()
 	{
-		$worker = $this->getMock(\Illuminate\Queue\Worker::class, array('process'), array($manager = m::mock(
+		$worker = $this->getMock(\Illuminate\Queue\Worker::class, ['process'], [
+            $manager = m::mock(
             QueueManager::class
-        )));
+        )
+        ]);
 		$manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
 		$manager->shouldReceive('getName')->andReturn('connection');
 		$job = m::mock(Job::class);
@@ -50,9 +52,11 @@ class QueueWorkerTest extends BackwardCompatibleTestCase
 
 	public function testWorkerSleepsIfNoJobIsPresentAndSleepIsEnabled()
 	{
-		$worker = $this->getMock(\Illuminate\Queue\Worker::class, array('process', 'sleep'), array($manager = m::mock(
+		$worker = $this->getMock(\Illuminate\Queue\Worker::class, ['process', 'sleep'], [
+            $manager = m::mock(
             QueueManager::class
-        )));
+        )
+        ]);
 		$manager->shouldReceive('connection')->once()->with('connection')->andReturn($connection = m::mock('StdClass'));
 		$connection->shouldReceive('pop')->once()->with('queue')->andReturn(null);
 		$worker->expects($this->never())->method('process');

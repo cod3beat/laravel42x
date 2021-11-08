@@ -7,7 +7,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testAttributesAreSetByConstructor()
 	{
-		$array  = array('name' => 'Taylor', 'age' => 25);
+		$array  = ['name' => 'Taylor', 'age' => 25];
 		$fluent = new Fluent($array);
 
 		$refl = new \ReflectionObject($fluent);
@@ -21,7 +21,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testAttributesAreSetByConstructorGivenStdClass()
 	{
-		$array  = array('name' => 'Taylor', 'age' => 25);
+		$array  = ['name' => 'Taylor', 'age' => 25];
 		$fluent = new Fluent((object) $array);
 
 		$refl = new \ReflectionObject($fluent);
@@ -35,7 +35,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testAttributesAreSetByConstructorGivenArrayIterator()
 	{
-		$array  = array('name' => 'Taylor', 'age' => 25);
+		$array  = ['name' => 'Taylor', 'age' => 25];
 		$fluent = new Fluent(new FluentArrayIteratorStub($array));
 
 		$refl = new \ReflectionObject($fluent);
@@ -49,7 +49,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testGetMethodReturnsAttribute()
 	{
-		$fluent = new Fluent(array('name' => 'Taylor'));
+		$fluent = new Fluent(['name' => 'Taylor']);
 
 		$this->assertEquals('Taylor', $fluent->get('name'));
 		$this->assertEquals('Default', $fluent->get('foo', 'Default'));
@@ -75,7 +75,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testIssetMagicMethod()
 	{
-		$array  = array('name' => 'Taylor', 'age' => 25);
+		$array  = ['name' => 'Taylor', 'age' => 25];
 		$fluent = new Fluent($array);
 
 		$this->assertTrue(isset($fluent->name));
@@ -88,7 +88,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testToArrayReturnsAttribute()
 	{
-		$array  = array('name' => 'Taylor', 'age' => 25);
+		$array  = ['name' => 'Taylor', 'age' => 25];
 		$fluent = new Fluent($array);
 
 		$this->assertEquals($array, $fluent->toArray());
@@ -97,7 +97,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 	public function testToJsonEncodesTheToArrayResult()
 	{
-		$fluent = $this->getMock(Fluent::class, array('toArray'));
+		$fluent = $this->getMock(Fluent::class, ['toArray']);
 		$fluent->expects($this->once())->method('toArray')->willReturn('foo');
 		$results = $fluent->toJson();
 
@@ -108,9 +108,9 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 
 
 class FluentArrayIteratorStub implements \IteratorAggregate {
-	protected $items = array();
+	protected $items = [];
 
-	public function __construct(array $items = array())
+	public function __construct(array $items = [])
 	{
 		$this->items = (array) $items;
 	}

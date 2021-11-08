@@ -17,16 +17,16 @@ class TranslationTranslatorTest extends BackwardCompatibleTestCase
 
     public function testHasMethodReturnsFalseWhenReturnedTranslationIsNull()
     {
-        $t = $this->getMock(Translator::class, array('get'), array($this->getLoader(), 'en'));
+        $t = $this->getMock(Translator::class, ['get'], [$this->getLoader(), 'en']);
         $t->expects($this->once())->method('get')->with(
             $this->equalTo('foo'),
-            $this->equalTo(array()),
+            $this->equalTo([]),
             $this->equalTo('bar')
         )->willReturn('foo');
         $this->assertFalse($t->has('foo', 'bar'));
 
-		$t = $this->getMock(Translator::class, array('get'), array($this->getLoader(), 'en', 'sp'));
-		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array()), $this->equalTo('bar'))->willReturn(
+		$t = $this->getMock(Translator::class, ['get'], [$this->getLoader(), 'en', 'sp']);
+		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo([]), $this->equalTo('bar'))->willReturn(
             'bar'
         );
 		$this->assertTrue($t->has('foo', 'bar'));
@@ -35,40 +35,44 @@ class TranslationTranslatorTest extends BackwardCompatibleTestCase
 
 	public function testGetMethodProperlyLoadsAndRetrievesItem()
 	{
-		$t = $this->getMock(Translator::class, null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
-		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(array('foo' => 'foo', 'baz' => 'breeze :foo'));
-		$this->assertEquals('breeze bar', $t->get('foo::bar.baz', array('foo' => 'bar'), 'en'));
+		$t = $this->getMock(Translator::class, null, [$this->getLoader(), 'en'], '', true, true, true, false, true);
+		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(
+            ['foo' => 'foo', 'baz' => 'breeze :foo']
+        );
+		$this->assertEquals('breeze bar', $t->get('foo::bar.baz', ['foo' => 'bar'], 'en'));
 		$this->assertEquals('foo', $t->get('foo::bar.foo'));
 	}
 
 
 	public function testGetMethodProperlyLoadsAndRetrievesItemWithLongestReplacementsFirst()
 	{
-		$t = $this->getMock(Translator::class, null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
-		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(array('foo' => 'foo', 'baz' => 'breeze :foo :foobar'));
-		$this->assertEquals('breeze bar taylor', $t->get('foo::bar.baz', array('foo' => 'bar', 'foobar' => 'taylor'), 'en'));
+		$t = $this->getMock(Translator::class, null, [$this->getLoader(), 'en'], '', true, true, true, false, true);
+		$t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(
+            ['foo' => 'foo', 'baz' => 'breeze :foo :foobar']
+        );
+		$this->assertEquals('breeze bar taylor', $t->get('foo::bar.baz', ['foo' => 'bar', 'foobar' => 'taylor'], 'en'));
 		$this->assertEquals('foo', $t->get('foo::bar.foo'));
 	}
 
 
 	public function testGetMethodProperlyLoadsAndRetrievesItemForGlobalNamespace()
 	{
-		$t = $this->getMock(Translator::class, null, array($this->getLoader(), 'en'), '', true, true, true, false, true);
-		$t->getLoader()->shouldReceive('load')->once()->with('en', 'foo', '*')->andReturn(array('bar' => 'breeze :foo'));
-		$this->assertEquals('breeze bar', $t->get('foo.bar', array('foo' => 'bar')));
+		$t = $this->getMock(Translator::class, null, [$this->getLoader(), 'en'], '', true, true, true, false, true);
+		$t->getLoader()->shouldReceive('load')->once()->with('en', 'foo', '*')->andReturn(['bar' => 'breeze :foo']);
+		$this->assertEquals('breeze bar', $t->get('foo.bar', ['foo' => 'bar']));
 	}
 
 
 	public function testChoiceMethodProperlyLoadsAndRetrievesItem()
 	{
-		$t = $this->getMock(Translator::class, array('get'), array($this->getLoader(), 'en'));
-		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array('replace')), $this->equalTo('en'))->willReturn(
+		$t = $this->getMock(Translator::class, ['get'], [$this->getLoader(), 'en']);
+		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(['replace']), $this->equalTo('en'))->willReturn(
             'line'
         );
 		$t->setSelector($selector = m::mock(MessageSelector::class));
 		$selector->shouldReceive('choose')->once()->with('line', 10, 'en')->andReturn('choiced');
 
-		$t->choice('foo', 10, array('replace'));
+		$t->choice('foo', 10, ['replace']);
 	}
 
     // TEST FROM SYMFONY

@@ -25,14 +25,14 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
 			$manager = m::mock(SessionManager::class)
 		);
 
-		$manager->shouldReceive('getSessionConfig')->andReturn(array(
+		$manager->shouldReceive('getSessionConfig')->andReturn([
 			'driver' => 'file',
-			'lottery' => array(100, 100),
+			'lottery' => [100, 100],
 			'path' => '/',
 			'domain' => null,
 			'lifetime' => 120,
 			'expire_on_close' => false,
-		));
+        ]);
 
 		$manager->shouldReceive('driver')->andReturn($driver = m::mock(Store::class)->makePartial());
 		$driver->shouldReceive('setRequestOnHandler')->once()->with($request);
@@ -59,9 +59,9 @@ class SessionMiddlewareTest extends BackwardCompatibleTestCase
 			$app = m::mock(HttpKernelInterface::class),
 			$manager = m::mock(SessionManager::class)
 		);
-		$manager->shouldReceive('getSessionConfig')->andReturn(array(
+		$manager->shouldReceive('getSessionConfig')->andReturn([
 			'driver' => null,
-		));
+        ]);
 		$app->shouldReceive('handle')->once()->with($request, Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST, true)->andReturn($response);
 		$middleResponse = $middle->handle($request);
 

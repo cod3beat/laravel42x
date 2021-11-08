@@ -19,8 +19,8 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
     {
         $artisan = $this->getMock(
             Artisan::class,
-            array('getArtisan'),
-            array($app = new Illuminate\Foundation\Application)
+            ['getArtisan'],
+            [$app = new Illuminate\Foundation\Application]
         );
         $artisan->expects($this->once())->method('getArtisan')->willReturn(
             $console = m::mock('Illuminate\Console\Application[find]')
@@ -33,7 +33,7 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
 			return $input;
 		});
 
-		$input = $artisan->call('foo', array('--bar' => 'baz'));
+		$input = $artisan->call('foo', ['--bar' => 'baz']);
 		$this->assertEquals('baz', $input->getParameterOption('--bar'));
 	}
 

@@ -95,7 +95,7 @@ class DatabaseMySqlSchemaGrammarTest extends BackwardCompatibleTestCase
 		$this->assertEquals('alter table `users` drop `foo`', $statements[0]);
 
 		$blueprint = new Blueprint('users');
-		$blueprint->dropColumn(array('foo', 'bar'));
+		$blueprint->dropColumn(['foo', 'bar']);
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(1, $statements);
@@ -201,7 +201,7 @@ class DatabaseMySqlSchemaGrammarTest extends BackwardCompatibleTestCase
 	public function testAddingIndex()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->index(array('foo', 'bar'), 'baz');
+		$blueprint->index(['foo', 'bar'], 'baz');
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(1, $statements);
@@ -423,7 +423,7 @@ class DatabaseMySqlSchemaGrammarTest extends BackwardCompatibleTestCase
 	public function testAddingEnum()
 	{
 		$blueprint = new Blueprint('users');
-		$blueprint->enum('foo', array('bar', 'baz'));
+		$blueprint->enum('foo', ['bar', 'baz']);
 		$statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
 		$this->assertCount(1, $statements);

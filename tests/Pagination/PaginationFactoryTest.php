@@ -28,7 +28,7 @@ class PaginationFactoryTest extends BackwardCompatibleTestCase
 		$request = Illuminate\Http\Request::create('http://foo.com', 'GET');
 		$env->setRequest($request);
 
-		$this->assertInstanceOf(Paginator::class, $env->make(array('foo', 'bar'), 2, 2));
+		$this->assertInstanceOf(Paginator::class, $env->make(['foo', 'bar'], 2, 2));
 	}
 
 
@@ -36,7 +36,8 @@ class PaginationFactoryTest extends BackwardCompatibleTestCase
 	{
 		$env = $this->getFactory();
 		$paginator = m::mock(Paginator::class);
-		$env->getViewFactory()->shouldReceive('make')->once()->with('pagination::slider', array('environment' => $env, 'paginator' => $paginator))->andReturn('foo');
+		$env->getViewFactory()->shouldReceive('make')->once()->with('pagination::slider', ['environment' => $env, 'paginator' => $paginator]
+        )->andReturn('foo');
 
 		$this->assertEquals('foo', $env->getPaginationView($paginator));
 	}

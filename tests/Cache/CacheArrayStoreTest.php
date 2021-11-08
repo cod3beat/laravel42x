@@ -15,7 +15,7 @@ class CacheArrayStoreTest extends BackwardCompatibleTestCase {
 
 	public function testStoreItemForeverProperlyStoresInArray()
 	{
-		$mock = $this->getMock(ArrayStore::class, array('put'));
+		$mock = $this->getMock(ArrayStore::class, ['put']);
 		$mock->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(0));
 		$mock->forever('foo', 'bar');
 	}

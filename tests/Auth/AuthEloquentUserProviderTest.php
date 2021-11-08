@@ -37,7 +37,7 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
 		$mock->shouldReceive('where')->once()->with('username', 'dayle');
 		$mock->shouldReceive('first')->once()->andReturn('bar');
 		$provider->expects($this->once())->method('createModel')->willReturn($mock);
-		$user = $provider->retrieveByCredentials(array('username' => 'dayle', 'password' => 'foo'));
+		$user = $provider->retrieveByCredentials(['username' => 'dayle', 'password' => 'foo']);
 
 		$this->assertEquals('bar', $user);
 	}
@@ -51,7 +51,7 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
 		$provider = new Illuminate\Auth\EloquentUserProvider($hasher, 'foo');
 		$user = m::mock(UserInterface::class);
 		$user->shouldReceive('getAuthPassword')->once()->andReturn('hash');
-		$result = $provider->validateCredentials($user, array('password' => 'plain'));
+		$result = $provider->validateCredentials($user, ['password' => 'plain']);
 
 		$this->assertTrue($result);
 	}
@@ -72,8 +72,8 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
 	{
 		$hasher = m::mock(HasherInterface::class);
 		return $this->getMockBuilder(EloquentUserProvider::class)
-            ->onlyMethods(array('createModel'))
-            ->setConstructorArgs(array($hasher, 'foo'))
+            ->onlyMethods(['createModel'])
+            ->setConstructorArgs([$hasher, 'foo'])
             ->getMock();
 	}
 

@@ -20,7 +20,7 @@ class FoundationViewPublishCommandTest extends BackwardCompatibleTestCase
         );
         $pub->shouldReceive('publishPackage')->once()->with('foo');
         $command->run(
-            new Symfony\Component\Console\Input\ArrayInput(array('package' => 'foo')),
+            new Symfony\Component\Console\Input\ArrayInput(['package' => 'foo']),
             new Symfony\Component\Console\Output\NullOutput
         );
 	}

@@ -61,7 +61,7 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 	{
 		$files = m::mock(Filesystem::class);
 
-		return $this->getMock(MigrationCreator::class, array('getDatePrefix'), array($files));
+		return $this->getMock(MigrationCreator::class, ['getDatePrefix'], [$files]);
 	}
 
 }

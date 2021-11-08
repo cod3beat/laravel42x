@@ -52,7 +52,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 		$this->userProvider->retrieveByCredentials(['credentials'])
             ->willReturn(null);
 
-		$this->assertEquals(PasswordBroker::INVALID_USER, $broker->remind(array('credentials')));
+		$this->assertEquals(PasswordBroker::INVALID_USER, $broker->remind(['credentials']));
 	}
 
 
@@ -60,20 +60,20 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
     {
         $this->expectException(UnexpectedValueException::class);
         $broker = $this->getBroker($mocks = $this->getMocks());
-        $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('foo'))->andReturn('bar');
+        $mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['foo'])->andReturn('bar');
 
-        $broker->getUser(array('foo'));
+        $broker->getUser(['foo']);
     }
 
 
 	public function testUserIsRetrievedByCredentials()
 	{
 		$broker = $this->getBroker($mocks = $this->getMocks());
-		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('foo'))->andReturn($user = m::mock(
+		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['foo'])->andReturn($user = m::mock(
             RemindableInterface::class
         ));
 
-		$this->assertEquals($user, $broker->getUser(array('foo')));
+		$this->assertEquals($user, $broker->getUser(['foo']));
 	}
 
 
@@ -81,15 +81,15 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	{
 		unset($_SERVER['__reminder.test']);
 		$mocks = $this->getMocks();
-		$broker = $this->getMock(PasswordBroker::class, array('sendReminder', 'getUri'), array_values($mocks));
-		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('foo'))->andReturn($user = m::mock(
+		$broker = $this->getMock(PasswordBroker::class, ['sendReminder', 'getUri'], array_values($mocks));
+		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['foo'])->andReturn($user = m::mock(
             RemindableInterface::class
         ));
 		$mocks['reminders']->shouldReceive('create')->once()->with($user)->andReturn('token');
 		$callback = function() {};
 		$broker->expects($this->once())->method('sendReminder')->with($this->equalTo($user), $this->equalTo('token'), $this->equalTo($callback));
 
-		$this->assertEquals(PasswordBroker::REMINDER_SENT, $broker->remind(array('foo'), $callback));
+		$this->assertEquals(PasswordBroker::REMINDER_SENT, $broker->remind(['foo'], $callback));
 	}
 
 
@@ -99,7 +99,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 		$broker = $this->getBroker($mocks = $this->getMocks());
 		$callback = function($message, $user) { $_SERVER['__auth.reminder'] = true; };
 		$user = m::mock(RemindableInterface::class);
-		$mocks['mailer']->shouldReceive('send')->once()->with('reminderView', array('token' => 'token', 'user' => $user), m::type('Closure'))->andReturnUsing(function($view, $data, $callback)
+		$mocks['mailer']->shouldReceive('send')->once()->with('reminderView', ['token' => 'token', 'user' => $user], m::type('Closure'))->andReturnUsing(function($view, $data, $callback)
 		{
 			return $callback;
 		});
@@ -116,15 +116,15 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	public function testRedirectIsReturnedByResetWhenUserCredentialsInvalid()
 	{
 		$broker = $this->getBroker($mocks = $this->getMocks());
-		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array('creds'))->andReturn(null);
+		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['creds'])->andReturn(null);
 
-		$this->assertEquals(PasswordBroker::INVALID_USER, $broker->reset(array('creds'), function() {}));
+		$this->assertEquals(PasswordBroker::INVALID_USER, $broker->reset(['creds'], function() {}));
 	}
 
 
 	public function testRedirectReturnedByRemindWhenPasswordsDontMatch()
 	{
-		$creds = array('password' => 'foo', 'password_confirmation' => 'bar');
+		$creds = ['password' => 'foo', 'password_confirmation' => 'bar'];
 		$broker = $this->getBroker($mocks = $this->getMocks());
 		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with($creds)->andReturn($user = m::mock(
             RemindableInterface::class
@@ -136,7 +136,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 
 	public function testRedirectReturnedByRemindWhenPasswordNotSet()
 	{
-		$creds = array('password' => null, 'password_confirmation' => null);
+		$creds = ['password' => null, 'password_confirmation' => null];
 		$broker = $this->getBroker($mocks = $this->getMocks());
 		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with($creds)->andReturn($user = m::mock(
             RemindableInterface::class
@@ -148,7 +148,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 
 	public function testRedirectReturnedByRemindWhenPasswordsLessThanSixCharacters()
 	{
-		$creds = array('password' => 'abc', 'password_confirmation' => 'abc');
+		$creds = ['password' => 'abc', 'password_confirmation' => 'abc'];
 		$broker = $this->getBroker($mocks = $this->getMocks());
 		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with($creds)->andReturn($user = m::mock(
             RemindableInterface::class
@@ -160,7 +160,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 
 	public function testRedirectReturnedByRemindWhenPasswordDoesntPassValidator()
 	{
-		$creds = array('password' => 'abcdef', 'password_confirmation' => 'abcdef');
+		$creds = ['password' => 'abcdef', 'password_confirmation' => 'abcdef'];
 		$broker = $this->getBroker($mocks = $this->getMocks());
 		$broker->validator(function($credentials) { return strlen($credentials['password']) >= 7; });
 		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with($creds)->andReturn($user = m::mock(
@@ -173,9 +173,9 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 
 	public function testRedirectReturnedByRemindWhenRecordDoesntExistInTable()
 	{
-		$creds = array('token' => 'token');
-		$broker = $this->getMock(PasswordBroker::class, array('validNewPasswords'), array_values($mocks = $this->getMocks()));
-		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array_except($creds, array('token')))->andReturn($user = m::mock(
+		$creds = ['token' => 'token'];
+		$broker = $this->getMock(PasswordBroker::class, ['validNewPasswords'], array_values($mocks = $this->getMocks()));
+		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(array_except($creds, ['token']))->andReturn($user = m::mock(
             RemindableInterface::class
         ));
 		$broker->expects($this->once())->method('validNewPasswords')->willReturn(true);
@@ -188,7 +188,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	public function testResetRemovesRecordOnReminderTableAndCallsCallback()
 	{
 		unset($_SERVER['__auth.reminder']);
-		$broker = $this->getMock(PasswordBroker::class, array('validateReset', 'getPassword', 'getToken'), array_values($mocks = $this->getMocks()));
+		$broker = $this->getMock(PasswordBroker::class, ['validateReset', 'getPassword', 'getToken'], array_values($mocks = $this->getMocks()));
 		$broker->expects($this->once())->method('validateReset')->willReturn(
             $user = m::mock(
                 RemindableInterface::class
@@ -201,8 +201,9 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 			return 'foo';
 		};
 
-		$this->assertEquals(PasswordBroker::PASSWORD_RESET, $broker->reset(array('password' => 'password', 'token' => 'token'), $callback));
-		$this->assertEquals(array('user' => $user, 'password' => 'password'), $_SERVER['__auth.reminder']);
+		$this->assertEquals(PasswordBroker::PASSWORD_RESET, $broker->reset(
+            ['password' => 'password', 'token' => 'token'], $callback));
+		$this->assertEquals(['user' => $user, 'password' => 'password'], $_SERVER['__auth.reminder']);
 	}
 
 
@@ -214,12 +215,12 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 
 	protected function getMocks()
 	{
-		$mocks = array(
+		$mocks = [
 			'reminders' => m::mock(ReminderRepositoryInterface::class),
 			'users'     => m::mock(UserProviderInterface::class),
 			'mailer'    => m::mock(Mailer::class),
 			'view'      => 'reminderView',
-		);
+        ];
 
 		return $mocks;
 	}

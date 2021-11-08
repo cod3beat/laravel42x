@@ -22,7 +22,8 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 
 	public function testSimpleRangeIsReturnedWhenCantBuildSlier()
 	{
-		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext'), array($paginator = $this->getPaginator()));
+		$presenter = $this->getMock(BootstrapPresenter::class, ['getPageRange', 'getPrevious', 'getNext'], [$paginator = $this->getPaginator()]
+        );
 		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(2))->willReturn(
             'bar'
         );
@@ -45,7 +46,8 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 
 	public function testBeginningSliderIsCreatedWhenCloseToStart()
 	{
-		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
+		$presenter = $this->getMock(BootstrapPresenter::class, ['getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'], [$paginator = $this->getPaginator()]
+        );
 		$presenter->setLastPage(14);
 		$presenter->expects($this->once())->method('getFinish')->willReturn('finish');
 		$presenter->expects($this->once())->method('getPrevious')->willReturn('previous');
@@ -60,7 +62,8 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 
 	public function testEndingSliderIsCreatedWhenCloseToStart()
 	{
-		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
+		$presenter = $this->getMock(BootstrapPresenter::class, ['getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'], [$paginator = $this->getPaginator()]
+        );
 		$presenter->setLastPage(14);
 		$presenter->setCurrentPage(13);
 		$presenter->expects($this->once())->method('getStart')->willReturn('start');
@@ -76,7 +79,8 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 
 	public function testSliderIsCreatedWhenCloseToStart()
 	{
-		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
+		$presenter = $this->getMock(BootstrapPresenter::class, ['getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'], [$paginator = $this->getPaginator()]
+        );
 		$presenter->setLastPage(30);
 		$presenter->setCurrentPage(15);
 		$presenter->expects($this->once())->method('getStart')->willReturn('start');
@@ -141,7 +145,7 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 
 	public function testGetAdjacentRange()
 	{
-		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange'), array($paginator = $this->getPaginator()));
+		$presenter = $this->getMock(BootstrapPresenter::class, ['getPageRange'], [$paginator = $this->getPaginator()]);
 		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(7))->willReturn(
             'foo'
         );

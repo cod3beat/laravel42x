@@ -21,9 +21,9 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
         $gen->shouldReceive('make')->once()->with(
             'FooController',
             __DIR__,
-            array('only' => array(), 'except' => array())
+            ['only' => [], 'except' => []]
         );
-        $this->runCommand($command, array('name' => 'FooController'));
+        $this->runCommand($command, ['name' => 'FooController']);
 	}
 
 
@@ -32,13 +32,15 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
 		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock(
             ControllerGenerator::class
         ), __DIR__);
-		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', array('only' => array('foo', 'bar'), 'except' => array('baz', 'boom')));
-		$command->setLaravel(array('path.base' => __DIR__.'/foo'));
-		$this->runCommand($command, array('name' => 'FooController', '--only' => 'foo,bar', '--except' => 'baz,boom', '--path' => 'bar'));
+		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', ['only' => ['foo', 'bar'], 'except' => ['baz', 'boom']]
+        );
+		$command->setLaravel(['path.base' => __DIR__.'/foo']);
+		$this->runCommand($command, ['name' => 'FooController', '--only' => 'foo,bar', '--except' => 'baz,boom', '--path' => 'bar']
+        );
 	}
 
 
-	public function runCommand($command, $input = array(), $output = null)
+	public function runCommand($command, $input = [], $output = null)
 	{
 		$output = $output ?: new Symfony\Component\Console\Output\NullOutput;
 

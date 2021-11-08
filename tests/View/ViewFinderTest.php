@@ -68,7 +68,7 @@ class ViewFinderTest extends BackwardCompatibleTestCase
 	public function testDirectoryCascadingNamespacedFileLoading()
 	{
 		$finder = $this->getFinder();
-		$finder->addNamespace('foo', array(__DIR__.'/foo', __DIR__.'/bar'));
+		$finder->addNamespace('foo', [__DIR__.'/foo', __DIR__.'/bar']);
 		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo/bar/baz.blade.php')->andReturn(false);
 		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/foo/bar/baz.php')->andReturn(false);
 		$finder->getFilesystem()->shouldReceive('exists')->once()->with(__DIR__.'/bar/bar/baz.blade.php')->andReturn(true);
@@ -149,7 +149,7 @@ class ViewFinderTest extends BackwardCompatibleTestCase
 
 	protected function getFinder()
 	{
-		return new Illuminate\View\FileViewFinder(m::mock(Filesystem::class), array(__DIR__));
+		return new Illuminate\View\FileViewFinder(m::mock(Filesystem::class), [__DIR__]);
 	}
 
 }

@@ -18,8 +18,8 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
     {
         $composer = $this->getMock(
             Composer::class,
-            array('getProcess'),
-            array($files = m::mock(Filesystem::class), __DIR__)
+            ['getProcess'],
+            [$files = m::mock(Filesystem::class), __DIR__]
         );
         $files->shouldReceive('exists')->once()->with(__DIR__ . '/composer.phar')->andReturn(true);
         $process = m::mock('stdClass');
@@ -33,9 +33,11 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
 
 	public function testDumpAutoloadRunsTheCorrectCommandWhenComposerIsntPresent()
 	{
-		$composer = $this->getMock(Composer::class, array('getProcess'), array($files = m::mock(
+		$composer = $this->getMock(Composer::class, ['getProcess'], [
+            $files = m::mock(
             Filesystem::class
-        ), __DIR__));
+        ), __DIR__
+        ]);
 		$files->shouldReceive('exists')->once()->with(__DIR__.'/composer.phar')->andReturn(false);
 		$process = m::mock('stdClass');
 		$composer->expects($this->once())->method('getProcess')->willReturn($process);

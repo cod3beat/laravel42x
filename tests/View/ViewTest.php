@@ -25,18 +25,19 @@ class ViewTest extends BackwardCompatibleTestCase
             m::mock(EngineInterface::class),
             'view',
             'path',
-            array()
+            []
         );
         $view->with('foo', 'bar');
-        $view->with(array('baz' => 'boom'));
-		$this->assertEquals(array('foo' => 'bar', 'baz' => 'boom'), $view->getData());
+        $view->with(['baz' => 'boom']);
+		$this->assertEquals(['foo' => 'bar', 'baz' => 'boom'], $view->getData());
 
 
 		$view = new View(m::mock(Factory::class), m::mock(
             EngineInterface::class
-        ), 'view', 'path', array());
+        ), 'view', 'path', []
+        );
 		$view->withFoo('bar')->withBaz('boom');
-		$this->assertEquals(array('foo' => 'bar', 'baz' => 'boom'), $view->getData());
+		$this->assertEquals(['foo' => 'bar', 'baz' => 'boom'], $view->getData());
 	}
 
 
@@ -45,8 +46,8 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view = $this->getView();
 		$view->getFactory()->shouldReceive('incrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('callComposer')->once()->ordered()->with($view);
-		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(array('shared' => 'foo'));
-		$view->getEngine()->shouldReceive('get')->once()->with('path', array('foo' => 'bar', 'shared' => 'foo'))->andReturn('contents');
+		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(['shared' => 'foo']);
+		$view->getEngine()->shouldReceive('get')->once()->with('path', ['foo' => 'bar', 'shared' => 'foo'])->andReturn('contents');
 		$view->getFactory()->shouldReceive('decrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('flushSectionsIfDoneRendering')->once();
 
@@ -63,15 +64,15 @@ class ViewTest extends BackwardCompatibleTestCase
 
 	public function testRenderSectionsReturnsEnvironmentSections()
 	{
-		$view = m::mock('Illuminate\View\View[render]', array(
+		$view = m::mock('Illuminate\View\View[render]', [
 			m::mock(Factory::class),
 			m::mock(EngineInterface::class),
 			'view',
 			'path',
-			array(),
-		));
+			[],
+        ]);
 
-		$view->shouldReceive('render')->with(m::type('Closure'))->once()->andReturn($sections = array('foo' => 'bar'));
+		$view->shouldReceive('render')->with(m::type('Closure'))->once()->andReturn($sections = ['foo' => 'bar']);
 
 		$this->assertEquals($sections, $view->renderSections());
 	}
@@ -82,8 +83,8 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view = $this->getView();
 		$view->getFactory()->shouldReceive('incrementRender')->twice();
 		$view->getFactory()->shouldReceive('callComposer')->twice()->with($view);
-		$view->getFactory()->shouldReceive('getShared')->twice()->andReturn(array('shared' => 'foo'));
-		$view->getEngine()->shouldReceive('get')->twice()->with('path', array('foo' => 'bar', 'shared' => 'foo'))->andReturn('contents');
+		$view->getFactory()->shouldReceive('getShared')->twice()->andReturn(['shared' => 'foo']);
+		$view->getEngine()->shouldReceive('get')->twice()->with('path', ['foo' => 'bar', 'shared' => 'foo'])->andReturn('contents');
 		$view->getFactory()->shouldReceive('decrementRender')->twice();
 		$view->getFactory()->shouldReceive('flushSectionsIfDoneRendering')->twice();
 
@@ -95,8 +96,8 @@ class ViewTest extends BackwardCompatibleTestCase
 	public function testViewNestBindsASubView()
 	{
 		$view = $this->getView();
-		$view->getFactory()->shouldReceive('make')->once()->with('foo', array('data'));
-		$result = $view->nest('key', 'foo', array('data'));
+		$view->getFactory()->shouldReceive('make')->once()->with('foo', ['data']);
+		$result = $view->nest('key', 'foo', ['data']);
 
 		$this->assertInstanceOf(View::class, $result);
 	}
@@ -105,7 +106,7 @@ class ViewTest extends BackwardCompatibleTestCase
 	public function testViewAcceptsArrayableImplementations()
 	{
 		$arrayable = m::mock(ArrayableInterface::class);
-		$arrayable->shouldReceive('toArray')->once()->andReturn(array('foo' => 'bar', 'baz' => array('qux', 'corge')));
+		$arrayable->shouldReceive('toArray')->once()->andReturn(['foo' => 'bar', 'baz' => ['qux', 'corge']]);
 
 		$view = new View(
 			m::mock(Factory::class),
@@ -116,7 +117,7 @@ class ViewTest extends BackwardCompatibleTestCase
 		);
 
 		$this->assertEquals('bar', $view->foo);
-		$this->assertEquals(array('qux', 'corge'), $view->baz);
+		$this->assertEquals(['qux', 'corge'], $view->baz);
 	}
 
 
@@ -172,7 +173,7 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view = $this->getView();
 		$view->getFactory()->shouldReceive('incrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('callComposer')->once()->ordered()->with($view);
-		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(array('shared' => 'foo'));
+		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(['shared' => 'foo']);
 		$view->getEngine()->shouldReceive('get')->once()->andReturn('contents');
 		$view->getFactory()->shouldReceive('decrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('flushSectionsIfDoneRendering')->once();
@@ -188,12 +189,12 @@ class ViewTest extends BackwardCompatibleTestCase
 		$view = $this->getView();
 		$view->getFactory()->shouldReceive('incrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('callComposer')->once()->ordered()->with($view);
-		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(array('shared' => 'foo'));
+		$view->getFactory()->shouldReceive('getShared')->once()->andReturn(['shared' => 'foo']);
 		$view->getEngine()->shouldReceive('get')->once()->andReturn('contents');
 		$view->getFactory()->shouldReceive('decrementRender')->once()->ordered();
 		$view->getFactory()->shouldReceive('flushSectionsIfDoneRendering')->once();
 
-		$view->getFactory()->shouldReceive('getSections')->once()->andReturn(array('foo','bar'));
+		$view->getFactory()->shouldReceive('getSections')->once()->andReturn(['foo','bar']);
 		$sections = $view->renderSections();
 		$this->assertEquals($sections[0], 'foo');
 		$this->assertEquals($sections[1], 'bar');
@@ -203,14 +204,14 @@ class ViewTest extends BackwardCompatibleTestCase
 	public function testWithErrors()
     {
         $view = $this->getView();
-        $errors = array('foo' => 'bar', 'qu' => 'ux');
+        $errors = ['foo' => 'bar', 'qu' => 'ux'];
         $this->assertSame($view, $view->withErrors($errors));
         $this->assertInstanceOf(MessageBag::class, $view->errors);
         $foo = $view->errors->get('foo');
         $this->assertEquals($foo[0], 'bar');
         $qu = $view->errors->get('qu');
         $this->assertEquals($qu[0], 'ux');
-        $data = array('foo' => 'baz');
+        $data = ['foo' => 'baz'];
         $this->assertSame($view, $view->withErrors(new MessageBag($data)));
         $foo = $view->errors->get('foo');
         $this->assertEquals($foo[0], 'baz');
@@ -224,7 +225,7 @@ class ViewTest extends BackwardCompatibleTestCase
 			m::mock(EngineInterface::class),
 			'view',
 			'path',
-			array('foo' => 'bar')
+			['foo' => 'bar']
 		);
 	}
 

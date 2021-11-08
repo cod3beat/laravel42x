@@ -86,7 +86,7 @@ class HttpResponseTest extends BackwardCompatibleTestCase
 
 	public function testGetOriginalContent()
 	{
-		$arr = array('foo' => 'bar');
+		$arr = ['foo' => 'bar'];
 		$response = new Response();
 		$response->setContent($arr);
 		$this->assertSame($arr, $response->getOriginalContent());
