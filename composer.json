@@ -21,7 +21,7 @@
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/browser-kit": "4.4.27",
         "symfony/console": "4.4.33",
-        "symfony/css-selector": "4.4.5",
+        "symfony/css-selector": "4.4.27",
         "symfony/dom-crawler": "4.4.5",
         "symfony/finder": "4.4.5",
         "symfony/http-foundation": "4.4.33",
