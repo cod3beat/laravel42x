@@ -28,7 +28,7 @@ class FilesystemTest extends BackwardCompatibleTestCase {
 		file_put_contents(__DIR__.'/file.txt', 'Hello World');
 		$files = new Filesystem;
 		$files->delete(__DIR__.'/file.txt');
-		$this->assertFileNotExists(__DIR__ . '/file.txt');
+		$this->assertFileDoesNotExist(__DIR__ . '/file.txt');
 		@unlink(__DIR__.'/file.txt');
 	}
 
@@ -58,8 +58,8 @@ class FilesystemTest extends BackwardCompatibleTestCase {
 		file_put_contents(__DIR__.'/foo/file.txt', 'Hello World');
 		$files = new Filesystem;
 		$files->deleteDirectory(__DIR__.'/foo');
-		$this->assertDirectoryNotExists(__DIR__ . '/foo');
-		$this->assertFileNotExists(__DIR__ . '/foo/file.txt');
+		$this->assertDirectoryDoesNotExist(__DIR__ . '/foo');
+		$this->assertFileDoesNotExist(__DIR__ . '/foo/file.txt');
 	}
 
 
@@ -70,7 +70,7 @@ class FilesystemTest extends BackwardCompatibleTestCase {
 		$files = new Filesystem;
 		$files->cleanDirectory(__DIR__.'/foo');
 		$this->assertDirectoryExists(__DIR__ . '/foo');
-		$this->assertFileNotExists(__DIR__ . '/foo/file.txt');
+		$this->assertFileDoesNotExist(__DIR__ . '/foo/file.txt');
 		@rmdir(__DIR__.'/foo');
 	}
 
