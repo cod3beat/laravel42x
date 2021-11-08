@@ -29,7 +29,7 @@
         "symfony/process": "4.4.30",
         "symfony/routing": "4.4.30",
         "symfony/security-core": "4.4.5",
-        "symfony/translation": "4.4.5",
+        "symfony/translation": "4.4.30",
         "symfony/event-dispatcher": "4.4.30",
         "symfony/mime": "~5.0.0",
         "symfony/error-handler": "4.4.5",
