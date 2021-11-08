@@ -34,7 +34,6 @@
         "symfony/mime": "~5.0.0",
         "symfony/error-handler": "4.4.5",
         "symfony/polyfill-ctype": "~1.14.0",
-        "symfony/polyfill-iconv": "~1.14.0",
         "symfony/polyfill-intl-idn": "~1.14.0",
         "symfony/polyfill-mbstring": "~1.14.0",
         "classpreloader/classpreloader": "^3.2",
