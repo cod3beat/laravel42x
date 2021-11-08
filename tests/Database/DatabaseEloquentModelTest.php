@@ -520,8 +520,6 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testToArrayIncludesCustomFormattedTimestamps()
 	{
-		Carbon::setToStringFormat('d-m-y');
-
 		$model = new EloquentDateModelStub;
 		$model->setRawAttributes(array(
 			'created_at'	=> '2012-12-04',
@@ -530,8 +528,8 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 		$array = $model->toArray();
 
-		$this->assertEquals('04-12-12', $array['created_at']);
-		$this->assertEquals('05-12-12', $array['updated_at']);
+		$this->assertEquals('2012-12-04 00:00:00', $array['created_at']);
+		$this->assertEquals('2012-12-05 00:00:00', $array['updated_at']);
 	}
 
 
