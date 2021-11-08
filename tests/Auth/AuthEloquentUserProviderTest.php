@@ -72,7 +72,7 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
 	{
 		$hasher = m::mock(HasherInterface::class);
 		return $this->getMockBuilder(EloquentUserProvider::class)
-            ->setMethods(array('createModel'))
+            ->onlyMethods(array('createModel'))
             ->setConstructorArgs(array($hasher, 'foo'))
             ->getMock();
 	}

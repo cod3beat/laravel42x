@@ -939,7 +939,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testRelationshipTouchOwnersIsPropagated()
 	{
-		$relation = $this->getMockBuilder(BelongsTo::class)->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
+		$relation = $this->getMockBuilder(BelongsTo::class)->onlyMethods(array('touch'))->disableOriginalConstructor()->getMock();
 		$relation->expects($this->once())->method('touch');
 
 		$model = m::mock('EloquentModelStub[partner]');
@@ -957,7 +957,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 
 	public function testRelationshipTouchOwnersIsNotPropagatedIfNoRelationshipResult()
 	{
-		$relation = $this->getMockBuilder(BelongsTo::class)->setMethods(array('touch'))->disableOriginalConstructor()->getMock();
+		$relation = $this->getMockBuilder(BelongsTo::class)->onlyMethods(array('touch'))->disableOriginalConstructor()->getMock();
 		$relation->expects($this->once())->method('touch');
 
 		$model = m::mock('EloquentModelStub[partner]');
