@@ -37,8 +37,6 @@
         "symfony/polyfill-iconv": "~1.14.0",
         "symfony/polyfill-intl-idn": "~1.14.0",
         "symfony/polyfill-mbstring": "~1.14.0",
-        "symfony/polyfill-php72": "~1.14.0",
-        "symfony/polyfill-php73": "~1.14.0",
         "classpreloader/classpreloader": "^3.2",
         "pda/pheanstalk": "^3.1",
         "classpreloader/console": "^2.1",
