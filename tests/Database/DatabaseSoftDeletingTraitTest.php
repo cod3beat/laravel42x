@@ -16,7 +16,7 @@ class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
     public function testDeleteSetsSoftDeletedColumn()
     {
         $model = m::mock('DatabaseSoftDeletingTraitStub');
-        $model->shouldDeferMissing();
+        $model->makePartial();
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('StdClass'));
 		$query->shouldReceive('where')->once()->with('id', 1)->andReturn($query);
 		$query->shouldReceive('update')->once()->with(['deleted_at' => 'date-time']);
@@ -29,7 +29,7 @@ class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
 	public function testRestore()
 	{
 		$model = m::mock('DatabaseSoftDeletingTraitStub');
-		$model->shouldDeferMissing();
+		$model->makePartial();
 		$model->shouldReceive('fireModelEvent')->with('restoring')->andReturn(true);
 		$model->shouldReceive('save')->once();
 		$model->shouldReceive('fireModelEvent')->with('restored', false)->andReturn(true);
@@ -43,7 +43,7 @@ class DatabaseSoftDeletingTraitTest extends BackwardCompatibleTestCase
 	public function testRestoreCancel()
 	{
 		$model = m::mock('DatabaseSoftDeletingTraitStub');
-		$model->shouldDeferMissing();
+		$model->makePartial();
 		$model->shouldReceive('fireModelEvent')->with('restoring')->andReturn(false);
 		$model->shouldReceive('save')->never();
 

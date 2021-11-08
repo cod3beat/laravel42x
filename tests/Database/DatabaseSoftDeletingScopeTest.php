@@ -43,7 +43,7 @@ class DatabaseSoftDeletingScopeTest extends BackwardCompatibleTestCase
 	public function testForceDeleteExtension()
 	{
 		$builder = m::mock(Builder::class);
-		$builder->shouldDeferMissing();
+		$builder->makePartial();
 		$scope = new Illuminate\Database\Eloquent\SoftDeletingScope;
 		$scope->extend($builder);
 		$callback = $builder->getMacro('forceDelete');
@@ -58,7 +58,7 @@ class DatabaseSoftDeletingScopeTest extends BackwardCompatibleTestCase
 	public function testRestoreExtension()
 	{
 		$builder = m::mock(Builder::class);
-		$builder->shouldDeferMissing();
+		$builder->makePartial();
 		$scope = new Illuminate\Database\Eloquent\SoftDeletingScope;
 		$scope->extend($builder);
 		$callback = $builder->getMacro('restore');
@@ -75,7 +75,7 @@ class DatabaseSoftDeletingScopeTest extends BackwardCompatibleTestCase
 	public function testWithTrashedExtension()
 	{
 		$builder = m::mock(Builder::class);
-		$builder->shouldDeferMissing();
+		$builder->makePartial();
 		$scope = m::mock('Illuminate\Database\Eloquent\SoftDeletingScope[remove]');
 		$scope->extend($builder);
 		$callback = $builder->getMacro('withTrashed');
@@ -90,7 +90,7 @@ class DatabaseSoftDeletingScopeTest extends BackwardCompatibleTestCase
 	public function testOnlyTrashedExtension()
 	{
 		$builder = m::mock(Builder::class);
-		$builder->shouldDeferMissing();
+		$builder->makePartial();
 		$scope = m::mock('Illuminate\Database\Eloquent\SoftDeletingScope[remove]');
 		$scope->extend($builder);
 		$callback = $builder->getMacro('onlyTrashed');
