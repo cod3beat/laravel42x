@@ -85,7 +85,7 @@ class DatabaseEloquentPivotTest extends BackwardCompatibleTestCase
 		$query->shouldReceive('where')->once()->with('foreign', 'foreign.value')->andReturn($query);
 		$query->shouldReceive('where')->once()->with('other', 'other.value')->andReturn($query);
 		$query->shouldReceive('delete')->once()->andReturn(true);
-		$pivot->expects($this->once())->method('newQuery')->will($this->returnValue($query));
+		$pivot->expects($this->once())->method('newQuery')->willReturn($query);
 
 		$this->assertTrue($pivot->delete());
 	}

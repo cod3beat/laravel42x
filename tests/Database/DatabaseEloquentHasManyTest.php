@@ -20,7 +20,7 @@ class DatabaseEloquentHasManyTest extends BackwardCompatibleTestCase
     {
         $relation = $this->getRelation();
         $created = $this->getMock(Model::class, array('save', 'getKey', 'setAttribute'));
-        $created->expects($this->once())->method('save')->will($this->returnValue(true));
+        $created->expects($this->once())->method('save')->willReturn(true);
 		$relation->getRelated()->shouldReceive('newInstance')->once()->with(array('name' => 'taylor'))->andReturn($created);
 		$created->expects($this->once())->method('setAttribute')->with('foreign_key', 1);
 
@@ -86,10 +86,10 @@ class DatabaseEloquentHasManyTest extends BackwardCompatibleTestCase
 		$models = $relation->match(array($model1, $model2, $model3), new Collection(array($result1, $result2, $result3)), 'foo');
 
 		$this->assertEquals(1, $models[0]->foo[0]->foreign_key);
-		$this->assertEquals(1, count($models[0]->foo));
+		$this->assertCount(1, $models[0]->foo);
 		$this->assertEquals(2, $models[1]->foo[0]->foreign_key);
 		$this->assertEquals(2, $models[1]->foo[1]->foreign_key);
-		$this->assertEquals(2, count($models[1]->foo));
+		$this->assertCount(2, $models[1]->foo);
 		$this->assertEmpty($models[2]->foo);
 	}
 

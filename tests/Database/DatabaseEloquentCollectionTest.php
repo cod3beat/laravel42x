@@ -82,7 +82,7 @@ class DatabaseEloquentCollectionTest extends BackwardCompatibleTestCase
 	{
 		$c = $this->getMock(Collection::class, array('first'), array(array('foo')));
 		$mockItem = m::mock('StdClass');
-		$c->expects($this->once())->method('first')->will($this->returnValue($mockItem));
+		$c->expects($this->once())->method('first')->willReturn($mockItem);
 		$mockItem->shouldReceive('newQuery')->once()->andReturn($mockItem);
 		$mockItem->shouldReceive('with')->with(array('bar', 'baz'))->andReturn($mockItem);
 		$mockItem->shouldReceive('eagerLoadRelations')->once()->with(array('foo'))->andReturn(array('results'));

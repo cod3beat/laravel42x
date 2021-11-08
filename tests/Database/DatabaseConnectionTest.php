@@ -23,7 +23,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
     {
         $connection = $this->getMockConnection();
         $mock = m::mock('StdClass');
-        $connection->expects($this->once())->method('getDefaultQueryGrammar')->will($this->returnValue($mock));
+        $connection->expects($this->once())->method('getDefaultQueryGrammar')->willReturn($mock);
 		$connection->useDefaultQueryGrammar();
 		$this->assertEquals($mock, $connection->getQueryGrammar());
 	}
@@ -33,7 +33,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$connection = $this->getMockConnection();
 		$mock = m::mock('StdClass');
-		$connection->expects($this->once())->method('getDefaultPostProcessor')->will($this->returnValue($mock));
+		$connection->expects($this->once())->method('getDefaultPostProcessor')->willReturn($mock);
 		$connection->useDefaultPostProcessor();
 		$this->assertEquals($mock, $connection->getPostProcessor());
 	}
@@ -42,7 +42,9 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testSelectOneCallsSelectAndReturnsSingleResult()
 	{
 		$connection = $this->getMockConnection(array('select'));
-		$connection->expects($this->once())->method('select')->with('foo', array('bar' => 'baz'))->will($this->returnValue(array('foo')));
+		$connection->expects($this->once())->method('select')->with('foo', array('bar' => 'baz'))->willReturn(
+            array('foo')
+        );
 		$this->assertEquals('foo', $connection->selectOne('foo', array('bar' => 'baz')));
 	}
 
@@ -54,24 +56,28 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$writePdo->expects($this->never())->method('prepare');
 		$statement = $this->getMock('PDOStatement', array('execute', 'fetchAll'));
 		$statement->expects($this->once())->method('execute')->with($this->equalTo(array('foo' => 'bar')));
-		$statement->expects($this->once())->method('fetchAll')->will($this->returnValue(array('boom')));
-		$pdo->expects($this->once())->method('prepare')->with('foo')->will($this->returnValue($statement));
+		$statement->expects($this->once())->method('fetchAll')->willReturn(array('boom'));
+		$pdo->expects($this->once())->method('prepare')->with('foo')->willReturn($statement);
 		$mock = $this->getMockConnection(array('prepareBindings'), $writePdo);
 		$mock->setReadPdo($pdo);
-		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('foo' => 'bar')))->will($this->returnValue(array('foo' => 'bar')));
+		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('foo' => 'bar')))->willReturn(
+            array('foo' => 'bar')
+        );
 		$results = $mock->select('foo', array('foo' => 'bar'));
 		$this->assertEquals(array('boom'), $results);
 		$log = $mock->getQueryLog();
 		$this->assertEquals('foo', $log[0]['query']);
 		$this->assertEquals(array('foo' => 'bar'), $log[0]['bindings']);
-		$this->assertTrue(is_numeric($log[0]['time']));
+		$this->assertIsNumeric($log[0]['time']);
 	}
 
 
 	public function testInsertCallsTheStatementMethod()
 	{
 		$connection = $this->getMockConnection(array('statement'));
-		$connection->expects($this->once())->method('statement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->will($this->returnValue('baz'));
+		$connection->expects($this->once())->method('statement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->willReturn(
+            'baz'
+        );
 		$results = $connection->insert('foo', array('bar'));
 		$this->assertEquals('baz', $results);
 	}
@@ -80,7 +86,9 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testUpdateCallsTheAffectingStatementMethod()
 	{
 		$connection = $this->getMockConnection(array('affectingStatement'));
-		$connection->expects($this->once())->method('affectingStatement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->will($this->returnValue('baz'));
+		$connection->expects($this->once())->method('affectingStatement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->willReturn(
+            'baz'
+        );
 		$results = $connection->update('foo', array('bar'));
 		$this->assertEquals('baz', $results);
 	}
@@ -89,7 +97,9 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testDeleteCallsTheAffectingStatementMethod()
 	{
 		$connection = $this->getMockConnection(array('affectingStatement'));
-		$connection->expects($this->once())->method('affectingStatement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->will($this->returnValue('baz'));
+		$connection->expects($this->once())->method('affectingStatement')->with($this->equalTo('foo'), $this->equalTo(array('bar')))->willReturn(
+            'baz'
+        );
 		$results = $connection->delete('foo', array('bar'));
 		$this->assertEquals('baz', $results);
 	}
@@ -99,16 +109,18 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', array('prepare'));
 		$statement = $this->getMock('PDOStatement', array('execute'));
-		$statement->expects($this->once())->method('execute')->with($this->equalTo(array('bar')))->will($this->returnValue('foo'));
-		$pdo->expects($this->once())->method('prepare')->with($this->equalTo('foo'))->will($this->returnValue($statement));
+		$statement->expects($this->once())->method('execute')->with($this->equalTo(array('bar')))->willReturn('foo');
+		$pdo->expects($this->once())->method('prepare')->with($this->equalTo('foo'))->willReturn($statement);
 		$mock = $this->getMockConnection(array('prepareBindings'), $pdo);
-		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('bar')))->will($this->returnValue(array('bar')));
+		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('bar')))->willReturn(
+            array('bar')
+        );
 		$results = $mock->statement('foo', array('bar'));
 		$this->assertEquals('foo', $results);
 		$log = $mock->getQueryLog();
 		$this->assertEquals('foo', $log[0]['query']);
 		$this->assertEquals(array('bar'), $log[0]['bindings']);
-		$this->assertTrue(is_numeric($log[0]['time']));
+		$this->assertIsNumeric($log[0]['time']);
 	}
 
 
@@ -117,16 +129,18 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', array('prepare'));
 		$statement = $this->getMock('PDOStatement', array('execute', 'rowCount'));
 		$statement->expects($this->once())->method('execute')->with($this->equalTo(array('foo' => 'bar')));
-		$statement->expects($this->once())->method('rowCount')->will($this->returnValue(array('boom')));
-		$pdo->expects($this->once())->method('prepare')->with('foo')->will($this->returnValue($statement));
+		$statement->expects($this->once())->method('rowCount')->willReturn(array('boom'));
+		$pdo->expects($this->once())->method('prepare')->with('foo')->willReturn($statement);
 		$mock = $this->getMockConnection(array('prepareBindings'), $pdo);
-		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('foo' => 'bar')))->will($this->returnValue(array('foo' => 'bar')));
+		$mock->expects($this->once())->method('prepareBindings')->with($this->equalTo(array('foo' => 'bar')))->willReturn(
+            array('foo' => 'bar')
+        );
 		$results = $mock->update('foo', array('foo' => 'bar'));
 		$this->assertEquals(array('boom'), $results);
 		$log = $mock->getQueryLog();
 		$this->assertEquals('foo', $log[0]['query']);
 		$this->assertEquals(array('foo' => 'bar'), $log[0]['bindings']);
-		$this->assertTrue(is_numeric($log[0]['time']));
+		$this->assertIsNumeric($log[0]['time']);
 	}
 
 
@@ -134,7 +148,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
-		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
+		$connection->expects($this->once())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.beganTransaction', $connection);
 		$connection->beginTransaction();
@@ -145,7 +159,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
-		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
+		$connection->expects($this->once())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.committed', $connection);
 		$connection->commit();
@@ -156,7 +170,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
 		$connection = $this->getMockConnection(array('getName'), $pdo);
-		$connection->expects($this->once())->method('getName')->will($this->returnValue('name'));
+		$connection->expects($this->once())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.rollingBack', $connection);
 		$connection->rollBack();

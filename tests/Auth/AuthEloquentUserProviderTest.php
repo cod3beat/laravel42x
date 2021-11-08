@@ -22,7 +22,7 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
         $mock = m::mock('stdClass');
         $mock->shouldReceive('newQuery')->once()->andReturn($mock);
 		$mock->shouldReceive('find')->once()->with(1)->andReturn('bar');
-		$provider->expects($this->once())->method('createModel')->will($this->returnValue($mock));
+		$provider->expects($this->once())->method('createModel')->willReturn($mock);
 		$user = $provider->retrieveByID(1);
 
 		$this->assertEquals('bar', $user);
@@ -36,7 +36,7 @@ class AuthEloquentUserProviderTest extends BackwardCompatibleTestCase
 		$mock->shouldReceive('newQuery')->once()->andReturn($mock);
 		$mock->shouldReceive('where')->once()->with('username', 'dayle');
 		$mock->shouldReceive('first')->once()->andReturn('bar');
-		$provider->expects($this->once())->method('createModel')->will($this->returnValue($mock));
+		$provider->expects($this->once())->method('createModel')->willReturn($mock);
 		$user = $provider->retrieveByCredentials(array('username' => 'dayle', 'password' => 'foo'));
 
 		$this->assertEquals('bar', $user);

@@ -46,8 +46,8 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 		$barMock->shouldReceive('up')->once();
 		$bazMock = m::mock('stdClass');
 		$bazMock->shouldReceive('up')->once();
-		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->will($this->returnValue($barMock));
-		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->will($this->returnValue($bazMock));
+		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->willReturn($barMock);
+		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->willReturn($bazMock);
 
 		$migrator->run(__DIR__);
 	}
@@ -81,8 +81,8 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 		$bazMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$bazMock->shouldReceive('up')->once();
 
-		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->will($this->returnValue($barMock));
-		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->will($this->returnValue($bazMock));
+		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->willReturn($barMock);
+		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->willReturn($bazMock);
 
 		$connection = m::mock('stdClass');
 		$connection->shouldReceive('pretend')->with(m::type('Closure'))->andReturnUsing(function($closure)
@@ -138,8 +138,8 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 		$fooMock = m::mock('stdClass');
 		$fooMock->shouldReceive('down')->once();
 
-		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->will($this->returnValue($barMock));
-		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('bar'))->will($this->returnValue($fooMock));
+		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->willReturn($barMock);
+		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('bar'))->willReturn($fooMock);
 
 		$migrator->getRepository()->shouldReceive('delete')->once()->with($barMigration);
 		$migrator->getRepository()->shouldReceive('delete')->once()->with($fooMigration);
@@ -168,8 +168,8 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 		$fooMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$fooMock->shouldReceive('down')->once();
 
-		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->will($this->returnValue($barMock));
-		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('bar'))->will($this->returnValue($fooMock));
+		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->willReturn($barMock);
+		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('bar'))->willReturn($fooMock);
 
 		$connection = m::mock('stdClass');
 		$connection->shouldReceive('pretend')->with(m::type('Closure'))->andReturnUsing(function($closure)

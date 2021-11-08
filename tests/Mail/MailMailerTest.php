@@ -21,7 +21,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
         unset($_SERVER['__mailer.test']);
         $mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
         $message = m::mock('StdClass');
-		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
+		$mailer->expects($this->once())->method('createMessage')->willReturn($message);
 		$view = m::mock('StdClass');
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', array('data', 'message' => $message))->andReturn($view);
 		$view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -40,7 +40,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 		unset($_SERVER['__mailer.test']);
 		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
-		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
+		$mailer->expects($this->once())->method('createMessage')->willReturn($message);
 		$view = m::mock('StdClass');
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', array('data', 'message' => $message))->andReturn($view);
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('bar', array('data', 'message' => $message))->andReturn($view);
@@ -61,7 +61,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 		unset($_SERVER['__mailer.test']);
 		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
-		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
+		$mailer->expects($this->once())->method('createMessage')->willReturn($message);
 		$view = m::mock('StdClass');
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', array('data', 'message' => $message))->andReturn($view);
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('bar', array('data', 'message' => $message))->andReturn($view);
@@ -137,7 +137,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
-		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
+		$mailer->expects($this->once())->method('createMessage')->willReturn($message);
 		$view = m::mock('StdClass');
 		$mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', array('data', 'message' => $message))->andReturn($view);
 		$view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -160,7 +160,7 @@ class MailMailerTest extends BackwardCompatibleTestCase
 	{
 		$mailer = $this->getMock(Mailer::class, array('createMessage'), $this->getMocks());
 		$message = m::mock('StdClass');
-		$mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
+		$mailer->expects($this->once())->method('createMessage')->willReturn($message);
 		$view = m::mock('StdClass');
 		$container = new Illuminate\Container\Container;
 		$mailer->setContainer($container);

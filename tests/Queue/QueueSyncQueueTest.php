@@ -20,7 +20,7 @@ class QueueSyncQueueTest extends BackwardCompatibleTestCase
         $sync->expects($this->once())->method('resolveJob')->with(
             $this->equalTo('Foo'),
             $this->equalTo('{"foo":"foobar"}')
-        )->will($this->returnValue($job));
+        )->willReturn($job);
 		$job->shouldReceive('fire')->once();
 
 		$sync->push('Foo', array('foo' => 'foobar'));

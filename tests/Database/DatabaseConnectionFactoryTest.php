@@ -34,10 +34,12 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 		$config = array('driver' => 'mysql', 'prefix' => 'prefix', 'database' => 'database', 'name' => 'foo');
 		$pdo = new DatabaseConnectionFactoryPDOStub;
 		$connector->shouldReceive('connect')->once()->with($config)->andReturn($pdo);
-		$factory->expects($this->once())->method('createConnector')->with($config)->will($this->returnValue($connector));
+		$factory->expects($this->once())->method('createConnector')->with($config)->willReturn($connector);
 		$mockConnection = m::mock('stdClass');
 		$passedConfig = array_merge($config, array('name' => 'foo'));
-		$factory->expects($this->once())->method('createConnection')->with($this->equalTo('mysql'), $this->equalTo($pdo), $this->equalTo('database'), $this->equalTo('prefix'), $this->equalTo($passedConfig))->will($this->returnValue($mockConnection));
+		$factory->expects($this->once())->method('createConnection')->with($this->equalTo('mysql'), $this->equalTo($pdo), $this->equalTo('database'), $this->equalTo('prefix'), $this->equalTo($passedConfig))->willReturn(
+            $mockConnection
+        );
 		$connection = $factory->make($config, 'foo');
 
 		$this->assertEquals($mockConnection, $connection);
@@ -62,11 +64,13 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 		$expect['database'] = 'database';
 		$pdo = new DatabaseConnectionFactoryPDOStub;
 		$connector->shouldReceive('connect')->twice()->with($expect)->andReturn($pdo);
-		$factory->expects($this->exactly(2))->method('createConnector')->with($expect)->will($this->returnValue($connector));
+		$factory->expects($this->exactly(2))->method('createConnector')->with($expect)->willReturn($connector);
 		$mockConnection = m::mock('stdClass');
 		$mockConnection->shouldReceive('setReadPdo')->once()->andReturn($mockConnection);
 		$passedConfig = array_merge($expect, array('name' => 'foo'));
-		$factory->expects($this->once())->method('createConnection')->with($this->equalTo('mysql'), $this->equalTo($pdo), $this->equalTo('database'), $this->equalTo('prefix'), $this->equalTo($passedConfig))->will($this->returnValue($mockConnection));
+		$factory->expects($this->once())->method('createConnection')->with($this->equalTo('mysql'), $this->equalTo($pdo), $this->equalTo('database'), $this->equalTo('prefix'), $this->equalTo($passedConfig))->willReturn(
+            $mockConnection
+        );
 		$connection = $factory->make($config, 'foo');
 
 		$this->assertEquals($mockConnection, $connection);
@@ -84,7 +88,7 @@ class DatabaseConnectionFactoryTest extends BackwardCompatibleTestCase
 		$pdo = new DatabaseConnectionFactoryPDOStub;
 		$connector->shouldReceive('connect')->once()->with($config)->andReturn($pdo);
 		$passedConfig = array_merge($config, array('name' => 'foo'));
-		$factory->expects($this->once())->method('createConnector')->with($config)->will($this->returnValue($connector));
+		$factory->expects($this->once())->method('createConnector')->with($config)->willReturn($connector);
 		$container->shouldReceive('make')->once()->with('db.connection.mysql', array($pdo, 'database', 'prefix', $passedConfig))->andReturn('foo');
 		$connection = $factory->make($config, 'foo');
 

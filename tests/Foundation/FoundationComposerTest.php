@@ -23,7 +23,7 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
         );
         $files->shouldReceive('exists')->once()->with(__DIR__ . '/composer.phar')->andReturn(true);
         $process = m::mock('stdClass');
-		$composer->expects($this->once())->method('getProcess')->will($this->returnValue($process));
+		$composer->expects($this->once())->method('getProcess')->willReturn($process);
 		$process->shouldReceive('setCommandLine')->once()->with('"'.PHP_BINARY.'" composer.phar dump-autoload');
 		$process->shouldReceive('run')->once();
 
@@ -38,7 +38,7 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
         ), __DIR__));
 		$files->shouldReceive('exists')->once()->with(__DIR__.'/composer.phar')->andReturn(false);
 		$process = m::mock('stdClass');
-		$composer->expects($this->once())->method('getProcess')->will($this->returnValue($process));
+		$composer->expects($this->once())->method('getProcess')->willReturn($process);
 		$process->shouldReceive('setCommandLine')->once()->with('composer dump-autoload');
 		$process->shouldReceive('run')->once();
 

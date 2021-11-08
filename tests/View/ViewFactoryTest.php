@@ -341,11 +341,11 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		echo 'hi';
 		$factory->stopSection();
 
-		$this->assertEquals(1, count($factory->getSections()));
+		$this->assertCount(1, $factory->getSections());
 
 		$factory->flushSections();
 
-		$this->assertEquals(0, count($factory->getSections()));
+		$this->assertCount(0, $factory->getSections());
 	}
 
 

@@ -8,7 +8,7 @@ class CacheApcStoreTest extends BackwardCompatibleTestCase {
 	public function testGetReturnsNullWhenNotFound()
 	{
 		$apc = $this->getMock(ApcWrapper::class, array('get'));
-		$apc->expects($this->once())->method('get')->with($this->equalTo('foobar'))->will($this->returnValue(null));
+		$apc->expects($this->once())->method('get')->with($this->equalTo('foobar'))->willReturn(null);
 		$store = new Illuminate\Cache\ApcStore($apc, 'foo');
 		$this->assertNull($store->get('bar'));
 	}
@@ -17,7 +17,7 @@ class CacheApcStoreTest extends BackwardCompatibleTestCase {
 	public function testAPCValueIsReturned()
 	{
 		$apc = $this->getMock(ApcWrapper::class, array('get'));
-		$apc->expects($this->once())->method('get')->will($this->returnValue('bar'));
+		$apc->expects($this->once())->method('get')->willReturn('bar');
 		$store = new Illuminate\Cache\ApcStore($apc);
 		$this->assertEquals('bar', $store->get('foo'));
 	}

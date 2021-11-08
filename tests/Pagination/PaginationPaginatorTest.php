@@ -56,7 +56,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 
 		$this->assertEquals(1, $p->getLastPage());
 		$this->assertEquals(1, $p->getCurrentPage());
-		$this->assertEquals(3, count($p->getItems()));
+		$this->assertCount(3, $p->getItems());
 	}
 
 
@@ -169,7 +169,7 @@ class PaginationPaginatorTest extends BackwardCompatibleTestCase
 	{
 		$p = new Paginator($factory = m::mock(Factory::class), array('foo', 'bar', 'baz'), 3, 2);
 
-		$this->assertEquals(3, count($p));
+		$this->assertCount(3, $p);
 	}
 
 

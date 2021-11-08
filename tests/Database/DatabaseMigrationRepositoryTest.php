@@ -33,7 +33,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
 			$resolver = m::mock(ConnectionResolverInterface::class), 'migrations'
 		));
-		$repo->expects($this->once())->method('getLastBatchNumber')->will($this->returnValue(1));
+		$repo->expects($this->once())->method('getLastBatchNumber')->willReturn(1);
 		$query = m::mock('stdClass');
 		$connectionMock = m::mock(Connection::class);
 		$repo->getConnectionResolver()->shouldReceive('connection')->with(null)->andReturn($connectionMock);
@@ -79,7 +79,7 @@ class DatabaseMigrationRepositoryTest extends BackwardCompatibleTestCase
 		$repo = $this->getMock(DatabaseMigrationRepository::class, array('getLastBatchNumber'), array(
 			m::mock(ConnectionResolverInterface::class), 'migrations'
 		));
-		$repo->expects($this->once())->method('getLastBatchNumber')->will($this->returnValue(1));
+		$repo->expects($this->once())->method('getLastBatchNumber')->willReturn(1);
 
 		$this->assertEquals(2, $repo->getNextBatchNumber());
 	}

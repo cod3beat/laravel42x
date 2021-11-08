@@ -38,7 +38,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 		$app = new Application;
 		$app->register($provider);
 
-		$this->assertTrue(in_array($class, $app->getLoadedProviders()));
+		$this->assertArrayHasKey($class, $app->getLoadedProviders());
 	}
 
 
@@ -47,7 +47,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 		$app = new ApplicationGetMiddlewaresStub;
 		$app->middleware(FrameGuard::class);
 		$app->forgetMiddleware(FrameGuard::class);
-		$this->assertEquals(0, count($app->getMiddlewares()));
+		$this->assertCount(0, $app->getMiddlewares());
 	}
 
 

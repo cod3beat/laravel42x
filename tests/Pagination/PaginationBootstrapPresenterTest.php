@@ -23,9 +23,11 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 	public function testSimpleRangeIsReturnedWhenCantBuildSlier()
 	{
 		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext'), array($paginator = $this->getPaginator()));
-		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(2))->will($this->returnValue('bar'));
-		$presenter->expects($this->once())->method('getPrevious')->will($this->returnValue('foo'));
-		$presenter->expects($this->once())->method('getNext')->will($this->returnValue('baz'));
+		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(2))->willReturn(
+            'bar'
+        );
+		$presenter->expects($this->once())->method('getPrevious')->willReturn('foo');
+		$presenter->expects($this->once())->method('getNext')->willReturn('baz');
 
 		$this->assertEquals('foobarbaz', $presenter->render());
 	}
@@ -45,10 +47,12 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 	{
 		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
 		$presenter->setLastPage(14);
-		$presenter->expects($this->once())->method('getFinish')->will($this->returnValue('finish'));
-		$presenter->expects($this->once())->method('getPrevious')->will($this->returnValue('previous'));
-		$presenter->expects($this->once())->method('getNext')->will($this->returnValue('next'));
-		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(8))->will($this->returnValue('range'));
+		$presenter->expects($this->once())->method('getFinish')->willReturn('finish');
+		$presenter->expects($this->once())->method('getPrevious')->willReturn('previous');
+		$presenter->expects($this->once())->method('getNext')->willReturn('next');
+		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(8))->willReturn(
+            'range'
+        );
 
 		$this->assertEquals('previousrangefinishnext', $presenter->render());
 	}
@@ -59,10 +63,12 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
 		$presenter->setLastPage(14);
 		$presenter->setCurrentPage(13);
-		$presenter->expects($this->once())->method('getStart')->will($this->returnValue('start'));
-		$presenter->expects($this->once())->method('getPrevious')->will($this->returnValue('previous'));
-		$presenter->expects($this->once())->method('getNext')->will($this->returnValue('next'));
-		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(6), $this->equalTo(14))->will($this->returnValue('range'));
+		$presenter->expects($this->once())->method('getStart')->willReturn('start');
+		$presenter->expects($this->once())->method('getPrevious')->willReturn('previous');
+		$presenter->expects($this->once())->method('getNext')->willReturn('next');
+		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(6), $this->equalTo(14))->willReturn(
+            'range'
+        );
 
 		$this->assertEquals('previousstartrangenext', $presenter->render());
 	}
@@ -73,11 +79,13 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange', 'getPrevious', 'getNext', 'getStart', 'getFinish'), array($paginator = $this->getPaginator()));
 		$presenter->setLastPage(30);
 		$presenter->setCurrentPage(15);
-		$presenter->expects($this->once())->method('getStart')->will($this->returnValue('start'));
-		$presenter->expects($this->once())->method('getFinish')->will($this->returnValue('finish'));
-		$presenter->expects($this->once())->method('getPrevious')->will($this->returnValue('previous'));
-		$presenter->expects($this->once())->method('getNext')->will($this->returnValue('next'));
-		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(12), $this->equalTo(18))->will($this->returnValue('range'));
+		$presenter->expects($this->once())->method('getStart')->willReturn('start');
+		$presenter->expects($this->once())->method('getFinish')->willReturn('finish');
+		$presenter->expects($this->once())->method('getPrevious')->willReturn('previous');
+		$presenter->expects($this->once())->method('getNext')->willReturn('next');
+		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(12), $this->equalTo(18))->willReturn(
+            'range'
+        );
 
 		$this->assertEquals('previousstartrangefinishnext', $presenter->render());
 	}
@@ -134,7 +142,9 @@ class PaginationBootstrapPresenterTest extends BackwardCompatibleTestCase
 	public function testGetAdjacentRange()
 	{
 		$presenter = $this->getMock(BootstrapPresenter::class, array('getPageRange'), array($paginator = $this->getPaginator()));
-		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(7))->will($this->returnValue('foo'));
+		$presenter->expects($this->once())->method('getPageRange')->with($this->equalTo(1), $this->equalTo(7))->willReturn(
+            'foo'
+        );
 		$presenter->setCurrentPage(4);
 
 		$this->assertEquals('foo', $presenter->getAdjacentRange());

@@ -22,11 +22,13 @@ class TranslationTranslatorTest extends BackwardCompatibleTestCase
             $this->equalTo('foo'),
             $this->equalTo(array()),
             $this->equalTo('bar')
-        )->will($this->returnValue('foo'));
+        )->willReturn('foo');
         $this->assertFalse($t->has('foo', 'bar'));
 
 		$t = $this->getMock(Translator::class, array('get'), array($this->getLoader(), 'en', 'sp'));
-		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array()), $this->equalTo('bar'))->will($this->returnValue('bar'));
+		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array()), $this->equalTo('bar'))->willReturn(
+            'bar'
+        );
 		$this->assertTrue($t->has('foo', 'bar'));
 	}
 
@@ -60,7 +62,9 @@ class TranslationTranslatorTest extends BackwardCompatibleTestCase
 	public function testChoiceMethodProperlyLoadsAndRetrievesItem()
 	{
 		$t = $this->getMock(Translator::class, array('get'), array($this->getLoader(), 'en'));
-		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array('replace')), $this->equalTo('en'))->will($this->returnValue('line'));
+		$t->expects($this->once())->method('get')->with($this->equalTo('foo'), $this->equalTo(array('replace')), $this->equalTo('en'))->willReturn(
+            'line'
+        );
 		$t->setSelector($selector = m::mock(MessageSelector::class));
 		$selector->shouldReceive('choose')->once()->with('line', 10, 'en')->andReturn('choiced');
 

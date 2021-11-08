@@ -19,7 +19,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
         $app->setLaravel('foo');
         $command = m::mock(\Illuminate\Console\Command::class);
 		$command->shouldReceive('setLaravel')->once()->with('foo');
-		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
+		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->willReturn($command);
 		$result = $app->add($command);
 
 		$this->assertEquals($command, $result);
@@ -32,7 +32,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 		$app->setLaravel('foo');
 		$command = m::mock(Command::class);
 		$command->shouldReceive('setLaravel')->never();
-		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
+		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->willReturn($command);
 		$result = $app->add($command);
 
 		$this->assertEquals($command, $result);
@@ -44,7 +44,7 @@ class ConsoleApplicationTest extends BackwardCompatibleTestCase
 		$app = $this->getMock(\Illuminate\Console\Application::class, array('addToParent'));
 		$command = m::mock(Command::class);
 		$app->setLaravel(array('foo' => $command));
-		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->will($this->returnValue($command));
+		$app->expects($this->once())->method('addToParent')->with($this->equalTo($command))->willReturn($command);
 		$result = $app->resolve('foo');
 
 		$this->assertEquals($command, $result);

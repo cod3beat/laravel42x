@@ -10,7 +10,7 @@ class BcryptHasherTest extends BackwardCompatibleTestCase {
 		$value = $hasher->make('password');
 		$this->assertNotSame('password', $value);
 		$this->assertTrue($hasher->check('password', $value));
-		$this->assertTrue(!$hasher->needsRehash($value));
+		$this->assertNotTrue($hasher->needsRehash($value));
 		$this->assertTrue($hasher->needsRehash($value, array('rounds' => 1)));
 	}
 

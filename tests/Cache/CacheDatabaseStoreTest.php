@@ -34,7 +34,7 @@ class CacheDatabaseStoreTest extends BackwardCompatibleTestCase
 		$store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
 		$table->shouldReceive('where')->once()->with('key', '=', 'prefixfoo')->andReturn($table);
 		$table->shouldReceive('first')->once()->andReturn((object) array('expiration' => 1));
-		$store->expects($this->once())->method('forget')->with($this->equalTo('foo'))->will($this->returnValue(null));
+		$store->expects($this->once())->method('forget')->with($this->equalTo('foo'))->willReturn(null);
 
 		$this->assertNull($store->get('foo'));
 	}
@@ -59,7 +59,7 @@ class CacheDatabaseStoreTest extends BackwardCompatibleTestCase
 		$table = m::mock('StdClass');
 		$store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
 		$store->getEncrypter()->shouldReceive('encrypt')->once()->with('bar')->andReturn('bar');
-		$store->expects($this->once())->method('getTime')->will($this->returnValue(1));
+		$store->expects($this->once())->method('getTime')->willReturn(1);
 		$table->shouldReceive('insert')->once()->with(array('key' => 'prefixfoo', 'value' => 'bar', 'expiration' => 61));
 
 		$store->put('foo', 'bar', 1);
@@ -72,7 +72,7 @@ class CacheDatabaseStoreTest extends BackwardCompatibleTestCase
 		$table = m::mock('StdClass');
 		$store->getConnection()->shouldReceive('table')->with('table')->andReturn($table);
 		$store->getEncrypter()->shouldReceive('encrypt')->once()->with('bar')->andReturn('bar');
-		$store->expects($this->once())->method('getTime')->will($this->returnValue(1));
+		$store->expects($this->once())->method('getTime')->willReturn(1);
 		$table->shouldReceive('insert')->once()->with(array('key' => 'prefixfoo', 'value' => 'bar', 'expiration' => 61))->andReturnUsing(function()
 		{
 			throw new Exception;

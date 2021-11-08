@@ -98,7 +98,7 @@ class SupportFluentTest extends BackwardCompatibleTestCase {
 	public function testToJsonEncodesTheToArrayResult()
 	{
 		$fluent = $this->getMock(Fluent::class, array('toArray'));
-		$fluent->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
+		$fluent->expects($this->once())->method('toArray')->willReturn('foo');
 		$results = $fluent->toJson();
 
 		$this->assertEquals(json_encode('foo'), $results);

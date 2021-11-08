@@ -22,8 +22,8 @@ class FoundationArtisanTest extends BackwardCompatibleTestCase
             array('getArtisan'),
             array($app = new Illuminate\Foundation\Application)
         );
-        $artisan->expects($this->once())->method('getArtisan')->will(
-            $this->returnValue($console = m::mock('Illuminate\Console\Application[find]'))
+        $artisan->expects($this->once())->method('getArtisan')->willReturn(
+            $console = m::mock('Illuminate\Console\Application[find]')
         );
         $console->shouldReceive('find')->once()->with('foo')->andReturn($command = m::mock('StdClass'));
 		$command->shouldReceive('run')->once()->with(m::type(ArrayInput::class), m::type(

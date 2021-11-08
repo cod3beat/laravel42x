@@ -89,7 +89,7 @@ class QueueIronQueueTest extends BackwardCompatibleTestCase
         ), 'default', true));
 		$crypt = m::mock(Encrypter::class);
 		$queue->setEncrypter($crypt);
-		$queue->expects($this->once())->method('getTime')->will($this->returnValue($now->getTimestamp()));
+		$queue->expects($this->once())->method('getTime')->willReturn($now->getTimestamp());
 		$crypt->shouldReceive('encrypt')->once()->with(json_encode(array('job' => 'foo', 'data' => array(1, 2, 3), 'attempts' => 1, 'queue' => 'default')))->andReturn('encrypted');
 		$iron->shouldReceive('postMessage')->once()->with('default', 'encrypted', array('delay' => 5))->andReturn((object) array('id' => 1));
 		$queue->later($now->addSeconds(5), 'foo', array(1, 2, 3));
@@ -137,7 +137,9 @@ class QueueIronQueueTest extends BackwardCompatibleTestCase
 		$request->shouldReceive('getContent')->once()->andReturn($content = json_encode(array('foo' => 'bar')));
 		$crypt->shouldReceive('decrypt')->once()->with($content)->andReturn($content);
 		$job = (object) array('id' => 'message-id', 'body' => json_encode(array('foo' => 'bar')), 'pushed' => true);
-		$queue->expects($this->once())->method('createPushedIronJob')->with($this->equalTo($job))->will($this->returnValue($mockIronJob = m::mock('StdClass')));
+		$queue->expects($this->once())->method('createPushedIronJob')->with($this->equalTo($job))->willReturn(
+            $mockIronJob = m::mock('StdClass')
+        );
 		$mockIronJob->shouldReceive('fire')->once();
 
 		$response = $queue->marshal();

@@ -22,7 +22,9 @@ class DatabaseSchemaBlueprintTest extends BackwardCompatibleTestCase
         $conn->shouldReceive('statement')->once()->with('bar');
 		$grammar = m::mock(MySqlGrammar::class);
 		$blueprint = $this->getMock(Blueprint::class, array('toSql'), array('users'));
-		$blueprint->expects($this->once())->method('toSql')->with($this->equalTo($conn), $this->equalTo($grammar))->will($this->returnValue(array('foo', 'bar')));
+		$blueprint->expects($this->once())->method('toSql')->with($this->equalTo($conn), $this->equalTo($grammar))->willReturn(
+            array('foo', 'bar')
+        );
 
 		$blueprint->build($conn, $grammar);
 	}

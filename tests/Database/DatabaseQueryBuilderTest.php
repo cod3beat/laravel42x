@@ -792,9 +792,11 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
-		$builder->expects($this->once())->method('forPage')->with($this->equalTo(1), $this->equalTo(15))->will($this->returnValue($builder));
-		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->will($this->returnValue(array('foo')));
-		$builder->expects($this->once())->method('getPaginationCount')->will($this->returnValue(10));
+		$builder->expects($this->once())->method('forPage')->with($this->equalTo(1), $this->equalTo(15))->willReturn(
+            $builder
+        );
+		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->willReturn(array('foo'));
+		$builder->expects($this->once())->method('getPaginationCount')->willReturn(10);
 		$paginator->shouldReceive('make')->once()->with(array('foo'), 10, 15)->andReturn(array('results'));
 
 		$this->assertEquals(array('results'), $builder->paginate(15, array('*')));
@@ -810,7 +812,9 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(2);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
-		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->will($this->returnValue(array('foo', 'bar', 'baz')));
+		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->willReturn(
+            array('foo', 'bar', 'baz')
+        );
 		$paginator->shouldReceive('make')->once()->with(array('baz'), 3, 2)->andReturn(array('results'));
 
 		$this->assertEquals(array('results'), $builder->groupBy('foo')->paginate(2, array('*')));
@@ -846,9 +850,9 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 		$paginator = m::mock(Factory::class);
 		$paginator->shouldReceive('getCurrentPage')->once()->andReturn(1);
 		$connection->shouldReceive('getPaginator')->once()->andReturn($paginator);
-		$builder->expects($this->once())->method('skip')->with($this->equalTo(0))->will($this->returnValue($builder));
-		$builder->expects($this->once())->method('take')->with($this->equalTo(16))->will($this->returnValue($builder));
-		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->will($this->returnValue(array('foo')));
+		$builder->expects($this->once())->method('skip')->with($this->equalTo(0))->willReturn($builder);
+		$builder->expects($this->once())->method('take')->with($this->equalTo(16))->willReturn($builder);
+		$builder->expects($this->once())->method('get')->with($this->equalTo(array('*')))->willReturn(array('foo'));
 		$paginator->shouldReceive('make')->once()->with(array('foo'), 15)->andReturn(array('results'));
 
 		$this->assertEquals(array('results'), $builder->simplePaginate(15, array('*')));
@@ -1202,7 +1206,9 @@ class DatabaseQueryBuilderTest extends BackwardCompatibleTestCase
 		$processor = m::mock(Processor::class);
 
 		$builder = $this->getMock(Builder::class, array('getFresh'), array($connection, $grammar, $processor));
-		$builder->expects($this->once())->method('getFresh')->with($this->equalTo(array('*')))->will($this->returnValue(array('results')));
+		$builder->expects($this->once())->method('getFresh')->with($this->equalTo(array('*')))->willReturn(
+            array('results')
+        );
 		return $builder->select('*')->from('users')->where('email', 'foo@bar.com');
 	}
 

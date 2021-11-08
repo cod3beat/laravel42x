@@ -55,7 +55,7 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 	{
 		$queue = $this->getMock(SqsQueue::class, array('getQueue'), array($this->sqs, $this->queueName, $this->account));
 		$queue->setContainer(m::mock(Container::class));
-		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
+		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->willReturn($this->queueUrl);
 		$this->sqs->shouldReceive('receiveMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'AttributeNames' => array('ApproximateReceiveCount')))->andReturn($this->mockedReceiveMessageResponseModel);
 		$result = $queue->pop($this->queueName);
 		$this->assertInstanceOf(SqsJob::class, $result);
@@ -66,9 +66,11 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 	{
 		$now = Carbon::now();
 		$queue = $this->getMock(SqsQueue::class, array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
-		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
-		$queue->expects($this->once())->method('getSeconds')->with($now)->will($this->returnValue(5));
-		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
+		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->willReturn(
+            $this->mockedPayload
+        );
+		$queue->expects($this->once())->method('getSeconds')->with($now)->willReturn(5);
+		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->willReturn($this->queueUrl);
 		$this->sqs->shouldReceive('sendMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'MessageBody' => $this->mockedPayload, 'DelaySeconds' => 5))->andReturn($this->mockedSendMessageResponseModel);
 		$id = $queue->later($now->addSeconds(5), $this->mockedJob, $this->mockedData, $this->queueName);
 		$this->assertEquals($this->mockedMessageId, $id);
@@ -78,9 +80,11 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 	public function testDelayedPushProperlyPushesJobOntoSqs()
 	{
 		$queue = $this->getMock(SqsQueue::class, array('createPayload', 'getSeconds', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
-		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
-		$queue->expects($this->once())->method('getSeconds')->with($this->mockedDelay)->will($this->returnValue($this->mockedDelay));
-		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
+		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->willReturn(
+            $this->mockedPayload
+        );
+		$queue->expects($this->once())->method('getSeconds')->with($this->mockedDelay)->willReturn($this->mockedDelay);
+		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->willReturn($this->queueUrl);
 		$this->sqs->shouldReceive('sendMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'MessageBody' => $this->mockedPayload, 'DelaySeconds' => $this->mockedDelay))->andReturn($this->mockedSendMessageResponseModel);
 		$id = $queue->later($this->mockedDelay, $this->mockedJob, $this->mockedData, $this->queueName);
 		$this->assertEquals($this->mockedMessageId, $id);
@@ -90,8 +94,10 @@ class QueueSqsQueueTest extends BackwardCompatibleTestCase
 	public function testPushProperlyPushesJobOntoSqs()
 	{
 		$queue = $this->getMock(SqsQueue::class, array('createPayload', 'getQueue'), array($this->sqs, $this->queueName, $this->account));
-		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->will($this->returnValue($this->mockedPayload));
-		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->will($this->returnValue($this->queueUrl));
+		$queue->expects($this->once())->method('createPayload')->with($this->mockedJob, $this->mockedData)->willReturn(
+            $this->mockedPayload
+        );
+		$queue->expects($this->once())->method('getQueue')->with($this->queueName)->willReturn($this->queueUrl);
 		$this->sqs->shouldReceive('sendMessage')->once()->with(array('QueueUrl' => $this->queueUrl, 'MessageBody' => $this->mockedPayload))->andReturn($this->mockedSendMessageResponseModel);
 		$id = $queue->push($this->mockedJob, $this->mockedData, $this->queueName);
 		$this->assertEquals($this->mockedMessageId, $id);

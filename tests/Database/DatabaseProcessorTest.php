@@ -17,7 +17,7 @@ class DatabaseProcessorTest extends BackwardCompatibleTestCase
     public function testInsertGetIdProcessing()
     {
         $pdo = $this->getMock('ProcessorTestPDOStub');
-        $pdo->expects($this->once())->method('lastInsertId')->with($this->equalTo('id'))->will($this->returnValue('1'));
+        $pdo->expects($this->once())->method('lastInsertId')->with($this->equalTo('id'))->willReturn('1');
         $connection = m::mock(Connection::class);
 		$connection->shouldReceive('insert')->once()->with('sql', array('foo'));
 		$connection->shouldReceive('getPdo')->once()->andReturn($pdo);

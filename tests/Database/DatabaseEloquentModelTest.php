@@ -87,7 +87,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$collection = EloquentModelStub::hydrate($data);
 
 		$this->assertInstanceOf(Collection::class, $collection);
-		$this->assertEquals(2, count($collection));
+		$this->assertCount(2, $collection);
 		$this->assertInstanceOf('EloquentModelStub', $collection[0]);
 		$this->assertInstanceOf('EloquentModelStub', $collection[1]);
 		$this->assertEquals('Taylor', $collection[0]->name);
@@ -164,7 +164,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('name' => 'taylor'));
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->once())->method('updateTimestamps');
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
@@ -188,7 +188,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('created_at' => 'foo', 'updated_at' => 'bar'));
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until');
 		$events->shouldReceive('fire');
@@ -206,7 +206,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
 		$query = m::mock(Builder::class);
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(false);
 		$model->exists = true;
@@ -219,7 +219,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
 		$query = m::mock(Builder::class);
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.updating: '.get_class($model), $model)->andReturn(false);
@@ -237,9 +237,9 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('name' => 'taylor'));
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->never())->method('updateTimestamps');
-		$model->expects($this->any())->method('fireModelEvent')->will($this->returnValue(true));
+		$model->expects($this->any())->method('fireModelEvent')->willReturn(true);
 
 		$model->id = 1;
 		$model->syncOriginal();
@@ -255,7 +255,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('where')->once()->with('id', '=', 1);
 		$query->shouldReceive('update')->once()->with(array('id' => 2, 'foo' => 'bar'));
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->once())->method('updateTimestamps');
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
@@ -276,7 +276,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testTimestampsAreReturnedAsObjects()
 	{
 		$model = $this->getMock('EloquentDateModelStub', array('getDateFormat'));
-		$model->expects($this->any())->method('getDateFormat')->will($this->returnValue('Y-m-d'));
+		$model->expects($this->any())->method('getDateFormat')->willReturn('Y-m-d');
 		$model->setRawAttributes(array(
 			'created_at'	=> '2012-12-04',
 			'updated_at'	=> '2012-12-05',
@@ -290,7 +290,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	public function testTimestampsAreReturnedAsObjectsFromPlainDatesAndTimestamps()
 	{
 		$model = $this->getMock('EloquentDateModelStub', array('getDateFormat'));
-		$model->expects($this->any())->method('getDateFormat')->will($this->returnValue('Y-m-d H:i:s'));
+		$model->expects($this->any())->method('getDateFormat')->willReturn('Y-m-d H:i:s');
 		$model->setRawAttributes(array(
 			'created_at'	=> '2012-12-04',
 			'updated_at'	=> time(),
@@ -361,7 +361,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('insertGetId')->once()->with(array('name' => 'taylor'), 'id')->andReturn(1);
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->once())->method('updateTimestamps');
 
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
@@ -379,7 +379,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes', 'updateTimestamps'));
 		$query = m::mock(Builder::class);
 		$query->shouldReceive('insert')->once()->with(array('name' => 'taylor'));
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->once())->method('updateTimestamps');
 		$model->setIncrementing(false);
 
@@ -401,7 +401,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 	{
 		$model = $this->getMock('EloquentModelStub', array('newQueryWithoutScopes'));
 		$query = m::mock(Builder::class);
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('until')->once()->with('eloquent.saving: '.get_class($model), $model)->andReturn(true);
 		$events->shouldReceive('until')->once()->with('eloquent.creating: '.get_class($model), $model)->andReturn(false);
@@ -417,7 +417,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$query = m::mock('stdClass');
 		$query->shouldReceive('where')->once()->with('id', 1)->andReturn($query);
 		$query->shouldReceive('delete')->once();
-		$model->expects($this->once())->method('newQueryWithoutScopes')->will($this->returnValue($query));
+		$model->expects($this->once())->method('newQueryWithoutScopes')->willReturn($query);
 		$model->expects($this->once())->method('touchOwners');
 		$model->exists = true;
 		$model->id = 1;
@@ -488,7 +488,7 @@ class DatabaseEloquentModelTest extends BackwardCompatibleTestCase
 		$model->setRelation('multi', new Illuminate\Database\Eloquent\Collection);
 		$array = $model->toArray();
 
-		$this->assertTrue(is_array($array));
+		$this->assertIsArray($array);
 		$this->assertEquals('foo', $array['name']);
 		$this->assertEquals('baz', $array['names'][0]['bar']);
 		$this->assertEquals('boom', $array['names'][1]['bam']);

@@ -108,7 +108,7 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 
 		$this->assertEquals(2, $models[1]->foo[0]->pivot->user_id);
 		$this->assertEquals(2, $models[1]->foo[1]->pivot->user_id);
-        $this->assertEquals(2, count($models[1]->foo));
+        $this->assertCount(2, $models[1]->foo);
         $this->assertEmpty($models[2]->foo);
 	}
 
@@ -318,7 +318,9 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 		$mockQueryBuilder->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('lists')->once()->with('role_id')->andReturn(array(1, 2, 3));
 		$relation->expects($this->once())->method('attach')->with($this->equalTo(4), $this->equalTo(array('foo' => 'bar')), $this->equalTo(false));
-		$relation->expects($this->once())->method('updateExistingPivot')->with($this->equalTo(3), $this->equalTo(array('baz' => 'qux')), $this->equalTo(false))->will($this->returnValue(true));
+		$relation->expects($this->once())->method('updateExistingPivot')->with($this->equalTo(3), $this->equalTo(array('baz' => 'qux')), $this->equalTo(false))->willReturn(
+            true
+        );
 		$relation->expects($this->once())->method('detach')->with($this->equalTo(array(1)));
 		$relation->expects($this->once())->method('touchIfTouching');
 
@@ -336,7 +338,9 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 		$mockQueryBuilder->shouldReceive('newQuery')->once()->andReturn($query);
 		$query->shouldReceive('lists')->once()->with('role_id')->andReturn(array(1, 2, 3));
 		$relation->expects($this->once())->method('attach')->with($this->equalTo(4), $this->equalTo(array('foo' => 'bar')), $this->equalTo(false));
-		$relation->expects($this->once())->method('updateExistingPivot')->with($this->equalTo(3), $this->equalTo(array('baz' => 'qux')), $this->equalTo(false))->will($this->returnValue(false));
+		$relation->expects($this->once())->method('updateExistingPivot')->with($this->equalTo(3), $this->equalTo(array('baz' => 'qux')), $this->equalTo(false))->willReturn(
+            false
+        );
 		$relation->expects($this->once())->method('detach')->with($this->equalTo(array(1)));
 		$relation->expects($this->once())->method('touchIfTouching');
 
@@ -363,7 +367,7 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 	public function testTouchIfTouching()
 	{
 		$relation = $this->getMock(BelongsToMany::class, array('touch', 'touchingParent'), $this->getRelationArguments());
-		$relation->expects($this->once())->method('touchingParent')->will($this->returnValue(true));
+		$relation->expects($this->once())->method('touchingParent')->willReturn(true);
 		$relation->getParent()->shouldReceive('touch')->once();
 		$relation->getParent()->shouldReceive('touches')->once()->with('relation_name')->andReturn(true);
 		$relation->expects($this->once())->method('touch');
@@ -384,7 +388,9 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 
 		$collection = m::mock(Collection::class);
 		$collection->shouldReceive('modelKeys')->once()->andReturn(array(1, 2, 3));
-		$relation->expects($this->once())->method('formatSyncList')->with(array(1, 2, 3))->will($this->returnValue(array(1 => array(),2 => array(),3 => array())));
+		$relation->expects($this->once())->method('formatSyncList')->with(array(1, 2, 3))->willReturn(
+            array(1 => array(), 2 => array(), 3 => array())
+        );
 		$relation->sync($collection);
 	}
 
@@ -413,7 +419,9 @@ class DatabaseEloquentBelongsToManyTest extends BackwardCompatibleTestCase
 
 		// This is so $relation->sync() works
 		$query->shouldReceive('lists')->once()->with('role_id')->andReturn([1, 2, 3]);
-		$relation->expects($this->once())->method('formatSyncList')->with([1, 2, 3])->will($this->returnValue([1 => [],2 => [],3 => []]));
+		$relation->expects($this->once())->method('formatSyncList')->with([1, 2, 3])->willReturn(
+            [1 => [], 2 => [], 3 => []]
+        );
 
 
 		$relation = $relation->wherePivot('foo', '=', 'bar'); // these params are to be stored

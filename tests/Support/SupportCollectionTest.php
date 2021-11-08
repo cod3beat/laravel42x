@@ -65,7 +65,7 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 	public function testToJsonEncodesTheToArrayResult()
 	{
 		$c = $this->getMock(Collection::class, array('toArray'));
-		$c->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
+		$c->expects($this->once())->method('toArray')->willReturn('foo');
 		$results = $c->toJson();
 
 		$this->assertEquals(json_encode('foo'), $results);
@@ -75,7 +75,7 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 	public function testCastingToStringJsonEncodesTheToArrayResult()
 	{
 		$c = $this->getMock(\Illuminate\Database\Eloquent\Collection::class, array('toArray'));
-		$c->expects($this->once())->method('toArray')->will($this->returnValue('foo'));
+		$c->expects($this->once())->method('toArray')->willReturn('foo');
 
 		$this->assertEquals(json_encode('foo'), (string) $c);
 	}
@@ -98,7 +98,7 @@ class SupportCollectionTest extends BackwardCompatibleTestCase
 	public function testCountable()
 	{
 		$c = new Collection(array('foo', 'bar'));
-		$this->assertEquals(2, count($c));
+		$this->assertCount(2, $c);
 	}
 
 
