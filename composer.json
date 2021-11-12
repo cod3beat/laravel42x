@@ -33,9 +33,7 @@
         "symfony/event-dispatcher": "4.4.30",
         "symfony/mime": "~5.0.0",
         "symfony/error-handler": "4.4.5",
-        "classpreloader/classpreloader": "^3.2",
         "pda/pheanstalk": "^3.1",
-        "classpreloader/console": "^2.1",
         "opis/closure": "^3.6",
         "voku/portable-ascii": "^1.5",
         "filp/whoops": "~2.11"
