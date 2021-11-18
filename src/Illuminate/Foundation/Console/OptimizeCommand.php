@@ -54,6 +54,9 @@ class OptimizeCommand extends Command {
 		{
 			$this->composer->dumpAutoloads();
 		}
+        elseif ($this->option('apcu')) {
+            $this->composer->dumpAutoloads('--optimize --apcu');
+        }
 		else
 		{
 			$this->composer->dumpOptimized();
@@ -107,9 +110,11 @@ class OptimizeCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('force', null, InputOption::VALUE_NONE, 'Force the compiled class file to be written.'),
+            ['force', null, InputOption::VALUE_NONE, 'Force the compiled class file to be written.'],
 
-			array('psr', null, InputOption::VALUE_NONE, 'Do not optimize Composer dump-autoload.'),
+            ['psr', null, InputOption::VALUE_NONE, 'Do not optimize Composer dump-autoload.'],
+
+            ['apcu', null, InputOption::VALUE_NONE, 'Optimize with APCU']
 		);
 	}
 
