@@ -32,31 +32,32 @@ class Composer {
 		$this->workingPath = $workingPath;
 	}
 
-	/**
-	 * Regenerate the Composer autoloader files.
-	 *
-	 * @param string $extra
-	 * @return void
-	 */
-	public function dumpAutoloads(string $extra = ''): void
+    /**
+     * Regenerate the Composer autoloader files.
+     *
+     * @param string $extra
+     *
+     * @return Process
+     */
+	public function dumpAutoloads(string $extra = ''): Process
     {
         $command = trim($this->findComposer().' dump-autoload '.$extra);
 
 		$process = $this->getProcess(explode(' ', $command));
 
-        echo "Running: {$process->getCommandLine()} \n";
-
 		$process->run();
+
+        return $process;
 	}
 
 	/**
 	 * Regenerate the optimized Composer autoloader files.
 	 *
-	 * @return void
+	 * @return Process
 	 */
-	public function dumpOptimized(): void
+	public function dumpOptimized(): Process
     {
-		$this->dumpAutoloads('--optimize');
+		return $this->dumpAutoloads('--optimize');
 	}
 
 	/**
