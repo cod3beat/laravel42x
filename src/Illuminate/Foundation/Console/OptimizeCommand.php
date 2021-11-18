@@ -54,7 +54,8 @@ class OptimizeCommand extends Command {
 		{
 			$this->composer->dumpAutoloads();
 		}
-        elseif ($this->option('apcu')) {
+        elseif ($this->option('apcu'))
+        {
             $this->composer->dumpAutoloads('--optimize --apcu');
         }
 		else

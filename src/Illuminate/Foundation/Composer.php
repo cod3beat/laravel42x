@@ -44,6 +44,8 @@ class Composer {
 
 		$process = $this->getProcess(explode(' ', $command));
 
+        echo "Running: {$process->getCommandLine()} \n";
+
 		$process->run();
 	}
 
