@@ -1,6 +1,8 @@
 <?php
 
-class ViewEngineResolverTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class ViewEngineResolverTest extends BackwardCompatibleTestCase {
 
 	public function testResolversMayBeResolved()
 	{

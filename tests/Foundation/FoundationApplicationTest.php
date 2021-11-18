@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Illuminate\Http\FrameGuard;
+use Illuminate\Support\ServiceProvider;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\Response;
 
 class FoundationApplicationTest extends BackwardCompatibleTestCase
 {
@@ -21,7 +24,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 		$app['translator'] = $trans = m::mock('StdClass');
 		$trans->shouldReceive('setLocale')->once()->with('foo');
 		$app['events'] = $events = m::mock('StdClass');
-		$events->shouldReceive('fire')->once()->with('locale.changed', array('foo'));
+		$events->shouldReceive('fire')->once()->with('locale.changed', ['foo']);
 
 		$app->setLocale('foo');
 	}
@@ -29,29 +32,29 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 
 	public function testServiceProvidersAreCorrectlyRegistered()
 	{
-		$provider = m::mock('Illuminate\Support\ServiceProvider');
+		$provider = m::mock(ServiceProvider::class);
 		$class = get_class($provider);
 		$provider->shouldReceive('register')->once();
 		$app = new Application;
 		$app->register($provider);
 
-		$this->assertTrue(in_array($class, $app->getLoadedProviders()));
+		$this->assertArrayHasKey($class, $app->getLoadedProviders());
 	}
 
 
 	public function testForgetMiddleware()
 	{
 		$app = new ApplicationGetMiddlewaresStub;
-		$app->middleware('Illuminate\Http\FrameGuard');
-		$app->forgetMiddleware('Illuminate\Http\FrameGuard');
-		$this->assertEquals(0, count($app->getMiddlewares()));
+		$app->middleware(FrameGuard::class);
+		$app->forgetMiddleware(FrameGuard::class);
+		$this->assertCount(0, $app->getMiddlewares());
 	}
 
 
 	public function testDeferredServicesMarkedAsBound()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationDeferredServiceProviderStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationDeferredServiceProviderStub']);
 		$this->assertTrue($app->bound('foo'));
 		$this->assertEquals('foo', $app->make('foo'));
 	}
@@ -60,7 +63,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testDeferredServicesAreSharedProperly()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationDeferredSharedServiceProviderStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationDeferredSharedServiceProviderStub']);
 		$this->assertTrue($app->bound('foo'));
 		$one = $app->make('foo'); $two = $app->make('foo');
 		$this->assertInstanceOf('StdClass', $one);
@@ -72,7 +75,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testDeferredServicesCanBeExtended()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationDeferredServiceProviderStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationDeferredServiceProviderStub']);
 		$app->extend('foo', function($instance, $container) { return $instance.'bar'; });
 		$this->assertEquals('foobar', $app->make('foo'));
 	}
@@ -81,7 +84,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testDeferredServiceProviderIsRegisteredOnlyOnce()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationDeferredServiceProviderCountStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationDeferredServiceProviderCountStub']);
 		$obj = $app->make('foo');
 		$this->assertInstanceOf('StdClass', $obj);
 		$this->assertSame($obj, $app->make('foo'));
@@ -93,7 +96,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	{
 		ApplicationDeferredServiceProviderStub::$initialized = false;
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationDeferredServiceProviderStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationDeferredServiceProviderStub']);
 		$this->assertTrue($app->bound('foo'));
 		$this->assertFalse(ApplicationDeferredServiceProviderStub::$initialized);
 		$app->extend('foo', function($instance, $container) { return $instance.'bar'; });
@@ -106,7 +109,7 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testDeferredServicesCanRegisterFactories()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array('foo' => 'ApplicationFactoryProviderStub'));
+		$app->setDeferredServices(['foo' => 'ApplicationFactoryProviderStub']);
 		$this->assertTrue($app->bound('foo'));
 		$this->assertEquals(1, $app->make('foo'));
 		$this->assertEquals(2, $app->make('foo'));
@@ -117,10 +120,10 @@ class FoundationApplicationTest extends BackwardCompatibleTestCase
 	public function testSingleProviderCanProvideMultipleDeferredServices()
 	{
 		$app = new Application;
-		$app->setDeferredServices(array(
+		$app->setDeferredServices([
 			'foo' => 'ApplicationMultiProviderStub',
 			'bar' => 'ApplicationMultiProviderStub',
-		));
+        ]);
 		$this->assertEquals('foo', $app->make('foo'));
 		$this->assertEquals('foobar', $app->make('bar'));
 	}
@@ -146,7 +149,7 @@ class ApplicationCustomExceptionHandlerStub extends Illuminate\Foundation\Applic
 
 	public function prepareResponse($value)
 	{
-		$response = m::mock('Symfony\Component\HttpFoundation\Response');
+		$response = m::mock(Response::class);
 		$response->shouldReceive('send')->once();
 		return $response;
 	}

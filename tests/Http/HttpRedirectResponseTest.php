@@ -2,6 +2,9 @@
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
+use Illuminate\Support\Contracts\MessageProviderInterface;
+use Illuminate\Support\ViewErrorBag;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -30,20 +33,20 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testWithOnRedirect()
 {
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
 		$session->shouldReceive('flash')->twice();
-		$response->with(array('name', 'age'));
+		$response->with(['name', 'age']);
 	}
 
 
 	public function testWithCookieOnRedirect()
     {
         $response = new RedirectResponse('foo.bar');
-        $this->assertEquals(0, count($response->headers->getCookies()));
+        $this->assertCount(0, $response->headers->getCookies());
         $this->assertEquals($response, $response->withCookie(new Cookie('foo', 'bar')));
         $cookies = $response->headers->getCookies();
-        $this->assertEquals(1, count($cookies));
+        $this->assertCount(1, $cookies);
         $this->assertEquals('foo', $cookies[0]->getName());
         $this->assertEquals('bar', $cookies[0]->getValue());
     }
@@ -52,9 +55,9 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testInputOnRedirect()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
-		$session->shouldReceive('flashInput')->once()->with(array('name' => 'Taylor', 'age' => 26));
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
+		$session->shouldReceive('flashInput')->once()->with(['name' => 'Taylor', 'age' => 26]);
 		$response->withInput();
 	}
 
@@ -62,9 +65,9 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testOnlyInputOnRedirect()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
-		$session->shouldReceive('flashInput')->once()->with(array('name' => 'Taylor'));
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
+		$session->shouldReceive('flashInput')->once()->with(['name' => 'Taylor']);
 		$response->onlyInput('name');
 	}
 
@@ -72,9 +75,9 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testExceptInputOnRedirect()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
-		$session->shouldReceive('flashInput')->once()->with(array('name' => 'Taylor'));
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
+		$session->shouldReceive('flashInput')->once()->with(['name' => 'Taylor']);
 		$response->exceptInput('age');
 	}
 
@@ -82,11 +85,11 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testFlashingErrorsOnRedirect()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
-		$session->shouldReceive('get')->with('errors', m::type('Illuminate\Support\ViewErrorBag'))->andReturn(new Illuminate\Support\ViewErrorBag);
-		$session->shouldReceive('flash')->once()->with('errors', m::type('Illuminate\Support\ViewErrorBag'));
-		$provider = m::mock('Illuminate\Support\Contracts\MessageProviderInterface');
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
+		$session->shouldReceive('get')->with('errors', m::type(ViewErrorBag::class))->andReturn(new Illuminate\Support\ViewErrorBag);
+		$session->shouldReceive('flash')->once()->with('errors', m::type(ViewErrorBag::class));
+		$provider = m::mock(MessageProviderInterface::class);
 		$provider->shouldReceive('getMessageBag')->once()->andReturn(new Illuminate\Support\MessageBag);
 		$response->withErrors($provider);
 	}
@@ -99,7 +102,7 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 		$this->assertNull($response->getSession());
 
 		$request = Request::create('/', 'GET');
-		$session = m::mock('Illuminate\Session\Store');
+		$session = m::mock(Store::class);
 		$response->setRequest($request);
 		$response->setSession($session);
 		$this->assertSame($request, $response->getRequest());
@@ -110,11 +113,11 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testRedirectWithErrorsArrayConvertsToMessageBag()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
-		$session->shouldReceive('get')->with('errors', m::type('Illuminate\Support\ViewErrorBag'))->andReturn(new Illuminate\Support\ViewErrorBag);
-		$session->shouldReceive('flash')->once()->with('errors', m::type('Illuminate\Support\ViewErrorBag'));
-		$provider = array('foo' => 'bar');
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
+		$session->shouldReceive('get')->with('errors', m::type(ViewErrorBag::class))->andReturn(new Illuminate\Support\ViewErrorBag);
+		$session->shouldReceive('flash')->once()->with('errors', m::type(ViewErrorBag::class));
+		$provider = ['foo' => 'bar'];
 		$response->withErrors($provider);
 	}
 
@@ -122,8 +125,8 @@ class HttpRedirectResponseTest extends BackwardCompatibleTestCase
 	public function testMagicCall()
 	{
 		$response = new RedirectResponse('foo.bar');
-		$response->setRequest(Request::create('/', 'GET', array('name' => 'Taylor', 'age' => 26)));
-		$response->setSession($session = m::mock('Illuminate\Session\Store'));
+		$response->setRequest(Request::create('/', 'GET', ['name' => 'Taylor', 'age' => 26]));
+		$response->setSession($session = m::mock(Store::class));
 		$session->shouldReceive('flash')->once()->with('foo', 'bar');
 		$response->withFoo('bar');
 	}

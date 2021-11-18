@@ -1,6 +1,8 @@
 <?php
 
-class SupportPluralizerTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class SupportPluralizerTest extends BackwardCompatibleTestCase {
 
 	public function testBasicUsage()
 	{

@@ -1,8 +1,12 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Grammar;
+use Illuminate\Database\Query\Builder;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -27,16 +31,16 @@ class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
 
 	public function testTouchMethodUpdatesRelatedTimestamps()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
-		$parent = m::mock('Illuminate\Database\Eloquent\Model');
+		$builder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$parent = m::mock(Model::class);
 		$parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
 		$builder->shouldReceive('getModel')->andReturn($related = m::mock('StdClass'));
 		$builder->shouldReceive('where');
 		$relation = new HasOne($builder, $parent, 'foreign_key', 'id');
 		$related->shouldReceive('getTable')->andReturn('table');
 		$related->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
-		$related->shouldReceive('freshTimestampString')->andReturn(Carbon\Carbon::now());
-		$builder->shouldReceive('update')->once()->with(array('updated_at' => Carbon\Carbon::now()));
+		$related->shouldReceive('freshTimestampString')->andReturn(Carbon::now());
+		$builder->shouldReceive('update')->once()->with(['updated_at' => Carbon::now()]);
 
 		$relation->touch();
 	}
@@ -50,10 +54,10 @@ class DatabaseEloquentRelationTest extends BackwardCompatibleTestCase
 	public function testDonNotRunParentModelGlobalScopes()
 	{
 		/** @var Mockery\MockInterface $parent */
-		$eloquentBuilder = m::mock('Illuminate\Database\Eloquent\Builder');
-		$queryBuilder = m::mock('Illuminate\Database\Query\Builder');
+		$eloquentBuilder = m::mock(\Illuminate\Database\Eloquent\Builder::class);
+		$queryBuilder = m::mock(Builder::class);
 		$parent = m::mock('EloquentRelationResetModelStub')->makePartial();
-		$grammar = m::mock('\Illuminate\Database\Grammar');
+		$grammar = m::mock(Grammar::class);
 
 		$eloquentBuilder->shouldReceive('getModel')->andReturn($related = m::mock('StdClass'));
 		$eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);

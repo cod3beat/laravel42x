@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Http\Response;
+use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Support\Contracts\RenderableInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -16,29 +19,49 @@ class HttpResponseTest extends BackwardCompatibleTestCase
 
     public function testJsonResponsesAreConvertedAndHeadersAreSet()
     {
-        $response = new Illuminate\Http\Response(new JsonableStub);
-        $this->assertEquals('foo', $response->getContent());
-        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
+        $response = new Response(new ArrayableStub);
+        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
 
-		$response = new Illuminate\Http\Response();
-		$response->setContent(array('foo' => 'bar'));
-		$this->assertEquals('{"foo":"bar"}', $response->getContent());
-		$this->assertEquals('application/json', $response->headers->get('Content-Type'));
+        $response = new Response(new JsonableStub);
+        $this->assertSame('foo', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+
+        $response = new Response(new ArrayableAndJsonableStub);
+        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+
+        $response = new Response;
+        $response->setContent(['foo' => 'bar']);
+        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+
+        $response = new Response(new JsonSerializableStub);
+        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+
+        $response = new Response(new ArrayableStub);
+        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+
+        $response->setContent('{"foo": "bar"}');
+        $this->assertSame('{"foo": "bar"}', $response->getContent());
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
 	}
 
 
 	public function testRenderablesAreRendered()
 	{
-		$mock = m::mock('Illuminate\Support\Contracts\RenderableInterface');
+		$mock = m::mock(RenderableInterface::class);
 		$mock->shouldReceive('render')->once()->andReturn('foo');
-		$response = new Illuminate\Http\Response($mock);
+		$response = new Response($mock);
 		$this->assertEquals('foo', $response->getContent());
 	}
 
 
 	public function testHeader()
 	{
-		$response = new Illuminate\Http\Response();
+		$response = new Response();
 		$this->assertNull($response->headers->get('foo'));
 		$response->header('foo', 'bar');
 		$this->assertEquals('bar', $response->headers->get('foo'));
@@ -51,11 +74,11 @@ class HttpResponseTest extends BackwardCompatibleTestCase
 
 	public function testWithCookie()
     {
-        $response = new Illuminate\Http\Response();
-        $this->assertEquals(0, count($response->headers->getCookies()));
+        $response = new Response();
+        $this->assertCount(0, $response->headers->getCookies());
         $this->assertEquals($response, $response->withCookie(new Cookie('foo', 'bar')));
         $cookies = $response->headers->getCookies();
-        $this->assertEquals(1, count($cookies));
+        $this->assertCount(1, $cookies);
         $this->assertEquals('foo', $cookies[0]->getName());
         $this->assertEquals('bar', $cookies[0]->getValue());
     }
@@ -63,8 +86,8 @@ class HttpResponseTest extends BackwardCompatibleTestCase
 
 	public function testGetOriginalContent()
 	{
-		$arr = array('foo' => 'bar');
-		$response = new Illuminate\Http\Response();
+		$arr = ['foo' => 'bar'];
+		$response = new Response();
 		$response->setContent($arr);
 		$this->assertSame($arr, $response->getOriginalContent());
 	}
@@ -72,16 +95,49 @@ class HttpResponseTest extends BackwardCompatibleTestCase
 
 	public function testSetAndRetrieveStatusCode()
 	{
-		$response = new Illuminate\Http\Response('foo', 404);
+		$response = new Response('foo', 404);
 		$this->assertSame(404, $response->getStatusCode());
 
-		$response = new Illuminate\Http\Response('foo');
+		$response = new Response('foo');
 		$response->setStatusCode(404);
 		$this->assertSame(404, $response->getStatusCode());
 	}
 
 }
 
-class JsonableStub implements JsonableInterface {
-	public function toJson($options = 0) { return 'foo'; }
+class ArrayableStub implements ArrayableInterface
+{
+    public function toArray()
+    {
+        return ['foo' => 'bar'];
+    }
+}
+
+class ArrayableAndJsonableStub implements ArrayableInterface, JsonableInterface
+{
+    public function toJson($options = 0)
+    {
+        return '{"foo":"bar"}';
+    }
+
+    public function toArray()
+    {
+        return [];
+    }
+}
+
+class JsonableStub implements JsonableInterface
+{
+    public function toJson($options = 0)
+    {
+        return 'foo';
+    }
+}
+
+class JsonSerializableStub implements JsonSerializable
+{
+    public function jsonSerialize(): array
+    {
+        return ['foo' => 'bar'];
+    }
 }

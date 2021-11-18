@@ -3,6 +3,7 @@
 use Illuminate\Cookie\CookieJar;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 
 class CookieTest extends BackwardCompatibleTestCase
@@ -59,11 +60,11 @@ class CookieTest extends BackwardCompatibleTestCase
 		$cookie->queue($cookie->make('foo','bar'));
 		$this->assertArrayHasKey('foo', $cookie->getQueuedCookies());
 		$this->assertTrue($cookie->hasQueued('foo'));
-		$this->assertInstanceOf('Symfony\Component\HttpFoundation\Cookie', $cookie->queued('foo'));
+		$this->assertInstanceOf(Cookie::class, $cookie->queued('foo'));
 		$cookie->queue('qu','ux');
 		$this->assertArrayHasKey('qu', $cookie->getQueuedCookies());
 		$this->assertTrue($cookie->hasQueued('qu'));
-		$this->assertInstanceOf('Symfony\Component\HttpFoundation\Cookie', $cookie->queued('qu'));
+		$this->assertInstanceOf(Cookie::class, $cookie->queued('qu'));
 	}
 
 
@@ -79,12 +80,12 @@ class CookieTest extends BackwardCompatibleTestCase
 
 	public function getCreator()
 	{
-		return new CookieJar(Request::create('/foo', 'GET'), array(
+		return new CookieJar(Request::create('/foo', 'GET'), [
 			'path'     => '/path',
 			'domain'   => '/domain',
 			'secure'   => true,
 			'httpOnly' => false,
-		));
+        ]);
 	}
 
 }

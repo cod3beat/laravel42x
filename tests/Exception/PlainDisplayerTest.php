@@ -1,14 +1,15 @@
 <?php
 
 use Illuminate\Exception\PlainDisplayer;
+use L4\Tests\BackwardCompatibleTestCase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class PlainDisplayerTest extends \L4\Tests\BackwardCompatibleTestCase {
+class PlainDisplayerTest extends BackwardCompatibleTestCase {
 
 	public function testStatusAndHeadersAreSetInResponse()
 	{
 		$displayer = new PlainDisplayer;
-		$headers = array('X-My-Test-Header' => 'HeaderValue');
+		$headers = ['X-My-Test-Header' => 'HeaderValue'];
 		$exception = new HttpException(401, 'Unauthorized', null, $headers);
 		$response = $displayer->display($exception);
 

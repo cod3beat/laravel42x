@@ -1,6 +1,7 @@
 <?php namespace Illuminate\Events;
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 
 class Dispatcher {
 
@@ -62,7 +63,7 @@ class Dispatcher {
 	{
 		foreach ((array) $events as $event)
 		{
-			if (str_contains($event, '*'))
+			if (Str::contains($event, '*'))
 			{
 				$this->setupWildcardListen($event, $listener);
 			}

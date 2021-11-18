@@ -21,7 +21,7 @@ class WhoopsDisplayerTest extends BackwardCompatibleTestCase
         $mockWhoops->handleException(new Exception());
         $mockWhoops->shouldReceive('handleException')->andReturn('response content');
         $displayer = new WhoopsDisplayer($originalWhoops, false);
-        $headers = array('X-My-Test-Header' => 'HeaderValue');
+        $headers = ['X-My-Test-Header' => 'HeaderValue'];
         $exception = new HttpException(401, 'Unauthorized', null, $headers);
         $response = $displayer->display($exception);
 

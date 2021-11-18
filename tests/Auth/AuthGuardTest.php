@@ -39,7 +39,8 @@ class AuthGuardTest extends BackwardCompatibleTestCase
 	    $guard = new Guard(
 	        $this->userProvider->reveal(),
             $this->session->reveal(),
-            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+            $request = Request::create('/', 'GET', [], [], [], ['PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret']
+            )
         );
 	    $this->userProvider
             ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
@@ -58,7 +59,8 @@ class AuthGuardTest extends BackwardCompatibleTestCase
         $guard = new Guard(
             $this->userProvider->reveal(),
             $this->session->reveal(),
-            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+            $request = Request::create('/', 'GET', [], [], [], ['PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret']
+            )
         );
         $this->userProvider
             ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
@@ -79,7 +81,8 @@ class AuthGuardTest extends BackwardCompatibleTestCase
         $guard = new Guard(
             $this->userProvider->reveal(),
             $this->session->reveal(),
-            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+            $request = Request::create('/', 'GET', [], [], [], ['PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret']
+            )
         );
         $guard->login($this->prophesize(UserInterface::class)->reveal());
 
@@ -91,7 +94,8 @@ class AuthGuardTest extends BackwardCompatibleTestCase
         $guard = new Guard(
             $this->userProvider->reveal(),
             $this->session->reveal(),
-            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+            $request = Request::create('/', 'GET', [], [], [], ['PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret']
+            )
         );
         $this->userProvider
             ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
@@ -112,7 +116,8 @@ class AuthGuardTest extends BackwardCompatibleTestCase
         $guard = new Guard(
             $this->userProvider->reveal(),
             $this->session->reveal(),
-            $request = Request::create('/', 'GET', array(), array(), array(), array('PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret'))
+            $request = Request::create('/', 'GET', [], [], [], ['PHP_AUTH_USER' => 'foo@bar.com', 'PHP_AUTH_PW' => 'secret']
+            )
         );
         $this->userProvider
             ->retrieveByCredentials(['email' => 'foo@bar.com', 'password' => 'secret'])
@@ -146,7 +151,7 @@ class AuthGuardTest extends BackwardCompatibleTestCase
 
         $this->userProvider->retrieveByCredentials(['foo'])->willReturn(null);
 
-		$this->assertFalse($guard->attempt(array('foo')));
+		$this->assertFalse($guard->attempt(['foo']));
 	}
 
 	public function testLoginStoresIdentifierInSession()
@@ -328,7 +333,7 @@ class AuthGuardTest extends BackwardCompatibleTestCase
         $guard = new Guard(
             $this->userProvider->reveal(),
             $this->session->reveal(),
-            Request::create('/', 'GET', array(), array('remember_82e5d2c56bdd0811318f0cf078b78bfc' => 'id|recaller'))
+            Request::create('/', 'GET', [], ['remember_82e5d2c56bdd0811318f0cf078b78bfc' => 'id|recaller'])
         );
 
         $this->userProvider

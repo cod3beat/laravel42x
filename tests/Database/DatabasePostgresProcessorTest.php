@@ -1,6 +1,8 @@
 <?php
 
-class DatabasePostgresProcessorTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class DatabasePostgresProcessorTest extends BackwardCompatibleTestCase {
 
 	public function testProcessColumnListing()
 	{

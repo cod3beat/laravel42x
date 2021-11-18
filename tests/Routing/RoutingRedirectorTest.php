@@ -1,8 +1,13 @@
 <?php
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Session\Store;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\HeaderBag;
 
 class RoutingRedirectorTest extends BackwardCompatibleTestCase
 {
@@ -15,20 +20,20 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
 
     protected function setUp(): void
     {
-        $this->headers = m::mock('Symfony\Component\HttpFoundation\HeaderBag');
+        $this->headers = m::mock(HeaderBag::class);
 
-        $this->request = m::mock('Illuminate\Http\Request');
+        $this->request = m::mock(Request::class);
         $this->request->headers = $this->headers;
 
-        $this->url = m::mock('Illuminate\Routing\UrlGenerator');
+        $this->url = m::mock(UrlGenerator::class);
         $this->url->shouldReceive('getRequest')->andReturn($this->request);
-        $this->url->shouldReceive('to')->with('bar', array(), null)->andReturn('http://foo.com/bar');
-        $this->url->shouldReceive('to')->with('bar', array(), true)->andReturn('https://foo.com/bar');
-		$this->url->shouldReceive('to')->with('login', array(), null)->andReturn('http://foo.com/login');
-        $this->url->shouldReceive('to')->with('http://foo.com/bar', array(), null)->andReturn('http://foo.com/bar');
-        $this->url->shouldReceive('to')->with('/', array(), null)->andReturn('http://foo.com/');
+        $this->url->shouldReceive('to')->with('bar', [], null)->andReturn('http://foo.com/bar');
+        $this->url->shouldReceive('to')->with('bar', [], true)->andReturn('https://foo.com/bar');
+		$this->url->shouldReceive('to')->with('login', [], null)->andReturn('http://foo.com/login');
+        $this->url->shouldReceive('to')->with('http://foo.com/bar', [], null)->andReturn('http://foo.com/bar');
+        $this->url->shouldReceive('to')->with('/', [], null)->andReturn('http://foo.com/');
 
-        $this->session = m::mock('Illuminate\Session\Store');
+        $this->session = m::mock(Store::class);
 
         $this->redirect = new Redirector($this->url);
         $this->redirect->setSession($this->session);
@@ -45,7 +50,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
     {
         $response = $this->redirect->to('bar');
 
-        $this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
 		$this->assertEquals('http://foo.com/bar', $response->getTargetUrl());
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($this->session, $response->getSession());
@@ -54,7 +59,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
 
 	public function testComplexRedirectTo()
 	{
-		$response = $this->redirect->to('bar', 303, array('X-RateLimit-Limit' => 60, 'X-RateLimit-Remaining' => 59), true);
+		$response = $this->redirect->to('bar', 303, ['X-RateLimit-Limit' => 60, 'X-RateLimit-Remaining' => 59], true);
 
 		$this->assertEquals('https://foo.com/bar', $response->getTargetUrl());
 		$this->assertEquals(303, $response->getStatusCode());
@@ -133,7 +138,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
 
 	public function testAction()
 	{
-		$this->url->shouldReceive('action')->with('bar@index', array())->andReturn('http://foo.com/bar');
+		$this->url->shouldReceive('action')->with('bar@index', [])->andReturn('http://foo.com/bar');
 		$response = $this->redirect->action('bar@index');
 		$this->assertEquals('http://foo.com/bar', $response->getTargetUrl());
 	}
@@ -142,7 +147,7 @@ class RoutingRedirectorTest extends BackwardCompatibleTestCase
 	public function testRoute()
 	{
 		$this->url->shouldReceive('route')->with('home')->andReturn('http://foo.com/bar');
-		$this->url->shouldReceive('route')->with('home', array())->andReturn('http://foo.com/bar');
+		$this->url->shouldReceive('route')->with('home', [])->andReturn('http://foo.com/bar');
 
 		$response = $this->redirect->route('home');
 		$this->assertEquals('http://foo.com/bar', $response->getTargetUrl());

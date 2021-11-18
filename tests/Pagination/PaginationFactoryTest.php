@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Factory;
+use Illuminate\Pagination\Paginator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,15 +28,16 @@ class PaginationFactoryTest extends BackwardCompatibleTestCase
 		$request = Illuminate\Http\Request::create('http://foo.com', 'GET');
 		$env->setRequest($request);
 
-		$this->assertInstanceOf('Illuminate\Pagination\Paginator', $env->make(array('foo', 'bar'), 2, 2));
+		$this->assertInstanceOf(Paginator::class, $env->make(['foo', 'bar'], 2, 2));
 	}
 
 
 	public function testPaginationViewCanBeCreated()
 	{
 		$env = $this->getFactory();
-		$paginator = m::mock('Illuminate\Pagination\Paginator');
-		$env->getViewFactory()->shouldReceive('make')->once()->with('pagination::slider', array('environment' => $env, 'paginator' => $paginator))->andReturn('foo');
+		$paginator = m::mock(Paginator::class);
+		$env->getViewFactory()->shouldReceive('make')->once()->with('pagination::slider', ['environment' => $env, 'paginator' => $paginator]
+        )->andReturn('foo');
 
 		$this->assertEquals('foo', $env->getPaginationView($paginator));
 	}
@@ -94,8 +97,8 @@ class PaginationFactoryTest extends BackwardCompatibleTestCase
 
 	protected function getFactory()
     {
-        $request = m::mock('Illuminate\Http\Request');
-        $view = m::mock('Illuminate\View\Factory');
+        $request = m::mock(Request::class);
+        $view = m::mock(\Illuminate\View\Factory::class);
         $trans = m::mock(TranslatorInterface::class);
         $view->shouldReceive('addNamespace')->once()->with(
             'pagination',

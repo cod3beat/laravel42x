@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Container\Container;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -14,7 +15,7 @@ class QueueSyncJobTest extends BackwardCompatibleTestCase
 
     public function testFireResolvesAndFiresJobClass()
     {
-        $container = m::mock('Illuminate\Container\Container');
+        $container = m::mock(Container::class);
         $job = new Illuminate\Queue\Jobs\SyncJob($container, 'Foo', '"data"');
         $handler = m::mock('StdClass');
 		$container->shouldReceive('make')->once()->with('Foo')->andReturn($handler);
@@ -36,7 +37,7 @@ class QueueSyncJobTest extends BackwardCompatibleTestCase
 
 	public function testFireResolvesAndFiresJobClassWithCorrectMethod()
 	{
-		$container = m::mock('Illuminate\Container\Container');
+		$container = m::mock(Container::class);
 		$job = new Illuminate\Queue\Jobs\SyncJob($container, 'Foo@bar', '"data"');
 		$handler = m::mock('StdClass');
 		$container->shouldReceive('make')->once()->with('Foo')->andReturn($handler);

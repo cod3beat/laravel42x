@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Redis\Database;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -95,7 +96,7 @@ class CacheRedisStoreTest extends BackwardCompatibleTestCase
 
 	protected function getRedis()
 	{
-		return new Illuminate\Cache\RedisStore(m::mock('Illuminate\Redis\Database'), 'prefix');
+		return new Illuminate\Cache\RedisStore(m::mock(Database::class), 'prefix');
 	}
 
 }

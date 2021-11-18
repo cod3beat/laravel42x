@@ -1,31 +1,40 @@
 <?php
 
-class RoutingControllerInspectorTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class RoutingControllerInspectorTest extends BackwardCompatibleTestCase {
 
 	public function testMethodsAreCorrectlyDetermined()
 	{
 		$inspector = new Illuminate\Routing\ControllerInspector;
 		$data = $inspector->getRoutable('RoutingControllerInspectorStub', 'prefix');
 
-		$this->assertEquals(4, count($data));
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix', 'uri' => 'prefix'), $data['getIndex'][1]);
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix/index', 'uri' => 'prefix/index/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['getIndex'][0]);
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix/foo-bar', 'uri' => 'prefix/foo-bar/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['getFooBar'][0]);
-		$this->assertEquals(array('verb' => 'post', 'plain' => 'prefix/baz', 'uri' => 'prefix/baz/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['postBaz'][0]);
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix/breeze', 'uri' => 'prefix/breeze/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['getBreeze'][0]);
+		$this->assertCount(4, $data);
+		$this->assertEquals(['verb' => 'get', 'plain' => 'prefix', 'uri' => 'prefix'], $data['getIndex'][1]);
+		$this->assertEquals(
+            ['verb' => 'get', 'plain' => 'prefix/index', 'uri' => 'prefix/index/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['getIndex'][0]);
+		$this->assertEquals(
+            ['verb' => 'get', 'plain' => 'prefix/foo-bar', 'uri' => 'prefix/foo-bar/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['getFooBar'][0]);
+		$this->assertEquals(
+            ['verb' => 'post', 'plain' => 'prefix/baz', 'uri' => 'prefix/baz/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['postBaz'][0]);
+		$this->assertEquals(
+            ['verb' => 'get', 'plain' => 'prefix/breeze', 'uri' => 'prefix/breeze/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['getBreeze'][0]);
 	}
 
 
 	public function testMethodsAreCorrectWhenControllerIsNamespaced()
 	{
 		$inspector = new Illuminate\Routing\ControllerInspector;
-		$data = $inspector->getRoutable('\\RoutingControllerInspectorStub', 'prefix');
+		$data = $inspector->getRoutable(\RoutingControllerInspectorStub::class, 'prefix');
 
-		$this->assertEquals(4, count($data));
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix', 'uri' => 'prefix'), $data['getIndex'][1]);
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix/index', 'uri' => 'prefix/index/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['getIndex'][0]);
-		$this->assertEquals(array('verb' => 'get', 'plain' => 'prefix/foo-bar', 'uri' => 'prefix/foo-bar/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['getFooBar'][0]);
-		$this->assertEquals(array('verb' => 'post', 'plain' => 'prefix/baz', 'uri' => 'prefix/baz/{one?}/{two?}/{three?}/{four?}/{five?}'), $data['postBaz'][0]);
+		$this->assertCount(4, $data);
+		$this->assertEquals(['verb' => 'get', 'plain' => 'prefix', 'uri' => 'prefix'], $data['getIndex'][1]);
+		$this->assertEquals(
+            ['verb' => 'get', 'plain' => 'prefix/index', 'uri' => 'prefix/index/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['getIndex'][0]);
+		$this->assertEquals(
+            ['verb' => 'get', 'plain' => 'prefix/foo-bar', 'uri' => 'prefix/foo-bar/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['getFooBar'][0]);
+		$this->assertEquals(
+            ['verb' => 'post', 'plain' => 'prefix/baz', 'uri' => 'prefix/baz/{one?}/{two?}/{three?}/{four?}/{five?}'], $data['postBaz'][0]);
 	}
 
 }

@@ -4,6 +4,8 @@ use Aws\Common\Credentials\Credentials;
 use Aws\Common\Signature\SignatureV4;
 use Aws\Sqs\SqsClient;
 use Guzzle\Common\Collection;
+use Illuminate\Container\Container;
+use Illuminate\Queue\SqsQueue;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -31,24 +33,25 @@ class QueueSqsJobTest extends BackwardCompatibleTestCase
 		$this->queueUrl = $this->baseUrl . '/' . $this->account . '/' . $this->queueName;
 
 		// Get a mock of the SqsClient
-		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', array('deleteMessage'), array($this->credentials, $this->signature, $this->config));
+		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', ['deleteMessage'], [$this->credentials, $this->signature, $this->config]
+        );
 
 		// Use Mockery to mock the IoC Container
-		$this->mockedContainer = m::mock('Illuminate\Container\Container');
+		$this->mockedContainer = m::mock(Container::class);
 
 		$this->mockedJob = 'foo';
-		$this->mockedData = array('data');
-		$this->mockedPayload = json_encode(array('job' => $this->mockedJob, 'data' => $this->mockedData, 'attempts' => 1));
+		$this->mockedData = ['data'];
+		$this->mockedPayload = json_encode(['job' => $this->mockedJob, 'data' => $this->mockedData, 'attempts' => 1]);
 		$this->mockedMessageId = 'e3cd03ee-59a3-4ad8-b0aa-ee2e3808ac81';
 		$this->mockedReceiptHandle = '0NNAq8PwvXuWv5gMtS9DJ8qEdyiUwbAjpp45w2m6M4SJ1Y+PxCh7R930NRB8ylSacEmoSnW18bgd4nK\/O6ctE+VFVul4eD23mA07vVoSnPI4F\/voI1eNCp6Iax0ktGmhlNVzBwaZHEr91BRtqTRM3QKd2ASF8u+IQaSwyl\/DGK+P1+dqUOodvOVtExJwdyDLy1glZVgm85Yw9Jf5yZEEErqRwzYz\/qSigdvW4sm2l7e4phRol\/+IjMtovOyH\/ukueYdlVbQ4OshQLENhUKe7RNN5i6bE\/e5x9bnPhfj2gbM';
 
-        $this->mockedJobData = array(
+        $this->mockedJobData = [
             'Body' => $this->mockedPayload,
             'MD5OfBody' => md5($this->mockedPayload),
             'ReceiptHandle' => $this->mockedReceiptHandle,
             'MessageId' => $this->mockedMessageId,
-            'Attributes' => array('ApproximateReceiveCount' => 1)
-        );
+            'Attributes' => ['ApproximateReceiveCount' => 1]
+        ];
     }
 
 
@@ -62,18 +65,22 @@ class QueueSqsJobTest extends BackwardCompatibleTestCase
     {
         $job = $this->getJob();
         $job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
-        $handler->shouldReceive('fire')->once()->with($job, array('data'));
+        $handler->shouldReceive('fire')->once()->with($job, ['data']);
 		$job->fire();
 	}
 
 
 	public function testDeleteRemovesTheJobFromSqs()
 	{
-		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', array('deleteMessage'), array($this->credentials, $this->signature, $this->config));
-		$queue = $this->getMock('Illuminate\Queue\SqsQueue', array('getQueue'), array($this->mockedSqsClient, $this->queueName, $this->account));
+		$this->mockedSqsClient = $this->getMock('Aws\Sqs\SqsClient', ['deleteMessage'], [$this->credentials, $this->signature, $this->config]
+        );
+		$queue = $this->getMock(SqsQueue::class, ['getQueue'], [$this->mockedSqsClient, $this->queueName, $this->account]
+        );
 		$queue->setContainer($this->mockedContainer);
 		$job = $this->getJob();
-		$job->getSqs()->expects($this->once())->method('deleteMessage')->with(array('QueueUrl' => $this->queueUrl, 'ReceiptHandle' => $this->mockedReceiptHandle));
+		$job->getSqs()->expects($this->once())->method('deleteMessage')->with(
+            ['QueueUrl' => $this->queueUrl, 'ReceiptHandle' => $this->mockedReceiptHandle]
+        );
 		$job->delete();
 	}
 

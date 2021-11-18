@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ControllerDispatcher;
 use Illuminate\Routing\Route;
+use Illuminate\Routing\RouteFiltererInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -28,13 +29,13 @@ class RoutingControllerDispatcherTest extends BackwardCompatibleTestCase
     {
         $request = Request::create('controller');
         $route = new Route(
-            array('GET'), 'controller', array(
+            ['GET'], 'controller', [
             'uses' => function () {
             }
-        )
+            ]
         );
 		$route->bind($request);
-		$dispatcher = new ControllerDispatcher(m::mock('Illuminate\Routing\RouteFiltererInterface'), new Container);
+		$dispatcher = new ControllerDispatcher(m::mock(RouteFiltererInterface::class), new Container);
 
 		$this->assertNull($_SERVER['ControllerDispatcherTestControllerStub']);
 

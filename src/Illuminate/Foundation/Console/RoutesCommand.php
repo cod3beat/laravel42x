@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 class RoutesCommand extends Command {
@@ -191,8 +192,8 @@ class RoutesCommand extends Command {
 	 */
 	protected function filterRoute(array $route)
 	{
-		if (($this->option('name') && ! str_contains($route['name'], $this->option('name'))) ||
-			 $this->option('path') && ! str_contains($route['uri'], $this->option('path')))
+		if (($this->option('name') && ! Str::contains($route['name'], $this->option('name'))) ||
+			 $this->option('path') && ! Str::contains($route['uri'], $this->option('path')))
 		{
 			return null;
 		}

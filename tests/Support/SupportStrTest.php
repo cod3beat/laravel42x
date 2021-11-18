@@ -45,9 +45,9 @@ class SupportStrTest extends BackwardCompatibleTestCase
 	{
 		$this->assertTrue(Str::startsWith('jason', 'jas'));
 		$this->assertTrue(Str::startsWith('jason', 'jason'));
-		$this->assertTrue(Str::startsWith('jason', array('jas')));
+		$this->assertTrue(Str::startsWith('jason', ['jas']));
 		$this->assertFalse(Str::startsWith('jason', 'day'));
-		$this->assertFalse(Str::startsWith('jason', array('day')));
+		$this->assertFalse(Str::startsWith('jason', ['day']));
 		$this->assertFalse(Str::startsWith('jason', ''));
 	}
 
@@ -56,9 +56,9 @@ class SupportStrTest extends BackwardCompatibleTestCase
 	{
 		$this->assertTrue(Str::endsWith('jason', 'on'));
 		$this->assertTrue(Str::endsWith('jason', 'jason'));
-		$this->assertTrue(Str::endsWith('jason', array('on')));
+		$this->assertTrue(Str::endsWith('jason', ['on']));
 		$this->assertFalse(Str::endsWith('jason', 'no'));
-		$this->assertFalse(Str::endsWith('jason', array('no')));
+		$this->assertFalse(Str::endsWith('jason', ['no']));
 		$this->assertFalse(Str::endsWith('jason', ''));
 		$this->assertFalse(Str::endsWith('7', ' 7'));
 	}
@@ -67,17 +67,17 @@ class SupportStrTest extends BackwardCompatibleTestCase
 	public function testStrContains()
 	{
 		$this->assertTrue(Str::contains('taylor', 'ylo'));
-		$this->assertTrue(Str::contains('taylor', array('ylo')));
+		$this->assertTrue(Str::contains('taylor', ['ylo']));
 		$this->assertFalse(Str::contains('taylor', 'xxx'));
-		$this->assertFalse(Str::contains('taylor', array('xxx')));
+		$this->assertFalse(Str::contains('taylor', ['xxx']));
 		$this->assertFalse(Str::contains('taylor', ''));
 	}
 
 
 	public function testParseCallback()
 	{
-		$this->assertEquals(array('Class', 'method'), Str::parseCallback('Class@method', 'foo'));
-		$this->assertEquals(array('Class', 'foo'), Str::parseCallback('Class', 'foo'));
+		$this->assertEquals(['Class', 'method'], Str::parseCallback('Class@method', 'foo'));
+		$this->assertEquals(['Class', 'foo'], Str::parseCallback('Class', 'foo'));
 	}
 
 

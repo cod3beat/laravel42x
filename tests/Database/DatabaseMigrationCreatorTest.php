@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Migrations\MigrationCreator;
+use Illuminate\Filesystem\Filesystem;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -21,7 +23,7 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
                 $_SERVER['__migration.creator'] = true;
             }
         );
-		$creator->expects($this->any())->method('getDatePrefix')->will($this->returnValue('foo'));
+		$creator->expects($this->any())->method('getDatePrefix')->willReturn('foo');
 		$creator->getFilesystem()->shouldReceive('get')->once()->with($creator->getStubPath().'/blank.stub')->andReturn('{{class}}');
 		$creator->getFilesystem()->shouldReceive('put')->once()->with('foo/foo_create_bar.php', 'CreateBar');
 
@@ -36,7 +38,7 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 	public function testTableUpdateMigrationStoresMigrationFile()
 	{
 		$creator = $this->getCreator();
-		$creator->expects($this->any())->method('getDatePrefix')->will($this->returnValue('foo'));
+		$creator->expects($this->any())->method('getDatePrefix')->willReturn('foo');
 		$creator->getFilesystem()->shouldReceive('get')->once()->with($creator->getStubPath().'/update.stub')->andReturn('{{class}} {{table}}');
 		$creator->getFilesystem()->shouldReceive('put')->once()->with('foo/foo_create_bar.php', 'CreateBar baz');
 
@@ -47,7 +49,7 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 	public function testTableCreationMigrationStoresMigrationFile()
 	{
 		$creator = $this->getCreator();
-		$creator->expects($this->any())->method('getDatePrefix')->will($this->returnValue('foo'));
+		$creator->expects($this->any())->method('getDatePrefix')->willReturn('foo');
 		$creator->getFilesystem()->shouldReceive('get')->once()->with($creator->getStubPath().'/create.stub')->andReturn('{{class}} {{table}}');
 		$creator->getFilesystem()->shouldReceive('put')->once()->with('foo/foo_create_bar.php', 'CreateBar baz');
 
@@ -57,9 +59,9 @@ class DatabaseMigrationCreatorTest extends BackwardCompatibleTestCase
 
 	protected function getCreator()
 	{
-		$files = m::mock('Illuminate\Filesystem\Filesystem');
+		$files = m::mock(Filesystem::class);
 
-		return $this->getMock('Illuminate\Database\Migrations\MigrationCreator', array('getDatePrefix'), array($files));
+		return $this->getMock(MigrationCreator::class, ['getDatePrefix'], [$files]);
 	}
 
 }

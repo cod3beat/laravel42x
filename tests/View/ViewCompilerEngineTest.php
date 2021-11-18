@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\View\Engines\CompilerEngine;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -43,7 +44,7 @@ class ViewCompilerEngineTest extends BackwardCompatibleTestCase
 
 	protected function getEngine()
 	{
-		return new CompilerEngine(m::mock('Illuminate\View\Compilers\CompilerInterface'));
+		return new CompilerEngine(m::mock(CompilerInterface::class));
 	}
 
 }

@@ -1,15 +1,16 @@
 <?php
 
 use Illuminate\Foundation\AliasLoader;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class FoundationAliasLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
+class FoundationAliasLoaderTest extends BackwardCompatibleTestCase {
 
 	public function testLoaderCanBeCreatedAndRegisteredOnce()
 	{
-		$loader = $this->getMock('Illuminate\Foundation\AliasLoader', array('prependToLoaderStack'), array(array('foo' => 'bar')));
+		$loader = $this->getMock(AliasLoader::class, ['prependToLoaderStack'], [['foo' => 'bar']]);
 		$loader->expects($this->once())->method('prependToLoaderStack');
 
-		$this->assertEquals(array('foo' => 'bar'), $loader->getAliases());
+		$this->assertEquals(['foo' => 'bar'], $loader->getAliases());
 		$this->assertFalse($loader->isRegistered());
 		$loader->register();
 
@@ -19,7 +20,7 @@ class FoundationAliasLoaderTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testGetInstanceCreatesOneInstance()
 	{
-		$loader = AliasLoader::getInstance(array('foo' => 'bar'));
+		$loader = AliasLoader::getInstance(['foo' => 'bar']);
 		$this->assertEquals($loader, AliasLoader::getInstance());
 	}
 

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\EnvironmentDetector;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -14,20 +15,21 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 
     public function testEnvironmentDetection()
     {
-        $env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
+        $env = m::mock(EnvironmentDetector::class)->makePartial();
         $env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(false);
         $result = $env->detect(
-            array(
-			'local'   => array('localhost')
-		));
+            [
+			'local'   => ['localhost']
+            ]
+        );
 		$this->assertEquals('production', $result);
 
 
-		$env = m::mock('Illuminate\Foundation\EnvironmentDetector')->makePartial();
+		$env = m::mock(EnvironmentDetector::class)->makePartial();
 		$env->shouldReceive('isMachine')->once()->with('localhost')->andReturn(true);
-		$result = $env->detect(array(
-			'local'   => array('localhost')
-		));
+		$result = $env->detect([
+			'local'   => ['localhost']
+        ]);
 		$this->assertEquals('local', $result);
 	}
 
@@ -45,9 +47,9 @@ class FoundationEnvironmentDetectorTest extends BackwardCompatibleTestCase
 	{
 		$env = new Illuminate\Foundation\EnvironmentDetector;
 
-		$result = $env->detect(array(
-			'local'   => array('foobar')
-		), array('--env=local'));
+		$result = $env->detect([
+			'local'   => ['foobar']
+        ], ['--env=local']);
 		$this->assertEquals('local', $result);
 	}
 

@@ -128,23 +128,26 @@ abstract class Facade {
 		throw new \RuntimeException("Facade does not implement getFacadeAccessor method.");
 	}
 
-	/**
-	 * Resolve the facade root instance from the container.
-	 *
-	 * @param  string  $name
-	 * @return mixed
-	 */
-	protected static function resolveFacadeInstance($name)
-	{
-		if (is_object($name)) return $name;
+    /**
+     * Resolve the facade root instance from the container.
+     *
+     * @param  object|string  $name
+     * @return mixed
+     */
+    protected static function resolveFacadeInstance($name)
+    {
+        if (is_object($name)) {
+            return $name;
+        }
 
-		if (isset(static::$resolvedInstance[$name]))
-		{
-			return static::$resolvedInstance[$name];
-		}
+        if (isset(static::$resolvedInstance[$name])) {
+            return static::$resolvedInstance[$name];
+        }
 
-		return static::$resolvedInstance[$name] = static::$app[$name];
-	}
+        if (static::$app) {
+            return static::$resolvedInstance[$name] = static::$app[$name];
+        }
+    }
 
 	/**
 	 * Clear a resolved facade instance.

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\Generators\ControllerGenerator;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -15,27 +16,31 @@ class RoutingMakeControllerCommandTest extends BackwardCompatibleTestCase
     public function testGeneratorIsCalledWithProperOptions()
     {
         $command = new Illuminate\Routing\Console\MakeControllerCommand(
-            $gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__
+            $gen = m::mock(ControllerGenerator::class), __DIR__
         );
         $gen->shouldReceive('make')->once()->with(
             'FooController',
             __DIR__,
-            array('only' => array(), 'except' => array())
+            ['only' => [], 'except' => []]
         );
-        $this->runCommand($command, array('name' => 'FooController'));
+        $this->runCommand($command, ['name' => 'FooController']);
 	}
 
 
 	public function testGeneratorIsCalledWithProperOptionsForExceptAndOnly()
 	{
-		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock('Illuminate\Routing\Generators\ControllerGenerator'), __DIR__);
-		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', array('only' => array('foo', 'bar'), 'except' => array('baz', 'boom')));
-		$command->setLaravel(array('path.base' => __DIR__.'/foo'));
-		$this->runCommand($command, array('name' => 'FooController', '--only' => 'foo,bar', '--except' => 'baz,boom', '--path' => 'bar'));
+		$command = new Illuminate\Routing\Console\MakeControllerCommand($gen = m::mock(
+            ControllerGenerator::class
+        ), __DIR__);
+		$gen->shouldReceive('make')->once()->with('FooController', __DIR__.'/foo/bar', ['only' => ['foo', 'bar'], 'except' => ['baz', 'boom']]
+        );
+		$command->setLaravel(['path.base' => __DIR__.'/foo']);
+		$this->runCommand($command, ['name' => 'FooController', '--only' => 'foo,bar', '--except' => 'baz,boom', '--path' => 'bar']
+        );
 	}
 
 
-	public function runCommand($command, $input = array(), $output = null)
+	public function runCommand($command, $input = [], $output = null)
 	{
 		$output = $output ?: new Symfony\Component\Console\Output\NullOutput;
 

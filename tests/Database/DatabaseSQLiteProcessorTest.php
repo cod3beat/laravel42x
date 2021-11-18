@@ -1,6 +1,8 @@
 <?php
 
-class DatabaseSQLiteProcessorTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class DatabaseSQLiteProcessorTest extends BackwardCompatibleTestCase {
 
 	public function testProcessColumnListing()
 	{

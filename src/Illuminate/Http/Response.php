@@ -1,14 +1,39 @@
 <?php namespace Illuminate\Http;
 
 use ArrayObject;
+use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
 use Illuminate\Support\Contracts\RenderableInterface;
+use InvalidArgumentException;
+use JsonSerializable;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class Response extends \Symfony\Component\HttpFoundation\Response {
+class Response extends SymfonyResponse
+{
 
 	use ResponseTrait;
 
-	/**
+    /**
+     * Create a new HTTP response.
+     *
+     * @param  mixed  $content
+     * @param  int  $status
+     * @param  array  $headers
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    public function __construct($content = '', int $status = 200, array $headers = [])
+    {
+        $this->headers = new ResponseHeaderBag($headers);
+        $this->setContent($content);
+        $this->setStatusCode($status);
+        $this->setProtocolVersion('1.0');
+    }
+
+
+    /**
 	 * The original content of the response.
 	 *
 	 * @var mixed
@@ -33,6 +58,10 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 			$this->headers->set('Content-Type', 'application/json');
 
 			$content = $this->morphToJson($content);
+
+            if ($content === false) {
+                throw new InvalidArgumentException(json_last_error_msg());
+            }
 		}
 
 		// If this content implements the "RenderableInterface", then we will call the
@@ -54,9 +83,15 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 	 */
 	protected function morphToJson($content)
 	{
-		if ($content instanceof JsonableInterface) return $content->toJson();
+        if ($content instanceof JsonableInterface) {
+            return $content->toJson();
+        }
 
-		return json_encode($content);
+        if ($content instanceof ArrayableInterface) {
+            return json_encode($content->toArray());
+        }
+
+        return json_encode($content);
 	}
 
 	/**
@@ -67,9 +102,11 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 	 */
 	protected function shouldBeJson($content)
 	{
-		return $content instanceof JsonableInterface ||
-			   $content instanceof ArrayObject ||
-			   is_array($content);
+        return $content instanceof ArrayableInterface ||
+            $content instanceof JsonableInterface ||
+            $content instanceof ArrayObject ||
+            $content instanceof JsonSerializable ||
+            is_array($content);
 	}
 
 	/**

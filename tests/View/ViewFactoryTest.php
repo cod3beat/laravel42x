@@ -1,7 +1,14 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Events\Dispatcher;
+use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineInterface;
+use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory;
+use Illuminate\View\View;
+use Illuminate\View\ViewFinderInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -20,12 +27,14 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 
         $factory = $this->getFactory();
 		$factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn('path.php');
-		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn($engine = m::mock('Illuminate\View\Engines\EngineInterface'));
+		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn($engine = m::mock(
+            EngineInterface::class
+        ));
 		$factory->getFinder()->shouldReceive('addExtension')->once()->with('php');
 		$factory->setDispatcher(new Illuminate\Events\Dispatcher);
 		$factory->creator('view', function($view) { $_SERVER['__test.view'] = $view; });
 		$factory->addExtension('php', 'php');
-		$view = $factory->make('view', array('foo' => 'bar'), array('baz' => 'boom'));
+		$view = $factory->make('view', ['foo' => 'bar'], ['baz' => 'boom']);
 
 		$this->assertSame($engine, $view->getEngine());
 		$this->assertSame($_SERVER['__test.view'], $view);
@@ -48,12 +57,12 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	public function testRenderEachCreatesViewForEachItemInArray()
 	{
 		$factory = m::mock('Illuminate\View\Factory[make]', $this->getFactoryArgs());
-		$factory->shouldReceive('make')->once()->with('foo', array('key' => 'bar', 'value' => 'baz'))->andReturn($mockView1 = m::mock('StdClass'));
-		$factory->shouldReceive('make')->once()->with('foo', array('key' => 'breeze', 'value' => 'boom'))->andReturn($mockView2 = m::mock('StdClass'));
+		$factory->shouldReceive('make')->once()->with('foo', ['key' => 'bar', 'value' => 'baz'])->andReturn($mockView1 = m::mock('StdClass'));
+		$factory->shouldReceive('make')->once()->with('foo', ['key' => 'breeze', 'value' => 'boom'])->andReturn($mockView2 = m::mock('StdClass'));
 		$mockView1->shouldReceive('render')->once()->andReturn('dayle');
 		$mockView2->shouldReceive('render')->once()->andReturn('rees');
 
-		$result = $factory->renderEach('foo', array('bar' => 'baz', 'breeze' => 'boom'), 'value');
+		$result = $factory->renderEach('foo', ['bar' => 'baz', 'breeze' => 'boom'], 'value');
 
 		$this->assertEquals('daylerees', $result);
 	}
@@ -65,7 +74,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		$factory->shouldReceive('make')->once()->with('foo')->andReturn($mockView = m::mock('StdClass'));
 		$mockView->shouldReceive('render')->once()->andReturn('empty');
 
-		$this->assertEquals('empty', $factory->renderEach('view', array(), 'iterator', 'foo'));
+		$this->assertEquals('empty', $factory->renderEach('view', [], 'iterator', 'foo'));
 	}
 
 
@@ -74,7 +83,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		$factory = $this->getFactory();
 		$factory->name('bar', 'foo');
 
-		$this->assertEquals(array('foo' => 'bar'), $factory->getNames());
+		$this->assertEquals(['foo' => 'bar'], $factory->getNames());
 	}
 
 
@@ -82,12 +91,14 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	{
 		$factory = $this->getFactory();
 		$factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn('path.php');
-		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn($engine = m::mock('Illuminate\View\Engines\EngineInterface'));
+		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn($engine = m::mock(
+            EngineInterface::class
+        ));
 		$factory->getFinder()->shouldReceive('addExtension')->once()->with('php');
 		$factory->getDispatcher()->shouldReceive('fire');
 		$factory->addExtension('php', 'php');
 		$factory->name('view', 'foo');
-		$view = $factory->of('foo', array('data'));
+		$view = $factory->of('foo', ['data']);
 
 		$this->assertSame($engine, $view->getEngine());
 	}
@@ -95,7 +106,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 
 	public function testRawStringsMayBeReturnedFromRenderEach()
 	{
-		$this->assertEquals('foo', $this->getFactory()->renderEach('foo', array(), 'item', 'raw|foo'));
+		$this->assertEquals('foo', $this->getFactory()->renderEach('foo', [], 'item', 'raw|foo'));
 	}
 
 
@@ -108,12 +119,14 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		$factory->getFinder()->shouldReceive('addExtension')->once()->with('foo');
 		$factory->getEngineResolver()->shouldReceive('register')->once()->with('bar', $resolver);
 		$factory->getFinder()->shouldReceive('find')->once()->with('view')->andReturn('path.foo');
-		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('bar')->andReturn($engine = m::mock('Illuminate\View\Engines\EngineInterface'));
+		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('bar')->andReturn($engine = m::mock(
+            EngineInterface::class
+        ));
 		$factory->getDispatcher()->shouldReceive('fire');
 
 		$factory->addExtension('foo', 'bar', $resolver);
 
-		$view = $factory->make('view', array('data'));
+		$view = $factory->make('view', ['data']);
 		$this->assertSame($engine, $view->getEngine());
 	}
 
@@ -174,18 +187,18 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		$factory->getDispatcher()->shouldReceive('listen')->once()->with('composing: bar', m::type('Closure'));
 		$factory->getDispatcher()->shouldReceive('listen')->once()->with('composing: qux', m::type('Closure'));
 		$factory->getDispatcher()->shouldReceive('listen')->once()->with('composing: foo', m::type('Closure'));
-		$composers = $factory->composers(array(
+		$composers = $factory->composers([
 			'foo' => 'bar',
-			'baz@baz' => array('qux', 'foo'),
-		));
+			'baz@baz' => ['qux', 'foo'],
+        ]);
 
 		$this->assertCount(3, $composers);
-		$reflections = array(
+		$reflections = [
 			new ReflectionFunction($composers[0]),
 			new ReflectionFunction($composers[1]),
-		);
-		$this->assertEquals(array('class' => 'foo', 'method' => 'compose', 'container' => null), $reflections[0]->getStaticVariables());
-		$this->assertEquals(array('class' => 'baz', 'method' => 'baz', 'container' => null), $reflections[1]->getStaticVariables());
+        ];
+		$this->assertEquals(['class' => 'foo', 'method' => 'compose', 'container' => null], $reflections[0]->getStaticVariables());
+		$this->assertEquals(['class' => 'baz', 'method' => 'baz', 'container' => null], $reflections[1]->getStaticVariables());
 	}
 
 
@@ -193,7 +206,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	{
 		$factory = $this->getFactory();
 		$factory->getDispatcher()->shouldReceive('listen')->once()->with('composing: foo', m::type('Closure'));
-		$factory->setContainer($container = m::mock('Illuminate\Container\Container'));
+		$factory->setContainer($container = m::mock(Container::class));
 		$container->shouldReceive('make')->once()->with('FooComposer')->andReturn($composer = m::mock('StdClass'));
 		$composer->shouldReceive('compose')->once()->with('view')->andReturn('composed');
 		$callback = $factory->composer('foo', 'FooComposer');
@@ -207,7 +220,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	{
 		$factory = $this->getFactory();
 		$factory->getDispatcher()->shouldReceive('listen')->once()->with('composing: foo', m::type('Closure'));
-		$factory->setContainer($container = m::mock('Illuminate\Container\Container'));
+		$factory->setContainer($container = m::mock(Container::class));
 		$container->shouldReceive('make')->once()->with('FooComposer')->andReturn($composer = m::mock('StdClass'));
 		$composer->shouldReceive('doComposer')->once()->with('view')->andReturn('composed');
 		$callback = $factory->composer('foo', 'FooComposer@doComposer');
@@ -220,9 +233,9 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	public function testCallComposerCallsProperEvent()
 	{
 		$factory = $this->getFactory();
-		$view = m::mock('Illuminate\View\View');
+		$view = m::mock(View::class);
 		$view->shouldReceive('getName')->once()->andReturn('name');
-		$factory->getDispatcher()->shouldReceive('fire')->once()->with('composing: name', array($view));
+		$factory->getDispatcher()->shouldReceive('fire')->once()->with('composing: name', [$view]);
 
 		$factory->callComposer($view);
 	}
@@ -328,11 +341,11 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		echo 'hi';
 		$factory->stopSection();
 
-		$this->assertEquals(1, count($factory->getSections()));
+		$this->assertCount(1, $factory->getSections());
 
 		$factory->flushSections();
 
-		$this->assertEquals(0, count($factory->getSections()));
+		$this->assertCount(0, $factory->getSections());
 	}
 
 
@@ -341,7 +354,9 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 		$factory = $this->getFactory();
 		$factory->alias('real', 'alias');
 		$factory->getFinder()->shouldReceive('find')->once()->with('real')->andReturn('path.php');
-		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn(m::mock('Illuminate\View\Engines\EngineInterface'));
+		$factory->getEngineResolver()->shouldReceive('resolve')->once()->with('php')->andReturn(m::mock(
+            EngineInterface::class
+        ));
 		$factory->getDispatcher()->shouldReceive('fire');
 
 		$view = $factory->make('alias');
@@ -361,7 +376,7 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 
 	public function testExceptionsInSectionsAreThrown()
     {
-        $engine = new CompilerEngine(m::mock('Illuminate\View\Compilers\CompilerInterface'));
+        $engine = new CompilerEngine(m::mock(CompilerInterface::class));
         $engine->getCompiler()->shouldReceive('getCompiledPath')->andReturnUsing(
             function ($path) {
                 return $path;
@@ -386,20 +401,20 @@ class ViewFactoryTest extends BackwardCompatibleTestCase
 	protected function getFactory()
 	{
 		return new Factory(
-			m::mock('Illuminate\View\Engines\EngineResolver'),
-			m::mock('Illuminate\View\ViewFinderInterface'),
-			m::mock('Illuminate\Events\Dispatcher')
+			m::mock(EngineResolver::class),
+			m::mock(ViewFinderInterface::class),
+			m::mock(Dispatcher::class)
 		);
 	}
 
 
 	protected function getFactoryArgs()
 	{
-		return array(
-			m::mock('Illuminate\View\Engines\EngineResolver'),
-			m::mock('Illuminate\View\ViewFinderInterface'),
-			m::mock('Illuminate\Events\Dispatcher'),
-		);
+		return [
+			m::mock(EngineResolver::class),
+			m::mock(ViewFinderInterface::class),
+			m::mock(Dispatcher::class),
+        ];
 	}
 
 }

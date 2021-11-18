@@ -5,6 +5,7 @@ use Illuminate\Routing\Matching\UriValidator;
 use Illuminate\Routing\Matching\HostValidator;
 use Illuminate\Routing\Matching\MethodValidator;
 use Illuminate\Routing\Matching\SchemeValidator;
+use Illuminate\Support\Str;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
 class Route {
@@ -237,7 +238,7 @@ class Route {
 	 */
 	public static function parseFilter($filter)
 	{
-		if ( ! str_contains($filter, ':')) return array($filter, array());
+		if ( ! Str::contains($filter, ':')) return array($filter, array());
 
 		return static::parseParameterFilter($filter);
 	}

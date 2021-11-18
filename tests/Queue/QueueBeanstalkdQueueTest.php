@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Container\Container;
+use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 use Pheanstalk\Job;
@@ -22,14 +24,14 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
         $pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
         $pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
         $pheanstalk->shouldReceive('put')->twice()->with(
-            json_encode(array('job' => 'foo', 'data' => array('data'))),
+            json_encode(['job' => 'foo', 'data' => ['data']]),
             1024,
             0,
             60
         );
 
-        $queue->push('foo', array('data'), 'stack');
-        $queue->push('foo', array('data'));
+        $queue->push('foo', ['data'], 'stack');
+        $queue->push('foo', ['data']);
     }
 
 
@@ -40,21 +42,21 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
         $pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
         $pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
         $pheanstalk->shouldReceive('put')->twice()->with(
-            json_encode(array('job' => 'foo', 'data' => array('data'))),
+            json_encode(['job' => 'foo', 'data' => ['data']]),
             PheanstalkInterface::DEFAULT_PRIORITY,
             5,
             PheanstalkInterface::DEFAULT_TTR
         );
 
-        $queue->later(5, 'foo', array('data'), 'stack');
-        $queue->later(5, 'foo', array('data'));
+        $queue->later(5, 'foo', ['data'], 'stack');
+        $queue->later(5, 'foo', ['data']);
     }
 
 
 	public function testPopProperlyPopsJobOffOfBeanstalkd()
     {
         $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
-        $queue->setContainer(m::mock('Illuminate\Container\Container'));
+        $queue->setContainer(m::mock(Container::class));
         $pheanstalk = $queue->getPheanstalk();
         $pheanstalk->shouldReceive('watchOnly')->once()->with('default')->andReturn($pheanstalk);
         $job = m::mock(Job::class);
@@ -62,7 +64,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 
         $result = $queue->pop();
 
-        $this->assertInstanceOf('Illuminate\Queue\Jobs\BeanstalkdJob', $result);
+        $this->assertInstanceOf(BeanstalkdJob::class, $result);
     }
 
 

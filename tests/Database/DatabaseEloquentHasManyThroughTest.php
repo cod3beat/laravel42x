@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
@@ -17,28 +19,28 @@ class DatabaseEloquentHasManyThroughTest extends BackwardCompatibleTestCase
     public function testRelationIsProperlyInitialized()
     {
         $relation = $this->getRelation();
-        $model = m::mock('Illuminate\Database\Eloquent\Model');
+        $model = m::mock(Model::class);
         $relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(
-            function ($array = array()) {
+            function ($array = []) {
                 return new Collection($array);
             }
         );
-		$model->shouldReceive('setRelation')->once()->with('foo', m::type('Illuminate\Database\Eloquent\Collection'));
-		$models = $relation->initRelation(array($model), 'foo');
+		$model->shouldReceive('setRelation')->once()->with('foo', m::type(Collection::class));
+		$models = $relation->initRelation([$model], 'foo');
 
-		$this->assertEquals(array($model), $models);
+		$this->assertEquals([$model], $models);
 	}
 
 
 	public function testEagerConstraintsAreProperlyAdded()
 	{
 		$relation = $this->getRelation();
-		$relation->getQuery()->shouldReceive('whereIn')->once()->with('users.country_id', array(1, 2));
+		$relation->getQuery()->shouldReceive('whereIn')->once()->with('users.country_id', [1, 2]);
 		$model1 = new EloquentHasManyThroughModelStub;
 		$model1->id = 1;
 		$model2 = new EloquentHasManyThroughModelStub;
 		$model2->id = 2;
-		$relation->addEagerConstraints(array($model1, $model2));
+		$relation->addEagerConstraints([$model1, $model2]);
 	}
 
 
@@ -61,30 +63,30 @@ class DatabaseEloquentHasManyThroughTest extends BackwardCompatibleTestCase
 		$model3->id = 3;
 
 		$relation->getRelated()->shouldReceive('newCollection')->andReturnUsing(function($array) { return new Collection($array); });
-		$models = $relation->match(array($model1, $model2, $model3), new Collection(array($result1, $result2, $result3)), 'foo');
+		$models = $relation->match([$model1, $model2, $model3], new Collection([$result1, $result2, $result3]), 'foo');
 
 		$this->assertEquals(1, $models[0]->foo[0]->country_id);
-		$this->assertEquals(1, count($models[0]->foo));
+		$this->assertCount(1, $models[0]->foo);
 		$this->assertEquals(2, $models[1]->foo[0]->country_id);
 		$this->assertEquals(2, $models[1]->foo[1]->country_id);
-		$this->assertEquals(2, count($models[1]->foo));
+		$this->assertCount(2, $models[1]->foo);
 		$this->assertEmpty($models[2]->foo);
 	}
 
 
 	protected function getRelation()
 	{
-		$builder = m::mock('Illuminate\Database\Eloquent\Builder');
+		$builder = m::mock(Builder::class);
 		$builder->shouldReceive('join')->once()->with('users', 'users.id', '=', 'posts.user_id');
 		$builder->shouldReceive('where')->with('users.country_id', '=', 1);
 
-		$country = m::mock('Illuminate\Database\Eloquent\Model');
+		$country = m::mock(Model::class);
 		$country->shouldReceive('getKey')->andReturn(1);
 		$country->shouldReceive('getForeignKey')->andReturn('country_id');
-		$user = m::mock('Illuminate\Database\Eloquent\Model');
+		$user = m::mock(Model::class);
 		$user->shouldReceive('getTable')->andReturn('users');
 		$user->shouldReceive('getQualifiedKeyName')->andReturn('users.id');
-		$post = m::mock('Illuminate\Database\Eloquent\Model');
+		$post = m::mock(Model::class);
 		$post->shouldReceive('getTable')->andReturn('posts');
 
 		$builder->shouldReceive('getModel')->andReturn($post);

@@ -3,6 +3,7 @@
 use DateTime;
 use ArrayAccess;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use LogicException;
 use JsonSerializable;
 use Illuminate\Events\Dispatcher;
@@ -2179,7 +2180,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
 	 */
 	protected function removeTableFromKey($key)
 	{
-		if ( ! str_contains($key, '.')) return $key;
+		if ( ! Str::contains($key, '.')) return $key;
 
 		return last(explode('.', $key));
 	}

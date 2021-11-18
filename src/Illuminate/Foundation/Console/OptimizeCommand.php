@@ -3,7 +3,6 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Illuminate\View\Engines\CompilerEngine;
-use ClassPreloader\Console\PreCompileCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 class OptimizeCommand extends Command {
@@ -53,19 +52,21 @@ class OptimizeCommand extends Command {
 
 		if ($this->option('psr'))
 		{
-			$this->composer->dumpAutoloads();
+			$process = $this->composer->dumpAutoloads();
 		}
+        elseif ($this->option('apcu'))
+        {
+            $process = $this->composer->dumpAutoloads('--optimize --apcu');
+        }
 		else
 		{
-			$this->composer->dumpOptimized();
+			$process = $this->composer->dumpOptimized();
 		}
+
+        $this->info("Executed: {$process->getCommandLine()}");
 
 		if ($this->option('force') || ! $this->laravel['config']['app.debug'])
 		{
-			$this->info('Compiling common classes');
-
-			$this->compileClasses();
-
 			$this->info('Compiling views');
 
 			$this->compileViews();
@@ -74,48 +75,6 @@ class OptimizeCommand extends Command {
 		{
 			$this->call('clear-compiled');
 		}
-	}
-
-	/**
-	 * Generate the compiled class file.
-	 *
-	 * @return void
-	 */
-	protected function compileClasses()
-	{
-		$this->registerClassPreloaderCommand();
-
-		$outputPath = $this->laravel['path.base'].'/bootstrap/compiled.php';
-
-		$this->callSilent('compile', array(
-			'--config' => implode(',', $this->getClassFiles()),
-			'--output' => $outputPath,
-			'--strip_comments' => 1,
-		));
-	}
-
-	/**
-	 * Get the classes that should be combined and compiled.
-	 *
-	 * @return array
-	 */
-	protected function getClassFiles()
-	{
-		$app = $this->laravel;
-
-		$core = require __DIR__.'/Optimize/config.php';
-
-		return array_merge($core, $this->laravel['config']['compile']);
-	}
-
-	/**
-	 * Register the pre-compiler command instance with Artisan.
-	 *
-	 * @return void
-	 */
-	protected function registerClassPreloaderCommand()
-	{
-		$this->getApplication()->add(new PreCompileCommand);
 	}
 
 	/**
@@ -154,9 +113,11 @@ class OptimizeCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('force', null, InputOption::VALUE_NONE, 'Force the compiled class file to be written.'),
+            ['force', null, InputOption::VALUE_NONE, 'Force the compiled class file to be written.'],
 
-			array('psr', null, InputOption::VALUE_NONE, 'Do not optimize Composer dump-autoload.'),
+            ['psr', null, InputOption::VALUE_NONE, 'Do not optimize Composer dump-autoload.'],
+
+            ['apcu', null, InputOption::VALUE_NONE, 'Optimize with APCU']
 		);
 	}
 

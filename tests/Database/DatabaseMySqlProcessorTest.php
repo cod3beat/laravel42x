@@ -1,6 +1,8 @@
 <?php
 
-class DatabaseMySqlProcessorTest extends \L4\Tests\BackwardCompatibleTestCase {
+use L4\Tests\BackwardCompatibleTestCase;
+
+class DatabaseMySqlProcessorTest extends BackwardCompatibleTestCase {
 
 	public function testProcessColumnListing()
 	{

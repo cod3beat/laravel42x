@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Cache\ArrayStore;
+use L4\Tests\BackwardCompatibleTestCase;
 
-class CacheArrayStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
+class CacheArrayStoreTest extends BackwardCompatibleTestCase {
 
 	public function testItemsCanBeSetAndRetrieved()
 	{
@@ -14,7 +15,7 @@ class CacheArrayStoreTest extends \L4\Tests\BackwardCompatibleTestCase {
 
 	public function testStoreItemForeverProperlyStoresInArray()
 	{
-		$mock = $this->getMock('Illuminate\Cache\ArrayStore', array('put'));
+		$mock = $this->getMock(ArrayStore::class, ['put']);
 		$mock->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(0));
 		$mock->forever('foo', 'bar');
 	}

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Exception\ExceptionDisplayerInterface;
 use Illuminate\Exception\Handler;
+use Illuminate\Support\Contracts\ResponsePreparerInterface;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
 
@@ -8,9 +10,9 @@ class HandlerTest extends BackwardCompatibleTestCase
 {
     protected function setUp(): void
     {
-        $this->responsePreparer = m::mock('Illuminate\Support\Contracts\ResponsePreparerInterface');
-        $this->plainDisplayer = m::mock('Illuminate\Exception\ExceptionDisplayerInterface');
-        $this->debugDisplayer = m::mock('Illuminate\Exception\ExceptionDisplayerInterface');
+        $this->responsePreparer = m::mock(ResponsePreparerInterface::class);
+        $this->plainDisplayer = m::mock(ExceptionDisplayerInterface::class);
+        $this->debugDisplayer = m::mock(ExceptionDisplayerInterface::class);
         $this->handler = new Handler($this->responsePreparer, $this->plainDisplayer, $this->debugDisplayer);
     }
 
@@ -19,7 +21,7 @@ class HandlerTest extends BackwardCompatibleTestCase
     {
 		$error = null;
 		try {
-			$this->handler->handleError(E_USER_ERROR, 'message', '/path/to/file', 111, array());
+			$this->handler->handleError(E_USER_ERROR, 'message', '/path/to/file', 111, []);
 		} catch (ErrorException $error) {}
 
 		$this->assertInstanceOf('ErrorException', $error);
