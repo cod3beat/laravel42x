@@ -42,7 +42,7 @@ class BackwardCompatibleTestCase extends TestCase
         $builder = $this->getMockBuilder($originalClassName);
 
         if (is_array($methods)) {
-            $builder->setMethods($methods);
+            $builder->onlyMethods($methods);
         }
 
         if (is_array($arguments)) {
