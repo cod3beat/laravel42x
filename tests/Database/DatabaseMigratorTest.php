@@ -43,9 +43,9 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 		$migrator->getRepository()->shouldReceive('getNextBatchNumber')->once()->andReturn(1);
 		$migrator->getRepository()->shouldReceive('log')->once()->with('2_bar', 1);
 		$migrator->getRepository()->shouldReceive('log')->once()->with('3_baz', 1);
-		$barMock = m::mock('stdClass');
+		$barMock = m::mock(stdClass::class);
 		$barMock->shouldReceive('up')->once();
-		$bazMock = m::mock('stdClass');
+		$bazMock = m::mock(stdClass::class);
 		$bazMock->shouldReceive('up')->once();
 		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->willReturn($barMock);
 		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->willReturn($bazMock);
@@ -74,18 +74,18 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
         ]);
 		$migrator->getRepository()->shouldReceive('getNextBatchNumber')->once()->andReturn(1);
 
-		$barMock = m::mock('stdClass');
+		$barMock = m::mock(stdClass::class);
 		$barMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$barMock->shouldReceive('up')->once();
 
-		$bazMock = m::mock('stdClass');
+		$bazMock = m::mock(stdClass::class);
 		$bazMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$bazMock->shouldReceive('up')->once();
 
 		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('2_bar'))->willReturn($barMock);
 		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('3_baz'))->willReturn($bazMock);
 
-		$connection = m::mock('stdClass');
+		$connection = m::mock(stdClass::class);
 		$connection->shouldReceive('pretend')->with(m::type('Closure'))->andReturnUsing(function($closure)
 		{
 			$closure();
@@ -133,10 +133,10 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 			$barMigration = new MigratorTestMigrationStub('bar'),
         ]);
 
-		$barMock = m::mock('stdClass');
+		$barMock = m::mock(stdClass::class);
 		$barMock->shouldReceive('down')->once();
 
-		$fooMock = m::mock('stdClass');
+		$fooMock = m::mock(stdClass::class);
 		$fooMock->shouldReceive('down')->once();
 
 		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->willReturn($barMock);
@@ -161,18 +161,18 @@ class DatabaseMigratorTest extends BackwardCompatibleTestCase
 			$barMigration = new MigratorTestMigrationStub('bar'),
         ]);
 
-		$barMock = m::mock('stdClass');
+		$barMock = m::mock(stdClass::class);
 		$barMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$barMock->shouldReceive('down')->once();
 
-		$fooMock = m::mock('stdClass');
+		$fooMock = m::mock(stdClass::class);
 		$fooMock->shouldReceive('getConnection')->once()->andReturn(null);
 		$fooMock->shouldReceive('down')->once();
 
 		$migrator->expects($this->at(0))->method('resolve')->with($this->equalTo('foo'))->willReturn($barMock);
 		$migrator->expects($this->at(1))->method('resolve')->with($this->equalTo('bar'))->willReturn($fooMock);
 
-		$connection = m::mock('stdClass');
+		$connection = m::mock(stdClass::class);
 		$connection->shouldReceive('pretend')->with(m::type('Closure'))->andReturnUsing(function($closure)
 		{
 			$closure();
