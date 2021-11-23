@@ -6,6 +6,7 @@ use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 
 class BackwardCompatibleTestCase extends TestCase
 {
@@ -42,7 +43,11 @@ class BackwardCompatibleTestCase extends TestCase
         $builder = $this->getMockBuilder($originalClassName);
 
         if (is_array($methods)) {
-            $builder->onlyMethods($methods);
+            if ($originalClassName === stdClass::class) {
+                $builder->addMethods($methods);
+            } else {
+                $builder->onlyMethods($methods);
+            }
         }
 
         if (is_array($arguments)) {
