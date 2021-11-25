@@ -17,3 +17,5 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
     composer --global config process-timeout 1000
+
+WORKDIR /usr/src/myapp
