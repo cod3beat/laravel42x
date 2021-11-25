@@ -44,6 +44,12 @@ Change this value on your `composer.json` laravel app
 }
 ```
 
+Then, run this command:
+
+```sh
+composer update laravel/framework --prefer-source -W
+```
+
 Add this volume binding to `docker-compose.yml`
 ```yaml
 version: '3.9'
