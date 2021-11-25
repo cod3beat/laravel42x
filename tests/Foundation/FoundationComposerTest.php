@@ -4,15 +4,10 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Composer;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Symfony\Component\Process\Process;
 
 class FoundationComposerTest extends BackwardCompatibleTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->markTestIncomplete('Symfony process setCommandLine method is deprecated. Test should be updated.');
-    }
-    
     protected function tearDown(): void
     {
         m::close();
@@ -27,10 +22,9 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
             [$files = m::mock(Filesystem::class), __DIR__]
         );
         $files->shouldReceive('exists')->once()->with(__DIR__ . '/composer.phar')->andReturn(true);
-        $process = m::mock('stdClass');
+        $process = $this->getMock(Process::class, ['run'], ['composer.phar dump-autoload', __DIR__ . '/composer.phar']);
 		$composer->expects($this->once())->method('getProcess')->willReturn($process);
-		$process->shouldReceive('setCommandLine')->once()->with('"'.PHP_BINARY.'" composer.phar dump-autoload');
-		$process->shouldReceive('run')->once();
+		$process->expects($this->once())->method('run');
 
 		$composer->dumpAutoloads();
 	}
@@ -44,10 +38,9 @@ class FoundationComposerTest extends BackwardCompatibleTestCase
         ), __DIR__
         ]);
 		$files->shouldReceive('exists')->once()->with(__DIR__.'/composer.phar')->andReturn(false);
-		$process = m::mock('stdClass');
-		$composer->expects($this->once())->method('getProcess')->willReturn($process);
-		$process->shouldReceive('setCommandLine')->once()->with('composer dump-autoload');
-		$process->shouldReceive('run')->once();
+        $process = $this->getMock(Process::class, ['run'], ['composer dump-autoload', __DIR__ . '/composer.phar']);
+        $composer->expects($this->once())->method('getProcess')->willReturn($process);
+        $process->expects($this->once())->method('run');
 
 		$composer->dumpAutoloads();
 	}
