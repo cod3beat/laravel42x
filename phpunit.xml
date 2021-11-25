@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         backupGlobals="false"
          backupStaticAttributes="false"
          beStrictAboutTestsThatDoNotTestAnything="false"
          bootstrap="phpunit.php"
@@ -11,20 +12,20 @@
          stopOnError="false"
          stopOnFailure="false"
          verbose="false"
->
-    <testsuites>
-        <testsuite name="Laravel Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-            <exclude>
-                <directory>./src/Illuminate/Pagination/views</directory>
-                <file>./src/Illuminate/Foundation/start.php</file>
-                <file>./src/Illuminate/Foundation/Console/Optimize/config.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+    <exclude>
+      <directory>./src/Illuminate/Pagination/views</directory>
+      <file>./src/Illuminate/Foundation/start.php</file>
+      <file>./src/Illuminate/Foundation/Console/Optimize/config.php</file>
+    </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="Laravel Test Suite">
+      <directory suffix="Test.php">./tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>
