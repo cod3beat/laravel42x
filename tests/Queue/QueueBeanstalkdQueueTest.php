@@ -4,29 +4,44 @@ use Illuminate\Container\Container;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\PheanstalkInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 {
+    /**
+     * @var Pheanstalk|ObjectProphecy
+     */
+    private $pheanstalk;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->pheanstalk = $this->prophesize(Pheanstalk::class);
+    }
 
     protected function tearDown(): void
     {
         m::close();
     }
 
-
-    public function testPushProperlyPushesJobOntoBeanstalkd()
+    public function testPushProperlyPushesJobOntoBeanstalkd(): void
     {
-        $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
-        $pheanstalk = $queue->getPheanstalk();
-        $pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
-        $pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
-        $pheanstalk->shouldReceive('put')->twice()->with(
+        $this->pheanstalk->useTube('stack')->willReturn($this->pheanstalk)->shouldBeCalledOnce();
+        $this->pheanstalk->useTube('default')->willReturn($this->pheanstalk)->shouldBeCalledOnce();
+        $this->pheanstalk->put(
             json_encode(['job' => 'foo', 'data' => ['data']]),
-            1024,
+            PheanstalkInterface::DEFAULT_PRIORITY,
             0,
+            60
+        )->shouldBeCalledTimes(2);
+
+        $queue = new Illuminate\Queue\BeanstalkdQueue(
+            $this->pheanstalk->reveal(),
+            'default',
             60
         );
 
@@ -35,7 +50,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
     }
 
 
-	public function testDelayedPushProperlyPushesJobOntoBeanstalkd()
+	public function testDelayedPushProperlyPushesJobOntoBeanstalkd(): void
     {
         $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
         $pheanstalk = $queue->getPheanstalk();
@@ -53,7 +68,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
     }
 
 
-	public function testPopProperlyPopsJobOffOfBeanstalkd()
+	public function testPopProperlyPopsJobOffOfBeanstalkd(): void
     {
         $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
         $queue->setContainer(m::mock(Container::class));
@@ -68,7 +83,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
     }
 
 
-	public function testDeleteProperlyRemoveJobsOffBeanstalkd()
+	public function testDeleteProperlyRemoveJobsOffBeanstalkd(): void
     {
         $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
         $pheanstalk = $queue->getPheanstalk();
