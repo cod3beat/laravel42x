@@ -34,12 +34,6 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
         $this->pheanstalkJob = $this->prophesize(Job::class);
     }
 
-    protected function tearDown(): void
-    {
-        m::close();
-    }
-
-
     public function testFireProperlyCallsTheJobHandler(): void
     {
         $this->pheanstalkJob->getData()->willReturn(json_encode(['job' => 'foo', 'data' => ['data1']]));
@@ -54,7 +48,6 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
 		$job->fire();
 	}
 
-
 	public function testDeleteRemovesTheJobFromBeanstalkd(): void
     {
         $this->pheanstalk->delete($this->pheanstalkJob)
@@ -64,7 +57,6 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
 
 		$job->delete();
 	}
-
 
 	public function testReleaseProperlyReleasesJobOntoBeanstalkd(): void
     {
@@ -79,24 +71,13 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
         $job->release();
     }
 
-
 	public function testBuryProperlyBuryTheJobFromBeanstalkd(): void
     {
-		$job = $this->getJob();
-		$job->getPheanstalk()->shouldReceive('bury')->once()->with($job->getPheanstalkJob());
+        $this->pheanstalk->bury($this->pheanstalkJob)->shouldBeCalledOnce();
+
+        $job = $this->getProphesizedJob();
 
 		$job->bury();
-	}
-
-
-	protected function getJob(): BeanstalkdJob
-    {
-		return new Illuminate\Queue\Jobs\BeanstalkdJob(
-            m::mock(Container::class),
-            m::mock(Pheanstalk::class),
-            m::mock(Job::class),
-            'default'
-		);
 	}
 
     protected function getProphesizedJob(): BeanstalkdJob
@@ -108,7 +89,6 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
             'default'
         );
     }
-
 }
 
 class BeanstalkdDummyHandler
