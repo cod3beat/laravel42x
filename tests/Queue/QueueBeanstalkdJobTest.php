@@ -4,9 +4,9 @@ use Illuminate\Container\Container;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\PheanstalkInterface;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
@@ -68,12 +68,13 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
 
 	public function testReleaseProperlyReleasesJobOntoBeanstalkd(): void
     {
-        $job = $this->getJob();
-        $job->getPheanstalk()->shouldReceive('release')->once()->with(
-            $job->getPheanstalkJob(),
+        $this->pheanstalk->release(
+            $this->pheanstalkJob,
             PheanstalkInterface::DEFAULT_PRIORITY,
             0
-        );
+        )->shouldBeCalledOnce();
+
+        $job = $this->getProphesizedJob();
 
         $job->release();
     }
