@@ -12,10 +12,10 @@ class BeanstalkdConnector implements ConnectorInterface {
 	 */
 	public function connect(array $config)
 	{
-		$pheanstalk = new \Pheanstalk\Pheanstalk($config['host'], array_get($config, 'port', \Pheanstalk\PheanstalkInterface::DEFAULT_PORT));
+		$pheanstalk = new \Pheanstalk\Pheanstalk($config['host'], array_get($config, 'port', \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PORT));
 
 		return new BeanstalkdQueue(
-			$pheanstalk, $config['queue'], array_get($config, 'ttr', \Pheanstalk\PheanstalkInterface::DEFAULT_TTR)
+			$pheanstalk, $config['queue'], array_get($config, 'ttr', \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_TTR)
 		);
 	}
 
