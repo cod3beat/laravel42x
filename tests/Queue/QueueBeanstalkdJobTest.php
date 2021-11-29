@@ -3,11 +3,9 @@
 use Illuminate\Container\Container;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
-use Mockery as m;
 use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
