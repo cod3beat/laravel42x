@@ -1,12 +1,15 @@
-<?php
+<?php /** @noinspection PhpParamsInspection */
 
 use Illuminate\Container\Container;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
 use Mockery as m;
+use Pheanstalk\Contract\JobIdInterface;
 use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
+use Pheanstalk\JobId;
 use Pheanstalk\Pheanstalk;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
@@ -96,12 +99,18 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 
 	public function testDeleteProperlyRemoveJobsOffBeanstalkd(): void
     {
-        $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
-        $pheanstalk = $queue->getPheanstalk();
-        $pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
-        $pheanstalk->shouldReceive('delete')->once()->with(1);
+        $this->pheanstalk->useTube('default')->willReturn($this->pheanstalk)->shouldBeCalledOnce();
+        $this->pheanstalk->delete(Argument::that(function(JobIdInterface $jobId) {
+            return $jobId->getId() === 1;
+        }))->shouldBeCalledOnce();
 
-        $queue->deleteMessage('default', 1);
+        $queue = new Illuminate\Queue\BeanstalkdQueue(
+            $this->pheanstalk->reveal(),
+            'default',
+            60
+        );
+
+        $queue->deleteMessage('default', '1');
     }
 
 }
