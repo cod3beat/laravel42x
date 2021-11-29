@@ -57,8 +57,10 @@ class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
 
 	public function testDeleteRemovesTheJobFromBeanstalkd(): void
     {
-		$job = $this->getJob();
-		$job->getPheanstalk()->shouldReceive('delete')->once()->with($job->getPheanstalkJob());
+        $this->pheanstalk->delete($this->pheanstalkJob)
+            ->shouldBeCalledOnce();
+
+        $job = $this->getProphesizedJob();
 
 		$job->delete();
 	}
