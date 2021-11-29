@@ -86,17 +86,19 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 		return $pheanstalk->put($payload, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY, $this->getSeconds($delay), $this->timeToRun);
 	}
 
-	/**
-	 * Pop the next job off of the queue.
-	 *
-	 * @param  string  $queue
-	 * @return \Illuminate\Queue\Jobs\Job|null
-	 */
+    /**
+     * Pop the next job off of the queue.
+     *
+     * @param string $queue
+     *
+     * @return \Illuminate\Queue\Jobs\Job|null
+     * @throws \Pheanstalk\Exception\DeadlineSoonException
+     */
 	public function pop($queue = null)
 	{
 		$queue = $this->getQueue($queue);
 
-		$job = $this->pheanstalk->watchOnly($queue)->reserve(0);
+		$job = $this->pheanstalk->watchOnly($queue)->reserveWithTimeout(0);
 
 		if ($job instanceof \Pheanstalk\Job)
 		{
