@@ -1,7 +1,9 @@
 <?php namespace Illuminate\Queue;
 
 use Illuminate\Queue\Jobs\BeanstalkdJob;
+use Illuminate\Queue\Jobs\Job;
 use Pheanstalk\Contract\JobIdInterface;
+use Pheanstalk\Exception\DeadlineSoonException;
 use Pheanstalk\JobId;
 
 class BeanstalkdQueue extends Queue implements QueueInterface {
@@ -93,8 +95,8 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
      *
      * @param string $queue
      *
-     * @return \Illuminate\Queue\Jobs\Job|null
-     * @throws \Pheanstalk\Exception\DeadlineSoonException
+     * @return Job|null
+     * @throws DeadlineSoonException
      */
 	public function pop($queue = null)
 	{
@@ -127,8 +129,8 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	 * @param  string|null  $queue
 	 * @return string
 	 */
-	public function getQueue($queue)
-	{
+	public function getQueue(?string $queue = null): string
+    {
 		return $queue ?: $this->default;
 	}
 
@@ -137,8 +139,8 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	 *
 	 * @return \Pheanstalk\Pheanstalk
 	 */
-	public function getPheanstalk()
-	{
+	public function getPheanstalk(): \Pheanstalk\Pheanstalk
+    {
 		return $this->pheanstalk;
 	}
 
