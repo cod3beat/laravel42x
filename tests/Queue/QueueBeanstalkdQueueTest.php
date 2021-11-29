@@ -36,7 +36,7 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
             json_encode(['job' => 'foo', 'data' => ['data']]),
             PheanstalkInterface::DEFAULT_PRIORITY,
             0,
-            60
+            PheanstalkInterface::DEFAULT_TTR
         )->shouldBeCalledTimes(2);
 
         $queue = new Illuminate\Queue\BeanstalkdQueue(
@@ -52,15 +52,19 @@ class QueueBeanstalkdQueueTest extends BackwardCompatibleTestCase
 
 	public function testDelayedPushProperlyPushesJobOntoBeanstalkd(): void
     {
-        $queue = new Illuminate\Queue\BeanstalkdQueue(m::mock(Pheanstalk::class), 'default', 60);
-        $pheanstalk = $queue->getPheanstalk();
-        $pheanstalk->shouldReceive('useTube')->once()->with('stack')->andReturn($pheanstalk);
-        $pheanstalk->shouldReceive('useTube')->once()->with('default')->andReturn($pheanstalk);
-        $pheanstalk->shouldReceive('put')->twice()->with(
+        $this->pheanstalk->useTube('stack')->willReturn($this->pheanstalk)->shouldBeCalledOnce();
+        $this->pheanstalk->useTube('default')->willReturn($this->pheanstalk)->shouldBeCalledOnce();
+        $this->pheanstalk->put(
             json_encode(['job' => 'foo', 'data' => ['data']]),
             PheanstalkInterface::DEFAULT_PRIORITY,
             5,
             PheanstalkInterface::DEFAULT_TTR
+        )->shouldBeCalledTimes(2);
+
+        $queue = new Illuminate\Queue\BeanstalkdQueue(
+            $this->pheanstalk->reveal(),
+            'default',
+            60
         );
 
         $queue->later(5, 'foo', ['data'], 'stack');
