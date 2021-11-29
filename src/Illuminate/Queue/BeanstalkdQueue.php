@@ -1,6 +1,8 @@
 <?php namespace Illuminate\Queue;
 
 use Illuminate\Queue\Jobs\BeanstalkdJob;
+use Pheanstalk\Contract\JobIdInterface;
+use Pheanstalk\JobId;
 
 class BeanstalkdQueue extends Queue implements QueueInterface {
 
@@ -106,16 +108,17 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 		}
 	}
 
-	/**
-	 * Delete a message from the Beanstalk queue.
-	 *
-	 * @param  string  $queue
-	 * @param  string  $id
-	 * @return void
-	 */
-	public function deleteMessage($queue, $id)
-	{
-		$this->pheanstalk->useTube($this->getQueue($queue))->delete($id);
+    /**
+     * Delete a message from the Beanstalk queue.
+     *
+     * @param string $queue
+     * @param string $id
+     *
+     * @return void
+     */
+	public function deleteMessage(string $queue, string $id): void
+    {
+		$this->pheanstalk->useTube($this->getQueue($queue))->delete(new JobId($id));
 	}
 
 	/**
