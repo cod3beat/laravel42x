@@ -64,7 +64,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	public function pushRaw($payload, $queue = null, array $options = array())
 	{
 		return $this->pheanstalk->useTube($this->getQueue($queue))->put(
-			$payload, \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, \Pheanstalk\PheanstalkInterface::DEFAULT_DELAY, $this->timeToRun
+			$payload, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_DELAY, $this->timeToRun
 		);
 	}
 
@@ -83,7 +83,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 
 		$pheanstalk = $this->pheanstalk->useTube($this->getQueue($queue));
 
-		return $pheanstalk->put($payload, \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, $this->getSeconds($delay), $this->timeToRun);
+		return $pheanstalk->put($payload, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY, $this->getSeconds($delay), $this->timeToRun);
 	}
 
 	/**
