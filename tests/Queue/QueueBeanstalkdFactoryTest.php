@@ -15,10 +15,10 @@ class QueueBeanstalkdFactoryTest extends BackwardCompatibleTestCase
         $queue = $connetor->connect([
             'host'  => 'localhost',
             'port'  => 11300,
-            'queue' => 'default'
+            'queue' => 'secondary'
         ]);
 
         self::assertInstanceOf(BeanstalkdQueue::class, $queue);
-        self::assertEquals('default', $queue->getQueue());
+        self::assertEquals('secondary', $queue->getQueue());
     }
 }
