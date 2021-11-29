@@ -9,7 +9,7 @@ class QueueBeanstalkdFactoryTest extends BackwardCompatibleTestCase
     /**
      * @test
      */
-    public function testCreatingConnector(): void
+    public function creatingConnector(): void
     {
         $connetor = new BeanstalkdConnector();
         $queue = $connetor->connect([
@@ -20,5 +20,20 @@ class QueueBeanstalkdFactoryTest extends BackwardCompatibleTestCase
 
         self::assertInstanceOf(BeanstalkdQueue::class, $queue);
         self::assertEquals('secondary', $queue->getQueue());
+    }
+
+    /**
+     * @test
+     */
+    public function creatingDefaultConnector(): void
+    {
+        $connetor = new BeanstalkdConnector();
+        $queue = $connetor->connect([
+            'host'  => 'localhost',
+            'queue' => 'default'
+        ]);
+
+        self::assertInstanceOf(BeanstalkdQueue::class, $queue);
+        self::assertEquals('default', $queue->getQueue());
     }
 }
