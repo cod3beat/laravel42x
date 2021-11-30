@@ -4,7 +4,12 @@ use L4\Tests\BackwardCompatibleTestCase;
 
 class CacheMemcachedStoreTest extends BackwardCompatibleTestCase {
 
-	public function testGetReturnsNullWhenNotFound()
+    protected function setUp(): void
+    {
+        $this->markTestSkipped("We dont use Memcached");
+    }
+
+    public function testGetReturnsNullWhenNotFound()
 	{
 		$memcache = $this->getMock(stdClass::class, ['get', 'getResultCode']);
 		$memcache->expects($this->once())->method('get')->with($this->equalTo('foo:bar'))->willReturn(null);
