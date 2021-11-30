@@ -1,35 +1,37 @@
 <?php namespace Illuminate\Queue\Jobs;
 
 use Illuminate\Container\Container;
+use Pheanstalk\Job as PheanstalkJob;
+use Pheanstalk\Pheanstalk;
 
 class BeanstalkdJob extends Job {
 
 	/**
 	 * The Pheanstalk instance.
 	 *
-	 * @var \Pheanstalk\Pheanstalk
+	 * @var Pheanstalk
 	 */
 	protected $pheanstalk;
 
 	/**
 	 * The Pheanstalk job instance.
 	 *
-	 * @var \Pheanstalk\Job
+	 * @var PheanstalkJob
 	 */
 	protected $job;
 
     /**
      * Create a new job instance.
      *
-     * @param  \Illuminate\Container\Container $container
-     * @param  \Pheanstalk\Pheanstalk $pheanstalk
-     * @param \Pheanstalk\Job $job
-     * @param  string $queue
+     * @param Container     $container
+     * @param  Pheanstalk   $pheanstalk
+     * @param PheanstalkJob $job
+     * @param string        $queue
      */
 	public function __construct(Container $container,
-                                \Pheanstalk\Pheanstalk $pheanstalk,
-                                \Pheanstalk\Job $job,
-                                $queue)
+                                Pheanstalk $pheanstalk,
+                                PheanstalkJob $job,
+                                string $queue)
 	{
 		$this->job = $job;
 		$this->queue = $queue;
@@ -77,7 +79,7 @@ class BeanstalkdJob extends Job {
 	 */
 	public function release($delay = 0)
 	{
-		$priority = \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY;
+		$priority = \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY;
 
 		$this->pheanstalk->release($this->job, $priority, $delay);
 	}
@@ -117,7 +119,7 @@ class BeanstalkdJob extends Job {
 	/**
 	 * Get the IoC container instance.
 	 *
-	 * @return \Illuminate\Container\Container
+	 * @return Container
 	 */
 	public function getContainer()
 	{
@@ -127,7 +129,7 @@ class BeanstalkdJob extends Job {
 	/**
 	 * Get the underlying Pheanstalk instance.
 	 *
-	 * @return \Pheanstalk\Pheanstalk
+	 * @return Pheanstalk
 	 */
 	public function getPheanstalk()
 	{

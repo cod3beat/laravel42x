@@ -1,73 +1,98 @@
 <?php
 
 use Illuminate\Container\Container;
+use Illuminate\Queue\Jobs\BeanstalkdJob;
 use L4\Tests\BackwardCompatibleTestCase;
-use Mockery as m;
+use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\PheanstalkInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class QueueBeanstalkdJobTest extends BackwardCompatibleTestCase
 {
+    /**
+     * @var Container|ObjectProphecy
+     */
+    private $container;
+    /**
+     * @var Pheanstalk|ObjectProphecy
+     */
+    private $pheanstalk;
+    /**
+     * @var Job|ObjectProphecy
+     */
+    private $pheanstalkJob;
 
-    protected function tearDown(): void
+    protected function setUp(): void
     {
-        m::close();
+        parent::setUp();
+
+        $this->container = $this->prophesize(Container::class);
+        $this->pheanstalk = $this->prophesize(Pheanstalk::class);
+        $this->pheanstalkJob = $this->prophesize(Job::class);
     }
 
-
-    public function testFireProperlyCallsTheJobHandler()
+    public function testFireProperlyCallsTheJobHandler(): void
     {
-        $job = $this->getJob();
-        $job->getPheanstalkJob()->shouldReceive('getData')->once()->andReturn(
-            json_encode(['job' => 'foo', 'data' => ['data']])
-        );
-        $job->getContainer()->shouldReceive('make')->once()->with('foo')->andReturn($handler = m::mock('StdClass'));
-		$handler->shouldReceive('fire')->once()->with($job, ['data']);
+        $this->pheanstalkJob->getData()->willReturn(json_encode(['job' => 'foo', 'data' => ['data1']]));
+
+        $handler = $this->prophesize(BeanstalkdDummyHandler::class);
+        $this->container->make('foo')->willReturn($handler->reveal());
+
+        $job = $this->getProphesizedJob();
+
+        $handler->fire($job, ['data1'])->shouldBeCalledOnce();
 
 		$job->fire();
 	}
 
+	public function testDeleteRemovesTheJobFromBeanstalkd(): void
+    {
+        $this->pheanstalk->delete($this->pheanstalkJob)
+            ->shouldBeCalledOnce();
 
-	public function testDeleteRemovesTheJobFromBeanstalkd()
-	{
-		$job = $this->getJob();
-		$job->getPheanstalk()->shouldReceive('delete')->once()->with($job->getPheanstalkJob());
+        $job = $this->getProphesizedJob();
 
 		$job->delete();
 	}
 
-
-	public function testReleaseProperlyReleasesJobOntoBeanstalkd()
+	public function testReleaseProperlyReleasesJobOntoBeanstalkd(): void
     {
-        $job = $this->getJob();
-        $job->getPheanstalk()->shouldReceive('release')->once()->with(
-            $job->getPheanstalkJob(),
+        $this->pheanstalk->release(
+            $this->pheanstalkJob,
             PheanstalkInterface::DEFAULT_PRIORITY,
             0
-        );
+        )->shouldBeCalledOnce();
+
+        $job = $this->getProphesizedJob();
 
         $job->release();
     }
 
+	public function testBuryProperlyBuryTheJobFromBeanstalkd(): void
+    {
+        $this->pheanstalk->bury($this->pheanstalkJob)->shouldBeCalledOnce();
 
-	public function testBuryProperlyBuryTheJobFromBeanstalkd()
-	{
-		$job = $this->getJob();
-		$job->getPheanstalk()->shouldReceive('bury')->once()->with($job->getPheanstalkJob());
+        $job = $this->getProphesizedJob();
 
 		$job->bury();
 	}
 
-
-	protected function getJob()
-	{
-		return new Illuminate\Queue\Jobs\BeanstalkdJob(
-            m::mock(Container::class),
-            m::mock(Pheanstalk::class),
-            m::mock(Job::class),
+    protected function getProphesizedJob(): BeanstalkdJob
+    {
+        return new BeanstalkdJob(
+            $this->container->reveal(),
+            $this->pheanstalk->reveal(),
+            $this->pheanstalkJob->reveal(),
             'default'
-		);
-	}
+        );
+    }
+}
 
+class BeanstalkdDummyHandler
+{
+    public function fire(\Illuminate\Queue\Jobs\Job $job, $data): void
+    {
+
+    }
 }

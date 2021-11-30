@@ -1,6 +1,10 @@
 <?php namespace Illuminate\Queue;
 
 use Illuminate\Queue\Jobs\BeanstalkdJob;
+use Illuminate\Queue\Jobs\Job;
+use Pheanstalk\Contract\JobIdInterface;
+use Pheanstalk\Exception\DeadlineSoonException;
+use Pheanstalk\JobId;
 
 class BeanstalkdQueue extends Queue implements QueueInterface {
 
@@ -64,7 +68,7 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	public function pushRaw($payload, $queue = null, array $options = array())
 	{
 		return $this->pheanstalk->useTube($this->getQueue($queue))->put(
-			$payload, \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, \Pheanstalk\PheanstalkInterface::DEFAULT_DELAY, $this->timeToRun
+			$payload, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_DELAY, $this->timeToRun
 		);
 	}
 
@@ -83,20 +87,22 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 
 		$pheanstalk = $this->pheanstalk->useTube($this->getQueue($queue));
 
-		return $pheanstalk->put($payload, \Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY, $this->getSeconds($delay), $this->timeToRun);
+		return $pheanstalk->put($payload, \Pheanstalk\Contract\PheanstalkInterface::DEFAULT_PRIORITY, $this->getSeconds($delay), $this->timeToRun);
 	}
 
-	/**
-	 * Pop the next job off of the queue.
-	 *
-	 * @param  string  $queue
-	 * @return \Illuminate\Queue\Jobs\Job|null
-	 */
+    /**
+     * Pop the next job off of the queue.
+     *
+     * @param string $queue
+     *
+     * @return Job|null
+     * @throws DeadlineSoonException
+     */
 	public function pop($queue = null)
 	{
 		$queue = $this->getQueue($queue);
 
-		$job = $this->pheanstalk->watchOnly($queue)->reserve(0);
+		$job = $this->pheanstalk->watchOnly($queue)->reserveWithTimeout(0);
 
 		if ($job instanceof \Pheanstalk\Job)
 		{
@@ -104,16 +110,17 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 		}
 	}
 
-	/**
-	 * Delete a message from the Beanstalk queue.
-	 *
-	 * @param  string  $queue
-	 * @param  string  $id
-	 * @return void
-	 */
-	public function deleteMessage($queue, $id)
-	{
-		$this->pheanstalk->useTube($this->getQueue($queue))->delete($id);
+    /**
+     * Delete a message from the Beanstalk queue.
+     *
+     * @param string $queue
+     * @param string $id
+     *
+     * @return void
+     */
+	public function deleteMessage(string $queue, string $id): void
+    {
+		$this->pheanstalk->useTube($this->getQueue($queue))->delete(new JobId($id));
 	}
 
 	/**
@@ -122,8 +129,8 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	 * @param  string|null  $queue
 	 * @return string
 	 */
-	public function getQueue($queue)
-	{
+	public function getQueue(?string $queue = null): string
+    {
 		return $queue ?: $this->default;
 	}
 
@@ -132,8 +139,8 @@ class BeanstalkdQueue extends Queue implements QueueInterface {
 	 *
 	 * @return \Pheanstalk\Pheanstalk
 	 */
-	public function getPheanstalk()
-	{
+	public function getPheanstalk(): \Pheanstalk\Pheanstalk
+    {
 		return $this->pheanstalk;
 	}
 
