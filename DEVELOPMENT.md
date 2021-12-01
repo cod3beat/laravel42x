@@ -37,7 +37,7 @@ Change this value on your `composer.json` laravel app
       "type": "path",
       "url": "/var/www/laravel42x",
       "options": {
-        "symlink": true
+        "symlink": false
       }
     }
   ]
