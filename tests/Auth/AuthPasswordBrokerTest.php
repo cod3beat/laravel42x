@@ -81,7 +81,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	{
 		unset($_SERVER['__reminder.test']);
 		$mocks = $this->getMocks();
-		$broker = $this->getMock(PasswordBroker::class, ['sendReminder', 'getUri'], array_values($mocks));
+		$broker = $this->getMock(PasswordBroker::class, ['sendReminder'], array_values($mocks));
 		$mocks['users']->shouldReceive('retrieveByCredentials')->once()->with(['foo'])->andReturn($user = m::mock(
             RemindableInterface::class
         ));
@@ -188,7 +188,7 @@ class AuthPasswordBrokerTest extends BackwardCompatibleTestCase
 	public function testResetRemovesRecordOnReminderTableAndCallsCallback()
 	{
 		unset($_SERVER['__auth.reminder']);
-		$broker = $this->getMock(PasswordBroker::class, ['validateReset', 'getPassword', 'getToken'], array_values($mocks = $this->getMocks()));
+		$broker = $this->getMock(PasswordBroker::class, ['validateReset'], array_values($mocks = $this->getMocks()));
 		$broker->expects($this->once())->method('validateReset')->willReturn(
             $user = m::mock(
                 RemindableInterface::class

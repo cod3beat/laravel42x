@@ -131,7 +131,16 @@ class CacheFileStoreTest extends BackwardCompatibleTestCase {
 
 	protected function mockFilesystem()
 	{
-		return $this->getMock(Filesystem::class);
+		return $this->getMock(Filesystem::class, [
+            'get',
+            'put',
+            'exists',
+            'delete',
+            'directories',
+            'isDirectory',
+            'makeDirectory',
+            'deleteDirectory'
+        ]);
 	}
 
 }

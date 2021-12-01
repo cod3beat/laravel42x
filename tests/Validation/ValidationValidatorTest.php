@@ -787,15 +787,15 @@ class ValidationValidatorTest extends BackwardCompatibleTestCase
 		$this->assertFalse($v->passes());
 
 		$file = $this->getMock(UploadedFile::class, ['isValid', 'getSize'], [__FILE__, basename(__FILE__)]);
-		$file->expects($this->at(0))->method('isValid')->willReturn(true);
-		$file->expects($this->at(1))->method('getSize')->willReturn(3072);
+		$file->method('isValid')->willReturn(true);
+		$file->method('getSize')->willReturn(3072);
 		$v = new Validator($trans, [], ['photo' => 'Max:10']);
 		$v->setFiles(['photo' => $file]);
 		$this->assertTrue($v->passes());
 
 		$file = $this->getMock(UploadedFile::class, ['isValid', 'getSize'], [__FILE__, basename(__FILE__)]);
-		$file->expects($this->at(0))->method('isValid')->willReturn(true);
-		$file->expects($this->at(1))->method('getSize')->willReturn(4072);
+		$file->method('isValid')->willReturn(true);
+		$file->method('getSize')->willReturn(4072);
 		$v = new Validator($trans, [], ['photo' => 'Max:2']);
 		$v->setFiles(['photo' => $file]);
 		$this->assertFalse($v->passes());

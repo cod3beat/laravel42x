@@ -22,7 +22,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
     public function testSettingDefaultCallsGetDefaultGrammar()
     {
         $connection = $this->getMockConnection();
-        $mock = m::mock('StdClass');
+        $mock = m::mock(stdClass::class);
         $connection->expects($this->once())->method('getDefaultQueryGrammar')->willReturn($mock);
 		$connection->useDefaultQueryGrammar();
 		$this->assertEquals($mock, $connection->getQueryGrammar());
@@ -32,7 +32,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	public function testSettingDefaultCallsGetDefaultPostProcessor()
 	{
 		$connection = $this->getMockConnection();
-		$mock = m::mock('StdClass');
+		$mock = m::mock(stdClass::class);
 		$connection->expects($this->once())->method('getDefaultPostProcessor')->willReturn($mock);
 		$connection->useDefaultPostProcessor();
 		$this->assertEquals($mock, $connection->getPostProcessor());
@@ -51,8 +51,8 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testSelectProperlyCallsPDO()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['prepare']);
-		$writePdo = $this->getMock('DatabaseConnectionTestMockPDO', ['prepare']);
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['prepare']);
+		$writePdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['prepare']);
 		$writePdo->expects($this->never())->method('prepare');
 		$statement = $this->getMock('PDOStatement', ['execute', 'fetchAll']);
 		$statement->expects($this->once())->method('execute')->with($this->equalTo(['foo' => 'bar']));
@@ -111,7 +111,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testStatementProperlyCallsPDO()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['prepare']);
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['prepare']);
 		$statement = $this->getMock('PDOStatement', ['execute']);
 		$statement->expects($this->once())->method('execute')->with($this->equalTo(['bar']))->willReturn('foo');
 		$pdo->expects($this->once())->method('prepare')->with($this->equalTo('foo'))->willReturn($statement);
@@ -130,7 +130,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testAffectingStatementProperlyCallsPDO()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['prepare']);
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['prepare']);
 		$statement = $this->getMock('PDOStatement', ['execute', 'rowCount']);
 		$statement->expects($this->once())->method('execute')->with($this->equalTo(['foo' => 'bar']));
 		$statement->expects($this->once())->method('rowCount')->willReturn(['boom']);
@@ -150,9 +150,9 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testBeganTransactionFiresEventsIfSet()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
+		$pdo = $this->createMock(DatabaseConnectionTestMockPDO::class);
 		$connection = $this->getMockConnection(['getName'], $pdo);
-		$connection->expects($this->once())->method('getName')->willReturn('name');
+		$connection->expects($this->any())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
 		$events->shouldReceive('fire')->once()->with('connection.name.beganTransaction', $connection);
 		$connection->beginTransaction();
@@ -161,7 +161,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testCommitedFiresEventsIfSet()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class);
 		$connection = $this->getMockConnection(['getName'], $pdo);
 		$connection->expects($this->once())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
@@ -172,7 +172,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testRollBackedFiresEventsIfSet()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO');
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class);
 		$connection = $this->getMockConnection(['getName'], $pdo);
 		$connection->expects($this->once())->method('getName')->willReturn('name');
 		$connection->setEventDispatcher($events = m::mock(Dispatcher::class));
@@ -183,7 +183,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testTransactionMethodRunsSuccessfully()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['beginTransaction', 'commit']);
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['beginTransaction', 'commit']);
 		$mock = $this->getMockConnection([], $pdo);
 		$pdo->expects($this->once())->method('beginTransaction');
 		$pdo->expects($this->once())->method('commit');
@@ -194,7 +194,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 
 	public function testTransactionMethodRollsbackAndThrows()
 	{
-		$pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['beginTransaction', 'commit', 'rollBack']);
+		$pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['beginTransaction', 'commit', 'rollBack']);
 		$mock = $this->getMockConnection([], $pdo);
 		$pdo->expects($this->once())->method('beginTransaction');
 		$pdo->expects($this->once())->method('rollBack');
@@ -212,7 +212,7 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
     public function testTransactionMethodDisallowPDOChanging()
     {
         $this->expectException(RuntimeException::class);
-        $pdo = $this->getMock('DatabaseConnectionTestMockPDO', ['beginTransaction', 'commit', 'rollBack']);
+        $pdo = $this->getMock(DatabaseConnectionTestMockPDO::class, ['beginTransaction', 'commit', 'rollBack']);
         $pdo->expects($this->once())->method('beginTransaction');
         $pdo->expects($this->once())->method('rollBack');
         $pdo->expects($this->never())->method('commit');
@@ -313,9 +313,21 @@ class DatabaseConnectionTest extends BackwardCompatibleTestCase
 	{
 		$pdo = $pdo ?: new DatabaseConnectionTestMockPDO;
 		$defaults = ['getDefaultQueryGrammar', 'getDefaultPostProcessor', 'getDefaultSchemaGrammar'];
-		return $this->getMock(Connection::class, array_merge($defaults, $methods), [$pdo]);
+
+		$connection = $this->getMockBuilder(Connection::class)
+            ->onlyMethods(array_merge($defaults, $methods))
+            ->setConstructorArgs([$pdo])
+            ->getMock();
+
+        $connection->enableQueryLog();
+
+        return $connection;
 	}
 
 }
 
-class DatabaseConnectionTestMockPDO extends PDO { public function __construct() {} }
+class DatabaseConnectionTestMockPDO extends PDO {
+    public function __construct() {
+        //
+    }
+}
